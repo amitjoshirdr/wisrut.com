@@ -3,586 +3,370 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Amit Joshi — Research-Led Design for Schools & EdTech</title>
-  <meta name="description" content="Brand identity designer for preschools, schools and EdTech startups. Founder of WisdomRoots, Rudrapur. Research-led design — evidence first, aesthetics second." />
+  <title>Wisrut</title>
   <style>
-    /* ─── RESET & BASE ─────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --black:   #0f0f0f;
-      --white:   #fafafa;
-      --mid:     #444444;
-      --light:   #e8e8e8;
-      --font:    'Georgia', serif;
-      --mono:    'Courier New', monospace;
-      --max:     760px;
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --surface-2: #161616;
+      --border: #222222;
+      --text: #f0f0f0;
+      --muted: #777777;
+      --faint: #333333;
+      --accent: #ffffff;
+      --radius: 10px;
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
+      background: var(--bg);
+      color: var(--text);
       font-family: var(--font);
-      font-size: 17px;
-      line-height: 1.7;
-      color: var(--black);
-      background: var(--white);
-    }
-
-    a { color: inherit; text-decoration: underline; }
-    a:hover { opacity: 0.65; }
-    img { display: block; max-width: 100%; height: auto; }
-
-    /* ─── LAYOUT ───────────────────────────────────────── */
-    .wrap {
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-    section { padding: 72px 0; }
-
-    /* ─── NAV ──────────────────────────────────────────── */
-    nav {
-      border-bottom: 1px solid var(--light);
-      padding: 20px 0;
-    }
-    .nav-inner {
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 0 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .nav-logo {
+      min-height: 100vh;
       font-size: 15px;
-      font-weight: bold;
-      letter-spacing: 0.04em;
-      text-decoration: none;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
-    .nav-links {
-      display: flex;
-      gap: 28px;
-      list-style: none;
-    }
-    .nav-links a {
-      font-size: 14px;
-      text-decoration: none;
-      color: var(--mid);
-    }
-    .nav-links a:hover { color: var(--black); }
 
-    /* ─── HERO ─────────────────────────────────────────── */
-    #hero {
-      padding: 80px 0 64px;
-      border-bottom: 1px solid var(--light);
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 10;
     }
-    .hero-label {
-      font-family: var(--mono);
-      font-size: 12px;
+
+    .logo {
+      font-size: 13px;
+      font-weight: 600;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--mid);
-      margin-bottom: 20px;
-    }
-    .hero-h1 {
-      font-size: clamp(28px, 5vw, 46px);
-      line-height: 1.18;
-      font-weight: bold;
-      letter-spacing: -0.02em;
-      margin-bottom: 24px;
-      max-width: 640px;
-    }
-    .hero-sub {
-      font-size: 18px;
-      color: var(--mid);
-      max-width: 580px;
-      margin-bottom: 36px;
-      line-height: 1.65;
-    }
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 36px;
-    }
-    .btn {
-      display: inline-block;
-      padding: 12px 26px;
-      font-size: 15px;
-      font-family: var(--font);
-      text-decoration: none;
-      border: 1.5px solid var(--black);
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-    .btn-primary { background: var(--black); color: var(--white); }
-    .btn-primary:hover { background: #333; opacity: 1; }
-    .btn-secondary { background: transparent; color: var(--black); }
-    .btn-secondary:hover { background: var(--black); color: var(--white); opacity: 1; }
-    .hero-tag {
-      font-family: var(--mono);
-      font-size: 13px;
-      color: var(--mid);
-      letter-spacing: 0.06em;
     }
 
-    /* ─── CREDIBILITY BAR ──────────────────────────────── */
-    #cred {
-      padding: 22px 0;
-      border-bottom: 1px solid var(--light);
-    }
-    .cred-inner {
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 0 24px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 28px;
-      align-items: center;
-    }
-    .cred-item {
-      font-family: var(--mono);
+    nav { display: flex; gap: 20px; }
+
+    nav a {
       font-size: 12px;
-      color: var(--mid);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-    .cred-dot {
-      color: var(--light);
-      font-size: 18px;
-      line-height: 1;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.15s;
     }
 
-    /* ─── ABOUT ────────────────────────────────────────── */
-    #about { border-bottom: 1px solid var(--light); }
-    .section-label {
-      font-family: var(--mono);
+    nav a:hover { color: var(--text); }
+
+    .hero {
+      padding: 56px 24px 40px;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 42ch;
+      margin: 0 auto;
+    }
+
+    .cards-section {
+      padding: 32px 20px 48px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .cards-label {
       font-size: 11px;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--mid);
+      color: var(--muted);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s, background 0.15s;
+      cursor: pointer;
+    }
+
+    .card:hover { border-color: #444; background: var(--surface-2); }
+    .card:active { transform: translateY(1px); }
+
+    .card-tag {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .card h2 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+    .card p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    .card-arrow {
+      margin-top: auto;
+      padding-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .card:hover .card-arrow { color: var(--text); }
+
+    .divider { height: 1px; background: var(--border); margin: 0 20px; }
+
+    .product-section {
+      padding: 56px 24px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .product-section h2 {
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .product-section > p {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 60ch;
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 10px;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--faint);
+    }
+
+    .badge-dot.live { background: #3fb950; }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.05s;
+    }
+
+    .btn-primary:hover { background: #e5e5e5; }
+    .btn-primary:active { transform: translateY(1px); }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
       margin-bottom: 28px;
     }
-    .about-p {
-      font-size: 18px;
-      line-height: 1.75;
-      color: var(--black);
-      max-width: 660px;
-    }
-    .about-p + .about-p { margin-top: 20px; }
 
-    /* ─── SERVICES ─────────────────────────────────────── */
-    #services { border-bottom: 1px solid var(--light); }
-    .service-card {
-      border: 1.5px solid var(--black);
-      padding: 36px 32px;
-      margin-bottom: 24px;
-    }
-    .service-card:last-child { margin-bottom: 0; }
-    .service-title {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .service-for {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--mid);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 18px;
-    }
-    .service-desc {
-      font-size: 16px;
-      color: var(--mid);
-      margin-bottom: 20px;
-      line-height: 1.65;
-    }
-    .service-list {
-      list-style: none;
-      margin-bottom: 24px;
-    }
-    .service-list li {
-      font-size: 15px;
-      padding: 6px 0;
-      border-top: 1px solid var(--light);
+    .feature-list li {
+      font-size: 13px;
+      color: var(--muted);
       display: flex;
       align-items: flex-start;
-      gap: 10px;
-    }
-    .service-list li::before {
-      content: "→";
-      flex-shrink: 0;
-      color: var(--mid);
-      margin-top: 1px;
-    }
-    .service-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-    .service-meta-item {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--mid);
-      letter-spacing: 0.06em;
-    }
-    .service-meta-item strong {
-      display: block;
-      font-size: 16px;
-      color: var(--black);
-      font-family: var(--font);
-      font-weight: bold;
-      letter-spacing: 0;
-    }
-    .service-callout {
-      border-left: 3px solid var(--black);
-      padding-left: 16px;
-      font-size: 15px;
-      font-style: italic;
-      color: var(--mid);
-      margin-top: 20px;
+      gap: 8px;
     }
 
-    /* ─── WORK ─────────────────────────────────────────── */
-    #work { border-bottom: 1px solid var(--light); }
-    .work-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
-      margin-top: 8px;
-    }
-    .work-card { border: 1.5px solid var(--light); overflow: hidden; }
-    .work-thumb {
-      width: 100%;
-      aspect-ratio: 4/3;
-      background: var(--light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--mid);
-      letter-spacing: 0.08em;
-    }
-    .work-info { padding: 16px; }
-    .work-name { font-size: 15px; font-weight: bold; margin-bottom: 4px; }
-    .work-tag {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--mid);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    .work-note {
-      font-size: 14px;
-      color: var(--mid);
-      font-style: italic;
-      margin-top: 28px;
-    }
+    .feature-list li::before { content: "—"; color: var(--faint); flex-shrink: 0; }
 
-    /* ─── TESTIMONIALS ─────────────────────────────────── */
-    #testimonials { border-bottom: 1px solid var(--light); }
-    .testimonial-placeholder {
-      font-style: italic;
-      color: var(--mid);
-      font-size: 16px;
-      border-left: 3px solid var(--light);
-      padding-left: 16px;
-    }
-
-    /* ─── CONTACT ──────────────────────────────────────── */
-    .contact-h2 {
-      font-size: clamp(22px, 4vw, 34px);
-      font-weight: bold;
-      margin-bottom: 16px;
-      letter-spacing: -0.01em;
-    }
-    .contact-sub {
-      font-size: 17px;
-      color: var(--mid);
-      max-width: 520px;
-      margin-bottom: 36px;
-      line-height: 1.65;
-    }
-    .contact-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 36px;
-    }
-    .contact-meta {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--mid);
-      letter-spacing: 0.06em;
-    }
-
-    /* ─── FOOTER ───────────────────────────────────────── */
     footer {
-      border-top: 1px solid var(--light);
-      padding: 24px 0;
-    }
-    .footer-inner {
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 0 24px;
+      border-top: 1px solid var(--border);
+      padding: 20px 24px;
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
     }
-    .footer-copy {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--mid);
-    }
-    .footer-links {
-      display: flex;
-      gap: 20px;
-      list-style: none;
-    }
-    .footer-links a {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--mid);
-      text-decoration: none;
-    }
-    .footer-links a:hover { color: var(--black); }
 
-    /* ─── RESPONSIVE ───────────────────────────────────── */
-    @media (max-width: 540px) {
-      .nav-links  { display: none; }
-      .cred-dot   { display: none; }
-      .cred-item  { width: 100%; }
-      .service-card { padding: 24px 20px; }
+    footer span { font-size: 11px; color: var(--muted); }
+
+    @media (max-width: 600px) {
+      header { padding: 14px 16px; }
+      nav { gap: 14px; }
+      nav a { font-size: 11px; }
+      .hero { padding: 40px 16px 28px; }
+      .cards-section { padding: 24px 16px 40px; }
+      .product-section { padding: 40px 16px; }
+      footer { padding: 16px; }
     }
   </style>
 </head>
-
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <div class="nav-inner">
-      <a class="nav-logo" href="/">wisrut.com</a>
-      <ul class="nav-links">
-        <li><a href="#work">Work</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </div>
-  </nav>
+  <header>
+    <div class="logo">Wisrut</div>
+    <nav>
+      <a href="#wisdom-roots">Wisdom Roots</a>
+      <a href="#rupform">RUPFORM</a>
+      <a href="#promptbrief">PromptBrief</a>
+    </nav>
+  </header>
 
-  <!-- HERO -->
-  <section id="hero">
-    <div class="wrap">
-      <p class="hero-label">Amit Joshi &nbsp;·&nbsp; Brand Identity Designer</p>
-      <h1 class="hero-h1">Research-led design for schools, preschools&nbsp;and EdTech.</h1>
-      <p class="hero-sub">
-        I build brand identities that earn parental trust before you say a word.
-        I run a preschool — so I understand your audience from the inside.
-      </p>
-      <div class="btn-row">
-        <a class="btn btn-primary" href="#work">View work</a>
-        <a class="btn btn-secondary" href="#contact">Start a project</a>
-      </div>
-      <p class="hero-tag">Evidence first &nbsp;·&nbsp; Aesthetics second</p>
-    </div>
+  <section class="hero">
+    <h1>Tools built for people who think and create.</h1>
+    <p>Three focused products. Each one built to do one thing well.</p>
   </section>
 
-  <!-- CREDIBILITY BAR -->
-  <div id="cred">
-    <div class="cred-inner">
-      <span class="cred-item">Masters in Digital Marketing, University of Reading</span>
-      <span class="cred-dot">·</span>
-      <span class="cred-item">Founder, WisdomRoots Early Learning</span>
-      <span class="cred-dot">·</span>
-      <span class="cred-item">3+ years in early childhood education</span>
-      <span class="cred-dot">·</span>
-      <span class="cred-item">Working globally via Fiverr</span>
-    </div>
-  </div>
+  <section class="cards-section">
+    <p class="cards-label">Products</p>
+    <div class="cards">
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="wrap">
-      <p class="section-label">About</p>
-      <p class="about-p">
-        I am Amit Joshi — founder of WisdomRoots, an early learning centre in Rudrapur,
-        Uttarakhand, and a brand identity designer for education businesses. I hold a Masters
-        in Digital Marketing from the University of Reading, UK, with electives in Business
-        Intelligence and Marketing Analytics.
-      </p>
-      <p class="about-p">
-        I run a preschool, so I see every day how parents actually decide whom to trust with
-        their child. I bring that insight into every logo, prospectus and visual system I design —
-        so your brand feels both beautiful and believable to the families you serve.
-      </p>
-      <p class="about-p">
-        I design from research, not assumption. Before opening Figma, I study what your
-        parents or learners are actually looking for. That evidence shapes every decision.
-      </p>
-    </div>
-  </section>
+      <a class="card" href="#wisdom-roots">
+        <span class="card-tag">Education</span>
+        <h2>Wisdom Roots</h2>
+        <p>Structured learning tools for modern students and educators.</p>
+        <span class="card-arrow">In progress →</span>
+      </a>
 
-  <!-- SERVICES -->
-  <section id="services">
-    <div class="wrap">
-      <p class="section-label">Services</p>
+      <a class="card" href="#rupform">
+        <span class="card-tag">Platform</span>
+        <h2>RUPFORM</h2>
+        <p>A focused platform currently under active development.</p>
+        <span class="card-arrow">In progress →</span>
+      </a>
 
-      <!-- Service 1 -->
-      <div class="service-card">
-        <h2 class="service-title">Brand Identity for Early Education</h2>
-        <p class="service-for">For preschools · Schools · EdTech startups</p>
-        <p class="service-desc">
-          A complete visual identity built on what your audience is actually looking for —
-          so parents take you seriously at first glance.
-        </p>
-        <ul class="service-list">
-          <li>Brand discovery call and short audience research</li>
-          <li>Logo system — primary mark and alternate version</li>
-          <li>Colour palette and typography system</li>
-          <li>One key application — prospectus cover, outdoor board, or social media header</li>
-          <li>One-page brand usage guide (PDF)</li>
-        </ul>
-        <div class="service-meta">
-          <div class="service-meta-item">
-            STARTS FROM
-            <strong>₹8,000</strong>
-          </div>
-          <div class="service-meta-item">
-            TIMELINE
-            <strong>7–10 working days</strong>
-          </div>
-          <div class="service-meta-item">
-            VIA
-            <strong>Fiverr or direct</strong>
-          </div>
-        </div>
-        <!-- ⚠ REPLACE with your actual Fiverr gig URL -->
-        <a class="btn btn-primary" href="YOUR_FIVERR_GIG_URL" target="_blank" rel="noopener">Start on Fiverr</a>
-        <p class="service-callout">
-          "Most designers ask what you want it to look like. I start with what your parents
-          are actually looking for — then design from that evidence."
-        </p>
-      </div>
-
-      <!-- Service 2 -->
-      <div class="service-card">
-        <h2 class="service-title">Brand Audit &amp; Light Refresh</h2>
-        <p class="service-for">For schools already running · Quick wins</p>
-        <p class="service-desc">
-          You have a logo — but it doesn't say what you actually do. A structured review
-          and concrete fixes, not a full redesign.
-        </p>
-        <ul class="service-list">
-          <li>Review of existing logo and admission material</li>
-          <li>Written recommendations — 2 to 3 specific, actionable fixes</li>
-          <li>Optional mini-refresh: tightened logo, cleaner colour use, redesigned board or flyer</li>
-        </ul>
-        <div class="service-meta">
-          <div class="service-meta-item">
-            AUDIT FROM
-            <strong>₹3,000</strong>
-          </div>
-          <div class="service-meta-item">
-            TIMELINE
-            <strong>3–5 working days</strong>
-          </div>
-        </div>
-        <a class="btn btn-secondary" href="#contact">Get in touch</a>
-      </div>
+      <a class="card" href="#promptbrief">
+        <span class="card-tag">AI Tool</span>
+        <h2>PromptBrief</h2>
+        <p>Turn a messy idea into a structured brief and a ready-to-use prompt, locally.</p>
+        <span class="card-arrow">Open now →</span>
+      </a>
+	  
+	  <a class="card" href="margo_setup.html">
+      <span class="card-tag">AI Brief</span>
+      <h2>Margo</h2>
+      <p>A focused, honest daily brief for students, curated from your standing charter.</p>
+      <span class="card-arrow">Open now →</span>
+		</a>
 
     </div>
   </section>
 
-  <!-- WORK -->
-  <section id="work">
-    <div class="wrap">
-      <p class="section-label">Selected work</p>
-      <div class="work-grid">
+  <div class="divider"></div>
 
-        <div class="work-card">
-          <!-- Replace div below with: <img src="images/wisdomroots.jpg" alt="WisdomRoots brand identity" /> -->
-          <div class="work-thumb">IMAGE COMING</div>
-          <div class="work-info">
-            <p class="work-name">WisdomRoots</p>
-            <p class="work-tag">Brand identity · Real project</p>
-          </div>
-        </div>
+  <section class="product-section" id="wisdom-roots">
+    <p class="section-label">Education</p>
+    <h2>Wisdom Roots</h2>
+    <p>Structured learning tools designed for students, educators, and curious minds who want more than passive consumption.</p>
+    <ul class="feature-list">
+      <li>Focused on practical, applicable knowledge</li>
+      <li>Designed for the modern learner</li>
+      <li>Mobile-first experience</li>
+    </ul>
+    <span class="badge">
+      <span class="badge-dot"></span>
+      Coming soon
+    </span>
+  </section>
 
-        <div class="work-card">
-          <div class="work-thumb">IMAGE COMING</div>
-          <div class="work-info">
-            <p class="work-name">Seedling House Early Learning</p>
-            <p class="work-tag">Brand identity · Concept project</p>
-          </div>
-        </div>
+  <div class="divider"></div>
 
-        <div class="work-card">
-          <div class="work-thumb">IMAGE COMING</div>
-          <div class="work-info">
-            <p class="work-name">Phonics EdTech Startup</p>
-            <p class="work-tag">Brand identity · Concept project</p>
-          </div>
-        </div>
+  <section class="product-section" id="rupform">
+    <p class="section-label">Platform</p>
+    <h2>RUPFORM</h2>
+    <p>A product currently in development. Details will be shared as the product takes shape.</p>
+    <ul class="feature-list">
+      <li>In active development</li>
+      <li>More details coming soon</li>
+    </ul>
+    <span class="badge">
+      <span class="badge-dot"></span>
+      In progress
+    </span>
+  </section>
 
-      </div>
-      <p class="work-note">
-        Full case studies with process documentation are in progress.
-        Contact me to see current work in detail.
-      </p>
+  <div class="divider"></div>
+
+  <section class="product-section" id="promptbrief">
+    <p class="section-label">AI Tool</p>
+    <h2>PromptBrief</h2>
+    <p>A local-first AI assistant that turns a messy idea into a structured brief, then into a high-quality prompt you can use anywhere. Runs entirely on your machine — no data leaves your device.</p>
+    <ul class="feature-list">
+      <li>Brief builder powered by local AI (Ollama + phi3)</li>
+      <li>Converts structured briefs into text or code prompts</li>
+      <li>Runs locally — no cloud, no subscription</li>
+      <li>Single HTML file, no install needed</li>
+    </ul>
+    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <a class="btn-primary" href="http://localhost:8000/promptbrief.html" target="_blank">
+        Open PromptBrief →
+      </a>
+      <span class="badge">
+        <span class="badge-dot live"></span>
+        Live — runs locally
+      </span>
     </div>
   </section>
 
-  <!-- TESTIMONIALS -->
-  <section id="testimonials">
-    <div class="wrap">
-      <p class="section-label">What clients say</p>
-      <p class="testimonial-placeholder">
-        Parent and client testimonials are being collected as this portfolio grows.
-        If you'd like to speak with a past client directly, I am happy to connect you.
-      </p>
-    </div>
-  </section>
+  <div class="divider"></div>
 
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="wrap">
-      <p class="section-label">Contact</p>
-      <h2 class="contact-h2">Ready to build a brand that earns trust?</h2>
-      <p class="contact-sub">
-        Not a pitch — just a conversation. Tell me about your school or project
-        and I'll tell you honestly whether I can help.
-      </p>
-      <div class="contact-links">
-        <a class="btn btn-primary" href="mailto:contact@wisrut.com">Email Amit</a>
-        <!-- ⚠ REPLACE with your actual Fiverr gig URL -->
-        <a class="btn btn-secondary" href="YOUR_FIVERR_GIG_URL" target="_blank" rel="noopener">Open Fiverr profile</a>
-      </div>
-      <p class="contact-meta">
-        contact@wisrut.com &nbsp;·&nbsp; Rudrapur, Uttarakhand, India &nbsp;·&nbsp;
-        Available for remote projects globally
-      </p>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
   <footer>
-    <div class="footer-inner">
-      <p class="footer-copy">© 2026 Amit Joshi · wisrut.com</p>
-      <ul class="footer-links">
-        <li><a href="#work">Work</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="mailto:contact@wisrut.com">Email</a></li>
-      </ul>
-    </div>
+    <span>© 2026 Wisrut · Amit Joshi</span>
+    <span>wisrut.com</span>
   </footer>
 
 </body>
