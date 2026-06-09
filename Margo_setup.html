@@ -405,6 +405,9 @@
     const LOCAL_P0_KEY = 'margo_p0_charter';
     const LOCAL_P1_KEY = 'margo_p1_refinement';
 
+    // Margo backend: Cloudflare Worker proxy (OpenRouter / Gemini / Groq)
+    const MARGO_BACKEND_URL = "https://margo-api.amitjoshirdr.workers.dev";
+
     function setStatus(el, text, mode) {
       el.textContent = text || '';
       el.classList.remove('ok', 'error');
@@ -472,7 +475,7 @@
         return;
       }
 
-      setStatus(p0InputStatus, 'Creating P0 charter with phi3...', '');
+      setStatus(p0InputStatus, 'Creating P0 charter…', '');
       setStatus(p0Status, '', '');
       setP0Output('Generating...');
       createP0Button.disabled = true;
@@ -496,27 +499,29 @@
       ].join('\n');
 
       const payload = {
+        // The Worker can map this model name to whatever real model you prefer.
         model: 'phi3',
         prompt: systemPrompt + '\n\nUSER:\n' + raw + '\n',
         stream: false
       };
 
       try {
-        const res = await fetch('http://localhost:11434/api/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch(`${MARGO_BACKEND_URL}/api/generate`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
 
         if (!res.ok) {
           setP0Output('Error while generating P0.');
-          setStatus(p0InputStatus, 'Error from Ollama: HTTP ' + res.status, 'error');
+          setStatus(p0InputStatus, 'Error from backend: HTTP ' + res.status, 'error');
           return;
         }
 
         const data = await res.json();
         let text = (data.response || '').trim();
 
+        // Defensive: strip accidental JSON-like wrappers
         if (text.startsWith('{') && text.endsWith('}')) {
           const colonIndex = text.indexOf(':');
           if (colonIndex !== -1) {
@@ -533,8 +538,9 @@
         setP0Output(text);
         setStatus(p0InputStatus, 'Draft P0 created. Review it on the right.', 'ok');
       } catch (err) {
-        setP0Output('Could not reach Ollama.');
-        setStatus(p0InputStatus, 'Could not reach Ollama: ' + err.message, 'error');
+        console.error('P0 backend error:', err);
+        setP0Output('Could not reach Margo backend.');
+        setStatus(p0InputStatus, 'Could not reach backend: ' + err.message, 'error');
       } finally {
         createP0Button.disabled = false;
       }
@@ -554,7 +560,11 @@
 
       rawIntent.value = current;
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      setStatus(p0Status, 'Current P0 copied back into the input. Edit it and click “Create charter (P0)” again.', 'ok');
+      setStatus(
+        p0Status,
+        'Current P0 copied back into the input. Edit it and click “Create charter (P0)” again.',
+        'ok'
+      );
     }
 
     function confirmP0() {
@@ -564,7 +574,7 @@
         current === 'Your P0 charter will appear here.' ||
         current === 'Generating...' ||
         current.startsWith('Error') ||
-        current.startsWith('Could not reach Ollama')
+        current.startsWith('Could not reach Margo backend')
       ) {
         setStatus(p0Status, 'You need a valid P0 draft before confirming.', 'error');
         return;
@@ -587,21 +597,23 @@
         p0 === 'Your P0 charter will appear here.' ||
         p0 === 'Generating...' ||
         p0.startsWith('Error') ||
-        p0.startsWith('Could not reach Ollama')
+        p0.startsWith('Could not reach Margo backend')
       ) {
         setStatus(p1Status, 'Confirm a valid P0 before generating P1.', 'error');
         return;
       }
 
       const notes = p1Input.value.trim();
-      const previousP1 = p1Output.textContent.trim().startsWith('Your P1') ? '' : p1Output.textContent.trim();
+      const previousP1 = p1Output.textContent.trim().startsWith('Your P1')
+        ? ''
+        : p1Output.textContent.trim();
 
       if (!notes && !previousP1) {
         setStatus(p1Status, 'Add some stable preferences or constraints first.', 'error');
         return;
       }
 
-      setStatus(p1Status, 'Generating P1 refinement with phi3...', '');
+      setStatus(p1Status, 'Generating P1 refinement…', '');
       setP1Output('Generating...');
       generateP1Button.disabled = true;
 
@@ -614,7 +626,7 @@
         "- Extract only stable preferences from this session: priorities, exclusions, desired categories, trust standards, format preferences, reading level, geographic scope, and depth preferences.",
         "- Remove temporary chatter, greetings, and one-off requests unless they reveal a durable preference.",
         "- Keep the language operational and specific.",
-        "- Return only the revised P1 as plain text, no JSON, no headings.",
+        "- Return only the revised P1 as plain text, no JSON, no headings."
       ].join('\n');
 
       const promptParts = [
@@ -637,7 +649,7 @@
       };
 
       try {
-        const res = await fetch('http://localhost:11434/api/generate', {
+        const res = await fetch(`${MARGO_BACKEND_URL}/api/generate`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -645,7 +657,7 @@
 
         if (!res.ok) {
           setP1Output('Error while generating P1.');
-          setStatus(p1Status, 'Error from Ollama: HTTP ' + res.status, 'error');
+          setStatus(p1Status, 'Error from backend: HTTP ' + res.status, 'error');
           return;
         }
 
@@ -668,8 +680,9 @@
         setP1Output(text);
         setStatus(p1Status, 'Draft P1 created. Review and save if it looks right.', 'ok');
       } catch (err) {
-        setP1Output('Could not reach Ollama.');
-        setStatus(p1Status, 'Could not reach Ollama: ' + err.message, 'error');
+        console.error('P1 backend error:', err);
+        setP1Output('Could not reach Margo backend.');
+        setStatus(p1Status, 'Could not reach backend: ' + err.message, 'error');
       } finally {
         generateP1Button.disabled = false;
       }
@@ -682,7 +695,7 @@
         current === 'Your P1 refinement will appear here after generation.' ||
         current === 'Generating...' ||
         current.startsWith('Error') ||
-        current.startsWith('Could not reach Ollama')
+        current.startsWith('Could not reach Margo backend')
       ) {
         setStatus(p1Status, 'You need a valid P1 draft before saving.', 'error');
         return;
@@ -706,5 +719,6 @@
 
     loadSavedLayers();
   </script>
+  
 </body>
 </html>

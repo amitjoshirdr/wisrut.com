@@ -418,6 +418,9 @@
     const LOCAL_P0_KEY = 'margo_p0_charter';
     const LOCAL_P1_KEY = 'margo_p1_refinement';
 
+    // Margo backend: Cloudflare Worker proxy
+    const MARGO_BACKEND_URL = "https://margo-api.amitjoshirdr.workers.dev";
+
     const p0TextEl = document.getElementById('p0Text');
     const p1StatusLineEl = document.getElementById('p1StatusLine');
     const storiesListEl = document.getElementById('storiesList');
@@ -667,12 +670,11 @@
         };
 
         try {
-          const res = await fetch('http://localhost:11434/api/generate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+          const res = await fetch(`${MARGO_BACKEND_URL}/api/generate`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
           });
-
           if (!res.ok) {
             summaryEl.textContent = 'Error while generating summary.';
             whyEl.textContent = 'Error while generating why-it-matters note.';
