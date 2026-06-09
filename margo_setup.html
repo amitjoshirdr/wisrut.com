@@ -17,15 +17,8 @@
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
       min-height: 100vh;
@@ -47,23 +40,9 @@
       flex-wrap: wrap;
     }
 
-    .brand {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .brand-title {
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      font-weight: 600;
-    }
-
-    .brand-sub {
-      font-size: 12px;
-      color: var(--muted);
-    }
+    .brand { display: flex; flex-direction: column; gap: 4px; }
+    .brand-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 600; }
+    .brand-sub { font-size: 12px; color: var(--muted); }
 
     .pill {
       border-radius: 999px;
@@ -76,12 +55,7 @@
       gap: 6px;
     }
 
-    .pill-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #3fb950;
-    }
+    .pill-dot { width: 6px; height: 6px; border-radius: 50%; background: #3fb950; }
 
     main {
       flex: 1;
@@ -91,13 +65,10 @@
       gap: 20px;
       max-width: 1040px;
       margin: 0 auto;
+      width: 100%;
     }
 
-    @media (max-width: 900px) {
-      main {
-        padding: 16px;
-      }
-    }
+    @media (max-width: 900px) { main { padding: 16px; } }
 
     .stack {
       display: grid;
@@ -105,11 +76,7 @@
       gap: 24px;
     }
 
-    @media (max-width: 900px) {
-      .stack {
-        grid-template-columns: 1fr;
-      }
-    }
+    @media (max-width: 900px) { .stack { grid-template-columns: 1fr; } }
 
     .panel {
       border-radius: 14px;
@@ -123,34 +90,12 @@
       min-width: 0;
     }
 
-    .panel-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 8px;
-    }
+    .panel-header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+    .panel-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+    .panel-title { font-size: 16px; font-weight: 500; }
+    .panel-note { font-size: 12px; color: var(--muted); }
 
-    .panel-eyebrow {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-    }
-
-    .panel-title {
-      font-size: 16px;
-      font-weight: 500;
-    }
-
-    .panel-note {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    label {
-      font-size: 13px;
-      color: var(--muted);
-    }
+    label { font-size: 13px; color: var(--muted); }
 
     textarea {
       width: 100%;
@@ -166,11 +111,7 @@
       line-height: 1.5;
     }
 
-    textarea:focus,
-    button:focus {
-      outline: 1px solid var(--accent);
-      outline-offset: 1px;
-    }
+    textarea:focus, button:focus { outline: 1px solid var(--accent); outline-offset: 1px; }
 
     .row {
       display: flex;
@@ -181,10 +122,7 @@
       margin-top: 6px;
     }
 
-    .hint {
-      font-size: 12px;
-      color: var(--muted);
-    }
+    .hint { font-size: 12px; color: var(--muted); }
 
     button {
       border-radius: 999px;
@@ -199,28 +137,11 @@
       white-space: nowrap;
     }
 
-    button:hover {
-      background: #e5e5e5;
-    }
-
-    button:active {
-      transform: translateY(1px);
-    }
-
-    button.secondary {
-      background: transparent;
-      color: var(--fg);
-      border: 1px solid var(--border);
-    }
-
-    button.secondary:hover {
-      background: #111;
-    }
-
-    button:disabled {
-      opacity: 0.6;
-      cursor: wait;
-    }
+    button:hover { background: #e5e5e5; }
+    button:active { transform: translateY(1px); }
+    button.secondary { background: transparent; color: var(--fg); border: 1px solid var(--border); }
+    button.secondary:hover { background: #111; }
+    button:disabled { opacity: 0.6; cursor: wait; }
 
     .output-box {
       border-radius: 10px;
@@ -235,23 +156,50 @@
       word-break: break-word;
     }
 
-    .status {
-      font-size: 12px;
+    .status { font-size: 12px; color: var(--muted); min-height: 16px; }
+    .status.ok { color: #8dd48a; }
+    .status.error { color: #ff8080; }
+
+    .panel-disabled { opacity: 0.5; }
+
+    .model-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
       color: var(--muted);
-      min-height: 16px;
+      flex-wrap: wrap;
     }
 
-    .status.ok {
-      color: #8dd48a;
+    .model-bar select {
+      background: var(--accent-soft);
+      color: var(--fg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 11px;
+      cursor: pointer;
     }
 
-    .status.error {
-      color: #ff8080;
+    .goto-brief {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.05s;
+      margin-top: 4px;
     }
 
-    .panel-disabled {
-      opacity: 0.5;
-    }
+    .goto-brief:hover { background: #e5e5e5; }
+    .goto-brief:active { transform: translateY(1px); }
 
     footer {
       border-top: 1px solid var(--border);
@@ -269,11 +217,11 @@
   <header>
     <div class="brand">
       <div class="brand-title">Margo</div>
-      <div class="brand-sub">Student current‑affairs brief · P0 + P1 setup</div>
+      <div class="brand-sub">Student current-affairs brief · P0 + P1 setup</div>
     </div>
     <div class="pill">
       <span class="pill-dot"></span>
-      Local prototype · phi3 via Ollama
+      Online · powered by open models
     </div>
   </header>
 
@@ -284,9 +232,18 @@
           <div class="panel-eyebrow">Step 1</div>
           <div class="panel-title">Define your P0 charter</div>
         </div>
+        <div class="model-bar">
+          <span>Model:</span>
+          <select id="modelSelect">
+            <option value="openrouter|nvidia/nemotron-3-ultra-550b-a55b:free">Nemotron Ultra (OpenRouter)</option>
+            <option value="openrouter|meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B (OpenRouter)</option>
+            <option value="groq|llama-3.3-70b-versatile">Llama 3.3 (Groq)</option>
+            <option value="gemini|gemini-2.0-flash">Gemini 2.0 Flash</option>
+          </select>
+        </div>
       </div>
       <div class="panel-note">
-        P0 answers: <strong>“What should this feed exist for?”</strong> It should be stable, exam- and growth-focused, and under 50 words.
+        P0 answers: <strong>"What should this feed exist for?"</strong> It is stable, exam- and growth-focused, and under 50 words. It never changes unless you reset it.
       </div>
     </section>
 
@@ -335,7 +292,7 @@
         <div class="row">
           <div class="hint">Check that it really matches what you care about. Edit and regenerate if needed.</div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="secondary" id="regenerateP0Button">Edit & regenerate</button>
+            <button class="secondary" id="regenerateP0Button">Edit &amp; regenerate</button>
             <button id="confirmP0Button">Confirm P0</button>
           </div>
         </div>
@@ -345,7 +302,7 @@
     </div>
 
     <!-- STEP 2: P1 refinement -->
-    <section class="panel" id="p1Panel">
+    <section class="panel panel-disabled" id="p1Panel">
       <div class="panel-header">
         <div>
           <div class="panel-eyebrow">Step 2</div>
@@ -353,11 +310,11 @@
         </div>
       </div>
       <div class="panel-note">
-        P1 answers: <strong>“How should Margo currently interpret this mission in practice?”</strong> It captures more detailed preferences (categories, trust standards, reading level, geography) up to 500 words.
+        P1 answers: <strong>"How should Margo currently interpret this mission in practice?"</strong> It captures detailed preferences — categories, trust standards, reading level, geography — up to 500 words.
       </div>
 
       <label for="p1Input">Session notes and preferences</label>
-      <textarea id="p1Input" placeholder="Write stable preferences and constraints, not one-off requests. For example:
+      <textarea id="p1Input" disabled placeholder="Write stable preferences and constraints, not one-off requests. For example:
 - Prioritise India policy and exams (UPSC, SSC, banking).
 - Prefer trusted national dailies and official sources first.
 - Avoid celebrity gossip and pure opinion pieces.
@@ -365,7 +322,7 @@
 
       <div class="row">
         <div class="hint">These notes plus P0 will be compressed into P1. P1 is editable over time.</div>
-        <button id="generateP1Button">Generate P1 from this session</button>
+        <button id="generateP1Button" disabled>Generate P1 from this session</button>
       </div>
 
       <label for="p1Output">Current P1 refinement layer</label>
@@ -373,118 +330,276 @@
 
       <div class="row">
         <div class="hint">Save P1 when it feels like a good working description of your brief.</div>
-        <button class="secondary" id="saveP1Button">Save P1 locally</button>
+        <button class="secondary" id="saveP1Button" disabled>Save P1 locally</button>
       </div>
 
       <div id="p1Status" class="status"></div>
     </section>
+
+    <!-- STEP 3: Go to brief -->
+    <section class="panel" id="gotoBriefPanel" style="display:none;">
+      <div class="panel-header">
+        <div>
+          <div class="panel-eyebrow">Step 3</div>
+          <div class="panel-title">Your brief is ready</div>
+        </div>
+      </div>
+      <div class="panel-note">
+        P0 and P1 are saved in this browser. Margo will use them to curate your daily top-10 brief.
+      </div>
+      <div>
+        <a href="margo_brief.html" class="goto-brief">Open today's brief →</a>
+      </div>
+    </section>
   </main>
 
   <footer>
-    <div>Margo prototype · P0 and P1 stored in this browser only.</div>
-    <div>Next: Top‑10 story brief using P0 + P1.</div>
+    <div>Margo · P0 and P1 stored in this browser only.</div>
+    <div>wisrut.com</div>
   </footer>
 
-<script>
-  const MARGO_BACKEND_URL = "https://margo-api.amitjoshirdr.workers.dev";
+  <script>
+    const WORKER_URL = 'https://margo-api.amitjoshirdr.workers.dev';
 
-  function setStatus(id, message, isError = false) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.textContent = message;
-    el.style.color = isError ? "red" : "inherit";
-  }
+    const rawIntent       = document.getElementById('rawIntent');
+    const createP0Button  = document.getElementById('createP0Button');
+    const p0InputStatus   = document.getElementById('p0InputStatus');
+    const p0Output        = document.getElementById('p0Output');
+    const regenerateP0Button = document.getElementById('regenerateP0Button');
+    const confirmP0Button = document.getElementById('confirmP0Button');
+    const p0Status        = document.getElementById('p0Status');
+    const p1Panel         = document.getElementById('p1Panel');
+    const p1Input         = document.getElementById('p1Input');
+    const generateP1Button = document.getElementById('generateP1Button');
+    const p1Output        = document.getElementById('p1Output');
+    const saveP1Button    = document.getElementById('saveP1Button');
+    const p1Status        = document.getElementById('p1Status');
+    const gotoBriefPanel  = document.getElementById('gotoBriefPanel');
+    const modelSelect     = document.getElementById('modelSelect');
 
-  async function createP0() {
-    // Adjust these selectors to match your actual form fields
-    const topicInput = document.getElementById("p0-topic");
-    const audienceInput = document.getElementById("p0-audience");
+    const LOCAL_P0_KEY = 'margo_p0_charter';
+    const LOCAL_P1_KEY = 'margo_p1_refinement';
 
-    const topic = topicInput ? topicInput.value.trim() : "";
-    const audience = audienceInput ? audienceInput.value.trim() : "";
-
-    if (!topic) {
-      setStatus("p0-status", "Please enter a topic for your brief.", true);
-      return;
+    function getProviderAndModel() {
+      const val = modelSelect.value;
+      const [provider, model] = val.split('|');
+      return { provider, model };
     }
 
-    const prompt = `
-You are Margo, a student-focused, trust-first news briefing assistant.
-Create a P0 charter for the following news brief.
+    function setStatus(el, text, mode) {
+      el.textContent = text || '';
+      el.classList.remove('ok', 'error');
+      if (mode === 'ok') el.classList.add('ok');
+      if (mode === 'error') el.classList.add('error');
+    }
 
-Topic: ${topic}
-Audience: ${audience || "students"}
-`;
+    function isPlaceholder(text) {
+      if (!text) return true;
+      const placeholders = [
+        'Your P0 charter will appear here.',
+        'Your P1 refinement will appear here after generation.',
+        'Generating...'
+      ];
+      return placeholders.includes(text) || text.startsWith('Error') || text.startsWith('Could not reach');
+    }
 
-    setStatus("p0-status", "Creating charter (P0)...", false);
+    function toggleP1Enabled(enabled) {
+      if (enabled) {
+        p1Panel.classList.remove('panel-disabled');
+        p1Input.disabled = false;
+        generateP1Button.disabled = false;
+        saveP1Button.disabled = false;
+        setStatus(p1Status, 'P0 confirmed. You can now refine your brief into P1.', 'ok');
+        gotoBriefPanel.style.display = '';
+      } else {
+        p1Panel.classList.add('panel-disabled');
+        p1Input.disabled = true;
+        generateP1Button.disabled = true;
+        saveP1Button.disabled = true;
+        setStatus(p1Status, 'Confirm a P0 charter first to enable P1.', '');
+        gotoBriefPanel.style.display = 'none';
+      }
+    }
 
-    try {
-      const response = await fetch(`${MARGO_BACKEND_URL}/api/generate`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "test-model", // we'll switch to a real model later
-          prompt: prompt,
-          stream: false,
-        }),
+    async function callWorker(messages) {
+      const { provider, model } = getProviderAndModel();
+      const res = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ provider, model, messages })
       });
-
-      if (!response.ok) {
-        const text = await response.text();
-        console.error("P0 error response:", response.status, text);
-        setStatus(
-          "p0-status",
-          `Backend error (${response.status}). See console for details.`,
-          true
-        );
-        return;
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(err.error || 'Worker error ' + res.status);
       }
-
-      const data = await response.json();
-      console.log("P0 data:", data);
-
-      if (!data || typeof data.response !== "string") {
-        setStatus(
-          "p0-status",
-          "Unexpected backend response format (missing response field).",
-          true
-        );
-        return;
-      }
-
-      const charter = data.response;
-
-      // Store in localStorage
-      localStorage.setItem("margo_p0_charter", charter);
-
-      // Show in UI
-      const outputEl = document.getElementById("p0-output");
-      if (outputEl) {
-        outputEl.textContent = charter;
-      }
-
-      setStatus("p0-status", "P0 charter created and saved.", false);
-    } catch (err) {
-      console.error("P0 fetch failed:", err);
-      setStatus(
-        "p0-status",
-        "Could not reach backend: " + (err.message || "Failed to fetch."),
-        true
-      );
+      const data = await res.json();
+      return data.text || '';
     }
-  }
 
-  // Placeholder for your existing generateP1() (we'll replace this later)
-  async function generateP1() {
-    setStatus(
-      "p1-status",
-      "P1 generation not wired yet. We'll hook this up after P0 is confirmed.",
-      true
-    );
-  }
-</script>
-  
+    function loadSavedLayers() {
+      let hasP0 = false;
+      try {
+        const storedP0 = localStorage.getItem(LOCAL_P0_KEY);
+        if (storedP0 && storedP0.trim()) {
+          p0Output.textContent = storedP0;
+          setStatus(p0Status, 'Loaded saved P0 from this browser.', 'ok');
+          hasP0 = true;
+        }
+      } catch (e) {}
+
+      try {
+        const storedP1 = localStorage.getItem(LOCAL_P1_KEY);
+        if (storedP1 && storedP1.trim()) {
+          p1Output.textContent = storedP1;
+        }
+      } catch (e) {}
+
+      toggleP1Enabled(hasP0);
+    }
+
+    async function createP0() {
+      const raw = rawIntent.value.trim();
+      if (!raw) {
+        setStatus(p0InputStatus, 'Please describe what kind of news matters to you.', 'error');
+        return;
+      }
+
+      setStatus(p0InputStatus, 'Creating P0 charter…', '');
+      setStatus(p0Status, '', '');
+      p0Output.textContent = 'Generating…';
+      createP0Button.disabled = true;
+
+      const messages = [
+        {
+          role: 'system',
+          content: [
+            "Convert the user's raw intent into a stable Margo charter called P0.",
+            "Rules:",
+            "- Maximum 50 words.",
+            "- Preserve the student's intent, topic priorities, and exclusions.",
+            "- Remove vagueness, hype, repetition, and emotional exaggeration.",
+            "- Make it usable for recurring news curation.",
+            "- Do not add assumptions not present in the user input.",
+            "- Output only the final P0 text as one plain paragraph. No JSON. No headings. No quotes."
+          ].join('\n')
+        },
+        { role: 'user', content: raw }
+      ];
+
+      try {
+        let text = await callWorker(messages);
+        text = text.trim();
+        if (!text) {
+          p0Output.textContent = 'No P0 text was returned by the model.';
+          setStatus(p0InputStatus, 'Model returned an empty response.', 'error');
+          return;
+        }
+        p0Output.textContent = text;
+        setStatus(p0InputStatus, 'Draft P0 created. Review it on the right.', 'ok');
+      } catch (err) {
+        p0Output.textContent = 'Could not reach Margo server.';
+        setStatus(p0InputStatus, 'Error: ' + err.message, 'error');
+      } finally {
+        createP0Button.disabled = false;
+      }
+    }
+
+    function regenerateP0() {
+      const current = p0Output.textContent.trim();
+      if (isPlaceholder(current)) {
+        setStatus(p0Status, 'Nothing to edit yet. Create a P0 first.', 'error');
+        return;
+      }
+      rawIntent.value = current;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setStatus(p0Status, 'Current P0 copied back into the input. Edit and regenerate.', 'ok');
+    }
+
+    function confirmP0() {
+      const current = p0Output.textContent.trim();
+      if (isPlaceholder(current)) {
+        setStatus(p0Status, 'You need a valid P0 draft before confirming.', 'error');
+        return;
+      }
+      try { localStorage.setItem(LOCAL_P0_KEY, current); } catch (e) {}
+      setStatus(p0Status, 'P0 confirmed and saved in this browser.', 'ok');
+      toggleP1Enabled(true);
+    }
+
+    async function generateP1() {
+      const p0 = p0Output.textContent.trim();
+      if (isPlaceholder(p0)) {
+        setStatus(p1Status, 'Confirm a valid P0 before generating P1.', 'error');
+        return;
+      }
+
+      const notes = p1Input.value.trim();
+      const previousP1 = isPlaceholder(p1Output.textContent.trim()) ? '' : p1Output.textContent.trim();
+
+      if (!notes && !previousP1) {
+        setStatus(p1Status, 'Add some stable preferences or constraints first.', 'error');
+        return;
+      }
+
+      setStatus(p1Status, 'Generating P1 refinement…', '');
+      p1Output.textContent = 'Generating…';
+      generateP1Button.disabled = true;
+
+      const messages = [
+        {
+          role: 'system',
+          content: [
+            "Update the Margo refinement layer called P1.",
+            "Rules:",
+            "- Maximum 500 words.",
+            "- Do not rewrite P0.",
+            "- Extract only stable preferences: priorities, exclusions, categories, trust standards, format preferences, reading level, geographic scope, and depth preferences.",
+            "- Remove temporary chatter and one-off requests unless they reveal a durable preference.",
+            "- Keep the language operational and specific.",
+            "- Return only the revised P1 as plain text. No JSON. No headings."
+          ].join('\n')
+        },
+        {
+          role: 'user',
+          content: `P0:\n${p0}\n\nPrevious P1 (may be empty):\n${previousP1 || '[none]'}\n\nSession notes:\n${notes}`
+        }
+      ];
+
+      try {
+        let text = await callWorker(messages);
+        text = text.trim();
+        if (!text) {
+          p1Output.textContent = 'No P1 text was returned by the model.';
+          setStatus(p1Status, 'Model returned an empty response.', 'error');
+          return;
+        }
+        p1Output.textContent = text;
+        setStatus(p1Status, 'Draft P1 created. Review and save if it looks right.', 'ok');
+      } catch (err) {
+        p1Output.textContent = 'Could not reach Margo server.';
+        setStatus(p1Status, 'Error: ' + err.message, 'error');
+      } finally {
+        generateP1Button.disabled = false;
+      }
+    }
+
+    function saveP1() {
+      const current = p1Output.textContent.trim();
+      if (isPlaceholder(current)) {
+        setStatus(p1Status, 'You need a valid P1 draft before saving.', 'error');
+        return;
+      }
+      try { localStorage.setItem(LOCAL_P1_KEY, current); } catch (e) {}
+      setStatus(p1Status, 'P1 saved in this browser. Margo will use it for your next brief.', 'ok');
+    }
+
+    createP0Button.addEventListener('click', createP0);
+    regenerateP0Button.addEventListener('click', regenerateP0);
+    confirmP0Button.addEventListener('click', confirmP0);
+    generateP1Button.addEventListener('click', generateP1);
+    saveP1Button.addEventListener('click', saveP1);
+
+    loadSavedLayers();
+  </script>
 </body>
 </html>
