@@ -598,147 +598,107 @@
       }
     }
 
-    async function generateBrief() {
-      const { p0, p1 } = loadLayers();
+async function generateBrief() {
+  const { p0, p1 } = loadLayers();
 
-      if (!p0) {
-        setStatus('No P0 charter found. Please define P0 in the Margo setup page first.', 'error');
-        return;
+  if (!p0) {
+    setStatus('No P0 charter found. Please define P0 in the Margo setup page first.', 'error');
+    return;
+  }
+
+  setStatus('Generating explanations for each story...', '');
+  generateBriefButton.disabled = true;
+
+  const cards = Array.from(document.querySelectorAll('.story-card'));
+
+  for (const article of articles) {
+    const card = cards.find((c) => c.dataset.articleId === article.id);
+    if (!card) continue;
+
+    const summaryEl = card.querySelector('.story-summary');
+    const whyEl = card.querySelector('.story-why');
+    const evidenceEl = card.querySelector('.evidence-note');
+
+    summaryEl.textContent = 'Summarising...';
+    whyEl.textContent = 'Thinking about why this matters for students...';
+    evidenceEl.textContent = 'Assessing trust and evidence...';
+
+    const systemPrompt = [
+      "You are the briefing engine for Margo, a student-focused current-affairs brief.",
+      "Use the user’s P0 charter and optional P1 refinement to explain why this article is worth their attention.",
+      "",
+      "You must NOT invent sources. Use only the article information provided.",
+      "",
+      "For each article, you must produce:",
+      "1) A 2-sentence summary in neutral language.",
+      "2) A 1-2 sentence explanation of why this matters for students.",
+      "3) A trust label: High, Medium, or Low.",
+      "4) A short evidence note using only: corroborated, developing, analysis-heavy, or opinion-heavy, plus a brief rationale.",
+      "",
+      "Be epistemically honest: do not overstate certainty and flag when evidence is still developing."
+    ].join('\n');
+
+    const userContent = [
+      "P0 charter:", p0,
+      "", "P1 refinement:", p1 || "[none]",
+      "", "Article source name:", article.source,
+      "", "Article topic:", article.topic,
+      "", "Article headline:", article.headline,
+      "", "Article context note:", article.rawNote || "[none]",
+      "", "Format your answer exactly as:",
+      "SUMMARY: <two sentences>",
+      "WHY_IT_MATTERS: <one or two sentences>",
+      "TRUST_LABEL: <High/Medium/Low>",
+      "EVIDENCE_NOTE: <short note>"
+    ].join('\n');
+
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userContent }
+    ];
+
+    try {
+      const res = await fetch(MARGO_BACKEND_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          provider: 'openrouter',
+          model: 'meta-llama/llama-3.3-70b-instruct:free',
+          messages
+        })
+      });
+      
+      if (!res.ok) {
+        summaryEl.textContent = 'Error while generating summary.';
+        continue;
       }
 
-      setStatus('Generating explanations for each story with phi3...', '');
-      generateBriefButton.disabled = true;
+      const data = await res.json();
+      const text = (data.text || '').trim();
 
-      const cards = Array.from(document.querySelectorAll('.story-card'));
-
-      for (const article of articles) {
-        const card = cards.find((c) => c.dataset.articleId === article.id);
-        if (!card) continue;
-
-        const summaryEl = card.querySelector('.story-summary');
-        const whyEl = card.querySelector('.story-why');
-        const evidenceEl = card.querySelector('.evidence-note');
-
-        summaryEl.textContent = 'Summarising...';
-        whyEl.textContent = 'Thinking about why this matters for students...';
-        evidenceEl.textContent = 'Assessing trust and evidence...';
-
-        const systemPrompt = [
-          "You are the briefing engine for Margo, a student-focused current-affairs brief.",
-          "Use the user’s P0 charter and optional P1 refinement to explain why this article is worth their attention.",
-          "",
-          "You must NOT invent sources. Use only the article information provided.",
-          "",
-          "For each article, you must produce:",
-          "1) A 2-sentence summary in neutral language.",
-          "2) A 1-2 sentence explanation of why this matters for students.",
-          "3) A trust label: High, Medium, or Low.",
-          "4) A short evidence note using only: corroborated, developing, analysis-heavy, or opinion-heavy, plus a brief rationale.",
-          "",
-          "Be epistemically honest: do not overstate certainty and flag when evidence is still developing."
-        ].join('\n');
-
-        const userContent = [
-		  "P0 charter:",
-		  p0,
-		  "",
-		  "P1 refinement (may be empty):",
-		  p1 || "[none]",
-		  "",
-		  "Article source name:",
-		  article.source,
-		  "",
-		  "Article topic:",
-		  article.topic,
-		  "",
-		  "Article headline:",
-		  article.headline,
-		  "",
-		  "Article context note:",
-		  article.rawNote || "[none]",
-		  "",
-		  "Format your answer exactly as:",
-		  "SUMMARY: <two sentences>",
-		  "WHY_IT_MATTERS: <one or two sentences>",
-		  "TRUST_LABEL: <High/Medium/Low>",
-		  "EVIDENCE_NOTE: <short note>",
-		].join('\n');
-
-		const messages = [
-		  { role: 'system', content: systemPrompt },
-		  { role: 'user', content: userContent }
-		];
-	const messages = [
-		  {
-			role: 'system',
-			content: systemPrompt
-		  },
-		  {
-			role: 'user',
-			content: promptPieces.slice(1).join('\n')  // everything after the system prompt
-		  }
-		];
-
-		try {
-		  const res = await fetch(MARGO_BACKEND_URL, {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-			  provider: 'openrouter',
-			  model: 'meta-llama/llama-3.3-70b-instruct:free',
-			  messages
-			})
-		  });
-		  if (!res.ok) {
-			summaryEl.textContent = 'Error while generating summary.';
-			whyEl.textContent = 'Error while generating why-it-matters note.';
-			evidenceEl.textContent = 'Error while generating evidence note.';
-			continue;
-		  }
-
-  const data = await res.json();
-  let text = (data.text || '').trim();
-
-          if (!text) {
-            summaryEl.textContent = 'Model returned an empty response.';
-            whyEl.textContent = '';
-            evidenceEl.textContent = '';
-            continue;
-          }
-
-          // Simple parsing based on the labels we asked for.
-          let summary = '';
-          let why = '';
-          let trustLabel = '';
-          let evidenceNote = '';
-
-          const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
-          for (const line of lines) {
-            if (line.toUpperCase().startsWith('SUMMARY:')) {
-              summary = line.slice(8).trim();
-            } else if (line.toUpperCase().startsWith('WHY_IT_MATTERS:')) {
-              why = line.slice(15).trim();
-            } else if (line.toUpperCase().startsWith('TRUST_LABEL:')) {
-              trustLabel = line.slice(12).trim();
-            } else if (line.toUpperCase().startsWith('EVIDENCE_NOTE:')) {
-              evidenceNote = line.slice(14).trim();
-            }
-          }
-
-          summaryEl.textContent = summary || 'Could not parse summary from model output.';
-          whyEl.textContent = why || 'Could not parse why-it-matters from model output.';
-          evidenceEl.textContent = evidenceNote || 'Could not parse evidence note from model output.';
-          applyTrustLabel(card, trustLabel);
-        } catch (err) {
-          summaryEl.textContent = 'Could not reach Ollama.';
-          whyEl.textContent = '';
-          evidenceEl.textContent = 'Could not reach Ollama: ' + err.message;
-        }
+      // Simple parsing
+      let summary = '', why = '', trustLabel = '', evidenceNote = '';
+      const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
+      
+      for (const line of lines) {
+        if (line.toUpperCase().startsWith('SUMMARY:')) summary = line.slice(8).trim();
+        else if (line.toUpperCase().startsWith('WHY_IT_MATTERS:')) why = line.slice(15).trim();
+        else if (line.toUpperCase().startsWith('TRUST_LABEL:')) trustLabel = line.slice(12).trim();
+        else if (line.toUpperCase().startsWith('EVIDENCE_NOTE:')) evidenceNote = line.slice(14).trim();
       }
 
-      setStatus('Generated explanations for all prototype stories.', 'ok');
-      generateBriefButton.disabled = false;
+      summaryEl.textContent = summary || 'Could not parse summary.';
+      whyEl.textContent = why || 'Could not parse why-it-matters.';
+      evidenceEl.textContent = evidenceNote || 'Could not parse evidence note.';
+      applyTrustLabel(card, trustLabel);
+    } catch (err) {
+      summaryEl.textContent = 'Could not reach server: ' + err.message;
     }
+  }
+
+  setStatus('Generated explanations.', 'ok');
+  generateBriefButton.disabled = false;
+}
 
     function clearBrief() {
       const cards = Array.from(document.querySelectorAll('.story-card'));
