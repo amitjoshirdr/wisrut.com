@@ -379,7 +379,7 @@
 		<span class="pill-dot"></span>
 		P0 + P1 active
 	  </div>
-	  <a href="margo_setup.html" style="font-size:12px; color:var(--muted); text-decoration:none; border-bottom:1px solid var(--border);">Edit brief settings</a>
+	  <a href="margo_setup.html?edit=1" style="font-size:12px; color:var(--muted); text-decoration:none; border-bottom:1px solid var(--border);">Edit brief settings</a>
 	</div>
   </header>
 
@@ -724,6 +724,12 @@ async function generateBrief() {
     // Initial load
     loadLayers();
     renderStories();
+
+    // Auto-generate if P0 is already set (return visit)
+    const _p0Check = (() => { try { return localStorage.getItem(LOCAL_P0_KEY); } catch(e) { return null; } })();
+    if (_p0Check && _p0Check.trim()) {
+      generateBrief();
+    }
   </script>
 </body>
 </html>

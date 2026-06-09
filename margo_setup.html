@@ -441,8 +441,15 @@
       try {
         const storedP0 = localStorage.getItem(LOCAL_P0_KEY);
         if (storedP0 && storedP0.trim()) {
+          // Return visit: P0 already set — skip setup and go straight to brief
+          // Unless user arrived with ?edit=1 to explicitly edit preferences
+          const params = new URLSearchParams(window.location.search);
+          if (!params.get('edit')) {
+            window.location.replace('margo_brief.html');
+            return;
+          }
           p0Output.textContent = storedP0;
-          setStatus(p0Status, 'Loaded saved P0 from this browser.', 'ok');
+          setStatus(p0Status, 'Loaded saved P0. Edit and confirm to update.', 'ok');
           hasP0 = true;
         }
       } catch (e) {}
@@ -522,7 +529,7 @@
         return;
       }
       try { localStorage.setItem(LOCAL_P0_KEY, current); } catch (e) {}
-      setStatus(p0Status, 'P0 confirmed and saved in this browser.', 'ok');
+      setStatus(p0Status, 'P0 confirmed and saved. You can refine with P1 below, or go straight to your brief.', 'ok');
       toggleP1Enabled(true);
     }
 
@@ -590,7 +597,9 @@
         return;
       }
       try { localStorage.setItem(LOCAL_P1_KEY, current); } catch (e) {}
-      setStatus(p1Status, 'P1 saved in this browser. Margo will use it for your next brief.', 'ok');
+      setStatus(p1Status, 'P1 saved. Redirecting to your brief…', 'ok');
+      saveP1Button.disabled = true;
+      setTimeout(() => { window.location.href = 'margo_brief.html'; }, 900);
     }
 
     createP0Button.addEventListener('click', createP0);
