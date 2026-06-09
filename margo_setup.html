@@ -385,340 +385,106 @@
     <div>Next: Top‑10 story brief using P0 + P1.</div>
   </footer>
 
-  <script>
-    const rawIntent = document.getElementById('rawIntent');
-    const createP0Button = document.getElementById('createP0Button');
-    const p0InputStatus = document.getElementById('p0InputStatus');
+<script>
+  const MARGO_BACKEND_URL = "https://margo-api.amitjoshirdr.workers.dev";
 
-    const p0Output = document.getElementById('p0Output');
-    const regenerateP0Button = document.getElementById('regenerateP0Button');
-    const confirmP0Button = document.getElementById('confirmP0Button');
-    const p0Status = document.getElementById('p0Status');
+  function setStatus(id, message, isError = false) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = message;
+    el.style.color = isError ? "red" : "inherit";
+  }
 
-    const p1Panel = document.getElementById('p1Panel');
-    const p1Input = document.getElementById('p1Input');
-    const generateP1Button = document.getElementById('generateP1Button');
-    const p1Output = document.getElementById('p1Output');
-    const saveP1Button = document.getElementById('saveP1Button');
-    const p1Status = document.getElementById('p1Status');
+  async function createP0() {
+    // Adjust these selectors to match your actual form fields
+    const topicInput = document.getElementById("p0-topic");
+    const audienceInput = document.getElementById("p0-audience");
 
-    const LOCAL_P0_KEY = 'margo_p0_charter';
-    const LOCAL_P1_KEY = 'margo_p1_refinement';
+    const topic = topicInput ? topicInput.value.trim() : "";
+    const audience = audienceInput ? audienceInput.value.trim() : "";
 
-    // Margo backend: Cloudflare Worker proxy (OpenRouter / Gemini / Groq)
-    const MARGO_BACKEND_URL = "https://margo-api.amitjoshirdr.workers.dev";
-
-    function setStatus(el, text, mode) {
-      el.textContent = text || '';
-      el.classList.remove('ok', 'error');
-      if (mode === 'ok') el.classList.add('ok');
-      if (mode === 'error') el.classList.add('error');
+    if (!topic) {
+      setStatus("p0-status", "Please enter a topic for your brief.", true);
+      return;
     }
 
-    function setP0Output(text) {
-      p0Output.textContent = text;
-    }
+    const prompt = `
+You are Margo, a student-focused, trust-first news briefing assistant.
+Create a P0 charter for the following news brief.
 
-    function setP1Output(text) {
-      p1Output.textContent = text;
-    }
+Topic: ${topic}
+Audience: ${audience || "students"}
+`;
 
-    function toggleP1Enabled(enabled) {
-      if (enabled) {
-        p1Panel.classList.remove('panel-disabled');
-        p1Input.disabled = false;
-        generateP1Button.disabled = false;
-        saveP1Button.disabled = false;
-        setStatus(p1Status, 'P0 is confirmed. You can now refine your brief into P1.', 'ok');
-      } else {
-        p1Panel.classList.add('panel-disabled');
-        p1Input.disabled = true;
-        generateP1Button.disabled = true;
-        saveP1Button.disabled = true;
-        setStatus(p1Status, 'Confirm a P0 charter first to enable P1.', '');
-      }
-    }
+    setStatus("p0-status", "Creating charter (P0)...", false);
 
-    function loadSavedLayers() {
-      let hasP0 = false;
-      try {
-        const storedP0 = window.localStorage.getItem(LOCAL_P0_KEY);
-        if (storedP0 && storedP0.trim()) {
-          setP0Output(storedP0);
-          setStatus(p0Status, 'Loaded saved P0 from this browser.', 'ok');
-          hasP0 = true;
-        }
-      } catch (e) {
-        // ignore
-      }
+    try {
+      const response = await fetch(`${MARGO_BACKEND_URL}/api/generate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "test-model", // we'll switch to a real model later
+          prompt: prompt,
+          stream: false,
+        }),
+      });
 
-      try {
-        const storedP1 = window.localStorage.getItem(LOCAL_P1_KEY);
-        if (storedP1 && storedP1.trim()) {
-          setP1Output(storedP1);
-          if (hasP0) {
-            setStatus(p1Status, 'Loaded saved P1 from this browser.', 'ok');
-          }
-        }
-      } catch (e) {
-        // ignore
-      }
-
-      toggleP1Enabled(hasP0);
-    }
-
-    async function createP0() {
-      const raw = rawIntent.value.trim();
-
-      if (!raw) {
-        setStatus(p0InputStatus, 'Please describe what kind of news matters to you.', 'error');
+      if (!response.ok) {
+        const text = await response.text();
+        console.error("P0 error response:", response.status, text);
+        setStatus(
+          "p0-status",
+          `Backend error (${response.status}). See console for details.`,
+          true
+        );
         return;
       }
 
-      setStatus(p0InputStatus, 'Creating P0 charter…', '');
-      setStatus(p0Status, '', '');
-      setP0Output('Generating...');
-      createP0Button.disabled = true;
+      const data = await response.json();
+      console.log("P0 data:", data);
 
-      const systemPrompt = [
-        "Convert the user’s raw intent into a stable Margo charter called P0.",
-        "",
-        "Output format:",
-        "- Output plain text only.",
-        "- Do NOT use JSON.",
-        "- Do NOT use braces, keys, or quotes.",
-        "- Do NOT wrap the text in any structure.",
-        "",
-        "Rules:",
-        "- Maximum 50 words.",
-        "- Preserve the student’s intent, topic priorities, and exclusions.",
-        "- Remove vagueness, hype, repetition, and emotional exaggeration.",
-        "- Make it usable for recurring news curation.",
-        "- Do not add assumptions not present in the user input.",
-        "- Output only the final P0 text as one paragraph."
-      ].join('\n');
-
-      const payload = {
-        // The Worker can map this model name to whatever real model you prefer.
-        model: 'phi3',
-        prompt: systemPrompt + '\n\nUSER:\n' + raw + '\n',
-        stream: false
-      };
-
-      try {
-        const res = await fetch(`${MARGO_BACKEND_URL}/api/generate`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) {
-          setP0Output('Error while generating P0.');
-          setStatus(p0InputStatus, 'Error from backend: HTTP ' + res.status, 'error');
-          return;
-        }
-
-        const data = await res.json();
-        let text = (data.response || '').trim();
-
-        // Defensive: strip accidental JSON-like wrappers
-        if (text.startsWith('{') && text.endsWith('}')) {
-          const colonIndex = text.indexOf(':');
-          if (colonIndex !== -1) {
-            text = text.slice(colonIndex + 1).replace(/^[\s"']+|[\s"'}]+$/g, '').trim();
-          }
-        }
-
-        if (!text) {
-          setP0Output('No P0 text was returned by the model.');
-          setStatus(p0InputStatus, 'Model returned an empty response.', 'error');
-          return;
-        }
-
-        setP0Output(text);
-        setStatus(p0InputStatus, 'Draft P0 created. Review it on the right.', 'ok');
-      } catch (err) {
-        console.error('P0 backend error:', err);
-        setP0Output('Could not reach Margo backend.');
-        setStatus(p0InputStatus, 'Could not reach backend: ' + err.message, 'error');
-      } finally {
-        createP0Button.disabled = false;
-      }
-    }
-
-    function regenerateP0() {
-      const current = p0Output.textContent.trim();
-      if (
-        !current ||
-        current === 'Your P0 charter will appear here.' ||
-        current === 'Generating...' ||
-        current.startsWith('Error')
-      ) {
-        setStatus(p0Status, 'Nothing to edit yet. Create a P0 first.', 'error');
+      if (!data || typeof data.response !== "string") {
+        setStatus(
+          "p0-status",
+          "Unexpected backend response format (missing response field).",
+          true
+        );
         return;
       }
 
-      rawIntent.value = current;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const charter = data.response;
+
+      // Store in localStorage
+      localStorage.setItem("margo_p0_charter", charter);
+
+      // Show in UI
+      const outputEl = document.getElementById("p0-output");
+      if (outputEl) {
+        outputEl.textContent = charter;
+      }
+
+      setStatus("p0-status", "P0 charter created and saved.", false);
+    } catch (err) {
+      console.error("P0 fetch failed:", err);
       setStatus(
-        p0Status,
-        'Current P0 copied back into the input. Edit it and click “Create charter (P0)” again.',
-        'ok'
+        "p0-status",
+        "Could not reach backend: " + (err.message || "Failed to fetch."),
+        true
       );
     }
+  }
 
-    function confirmP0() {
-      const current = p0Output.textContent.trim();
-      if (
-        !current ||
-        current === 'Your P0 charter will appear here.' ||
-        current === 'Generating...' ||
-        current.startsWith('Error') ||
-        current.startsWith('Could not reach Margo backend')
-      ) {
-        setStatus(p0Status, 'You need a valid P0 draft before confirming.', 'error');
-        return;
-      }
-
-      try {
-        window.localStorage.setItem(LOCAL_P0_KEY, current);
-      } catch (e) {
-        // ignore storage errors in prototype
-      }
-
-      setStatus(p0Status, 'P0 confirmed and saved locally in this browser.', 'ok');
-      toggleP1Enabled(true);
-    }
-
-    async function generateP1() {
-      const p0 = p0Output.textContent.trim();
-      if (
-        !p0 ||
-        p0 === 'Your P0 charter will appear here.' ||
-        p0 === 'Generating...' ||
-        p0.startsWith('Error') ||
-        p0.startsWith('Could not reach Margo backend')
-      ) {
-        setStatus(p1Status, 'Confirm a valid P0 before generating P1.', 'error');
-        return;
-      }
-
-      const notes = p1Input.value.trim();
-      const previousP1 = p1Output.textContent.trim().startsWith('Your P1')
-        ? ''
-        : p1Output.textContent.trim();
-
-      if (!notes && !previousP1) {
-        setStatus(p1Status, 'Add some stable preferences or constraints first.', 'error');
-        return;
-      }
-
-      setStatus(p1Status, 'Generating P1 refinement…', '');
-      setP1Output('Generating...');
-      generateP1Button.disabled = true;
-
-      const systemPrompt = [
-        "Update the Margo refinement layer called P1.",
-        "",
-        "Rules:",
-        "- Maximum 500 words.",
-        "- Do not rewrite P0.",
-        "- Extract only stable preferences from this session: priorities, exclusions, desired categories, trust standards, format preferences, reading level, geographic scope, and depth preferences.",
-        "- Remove temporary chatter, greetings, and one-off requests unless they reveal a durable preference.",
-        "- Keep the language operational and specific.",
-        "- Return only the revised P1 as plain text, no JSON, no headings."
-      ].join('\n');
-
-      const promptParts = [
-        systemPrompt,
-        "",
-        "P0:",
-        p0,
-        "",
-        "Previous P1 (may be empty):",
-        previousP1 || "[none]",
-        "",
-        "Session notes from the student:",
-        notes
-      ];
-
-      const payload = {
-        model: 'phi3',
-        prompt: promptParts.join('\n'),
-        stream: false
-      };
-
-      try {
-        const res = await fetch(`${MARGO_BACKEND_URL}/api/generate`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) {
-          setP1Output('Error while generating P1.');
-          setStatus(p1Status, 'Error from backend: HTTP ' + res.status, 'error');
-          return;
-        }
-
-        const data = await res.json();
-        let text = (data.response || '').trim();
-
-        if (text.startsWith('{') && text.endsWith('}')) {
-          const colonIndex = text.indexOf(':');
-          if (colonIndex !== -1) {
-            text = text.slice(colonIndex + 1).replace(/^[\s"']+|[\s"'}]+$/g, '').trim();
-          }
-        }
-
-        if (!text) {
-          setP1Output('No P1 text was returned by the model.');
-          setStatus(p1Status, 'Model returned an empty response.', 'error');
-          return;
-        }
-
-        setP1Output(text);
-        setStatus(p1Status, 'Draft P1 created. Review and save if it looks right.', 'ok');
-      } catch (err) {
-        console.error('P1 backend error:', err);
-        setP1Output('Could not reach Margo backend.');
-        setStatus(p1Status, 'Could not reach backend: ' + err.message, 'error');
-      } finally {
-        generateP1Button.disabled = false;
-      }
-    }
-
-    function saveP1() {
-      const current = p1Output.textContent.trim();
-      if (
-        !current ||
-        current === 'Your P1 refinement will appear here after generation.' ||
-        current === 'Generating...' ||
-        current.startsWith('Error') ||
-        current.startsWith('Could not reach Margo backend')
-      ) {
-        setStatus(p1Status, 'You need a valid P1 draft before saving.', 'error');
-        return;
-      }
-
-      try {
-        window.localStorage.setItem(LOCAL_P1_KEY, current);
-      } catch (e) {
-        // ignore
-      }
-
-      setStatus(p1Status, 'P1 saved locally. Future Margo prototypes can use this refinement.', 'ok');
-    }
-
-    createP0Button.addEventListener('click', createP0);
-    regenerateP0Button.addEventListener('click', regenerateP0);
-    confirmP0Button.addEventListener('click', confirmP0);
-
-    generateP1Button.addEventListener('click', generateP1);
-    saveP1Button.addEventListener('click', saveP1);
-
-    loadSavedLayers();
-  </script>
+  // Placeholder for your existing generateP1() (we'll replace this later)
+  async function generateP1() {
+    setStatus(
+      "p1-status",
+      "P1 generation not wired yet. We'll hook this up after P0 is confirmed.",
+      true
+    );
+  }
+</script>
   
 </body>
 </html>
