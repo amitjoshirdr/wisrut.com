@@ -127,40 +127,6 @@
     .search-results ul {
       padding-left: 1.1rem;
     }
-
-    /* Article length slider */
-    .length-slider-wrap {
-      margin: 0.75rem 0 0.5rem 0;
-    }
-
-    .length-slider-label {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.85rem;
-      color: #444;
-      margin-bottom: 0.3rem;
-    }
-
-    .length-slider-label strong {
-      font-size: 0.95rem;
-      color: #111;
-    }
-
-    .length-slider-range {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: #999;
-      margin-top: 0.15rem;
-    }
-
-    input[type="range"] {
-      width: 100%;
-      accent-color: #222;
-      cursor: pointer;
-      height: 4px;
-    }
   </style>
 </head>
 
@@ -194,26 +160,6 @@
       id="news-prompt"
       rows="3"
       placeholder="Example: I am a Class 11 student preparing for CBSE boards. Show me daily, bias-aware news about Indian economy and science."></textarea>
-
-    <!-- Article length slider -->
-    <div class="length-slider-wrap">
-      <div class="length-slider-label">
-        <span>Article length</span>
-        <strong id="length-display">500 words</strong>
-      </div>
-      <input
-        type="range"
-        id="article-length-slider"
-        min="400"
-        max="2000"
-        step="50"
-        value="500"
-      />
-      <div class="length-slider-range">
-        <span>400 words</span>
-        <span>2000 words</span>
-      </div>
-    </div>
 
     <!-- Controls for generating and resetting -->
     <div>
@@ -292,17 +238,6 @@
   // =============================
 
   const MARGOBACKENDURL = "https://margo-api.amitjoshirdr.workers.dev";
-
-  // Live-update the word count label when the slider moves
-  document.addEventListener("DOMContentLoaded", () => {
-    const slider = document.getElementById("article-length-slider");
-    const display = document.getElementById("length-display");
-    if (slider && display) {
-      slider.addEventListener("input", () => {
-        display.textContent = `${slider.value} words`;
-      });
-    }
-  });
 
   const LSKEYS = {
     newsP0: "margop0original",        // first prompt string, locked after first submit
@@ -579,10 +514,6 @@ function parseArticles(backendResponse) {
     console.log("NEWS P0:", P0);
     console.log("NEWS P1 history:", p1History);
 
-    // Read the user-selected article word count from the slider
-    const sliderEl = document.getElementById("article-length-slider");
-    const targetWords = sliderEl ? parseInt(sliderEl.value, 10) : 500;
-
     // Shared article format instructions used in both first-submit and refinement prompts
     const ARTICLE_FORMAT = `Write exactly 3 complete, high-quality news articles. Separate each article with a line containing only ---
 
@@ -592,7 +523,6 @@ QUALITY RULES — every article must follow all of these without exception:
 3. Be honest about what you know. If exact figures are unavailable, say so clearly rather than inventing plausible-sounding ones. If a quote cannot be verified, do not include it.
 4. Perspectives must be real and distinct. Include at least three viewpoints: e.g. the government/institution position, an expert or academic view, and the view of the affected group (students, citizens, workers). Do not blend them into one vague paragraph.
 5. The student angle must be specific and actionable — not generic encouragement. Tell the student exactly what this development means for their exams, career, or daily life.
-6. WORD COUNT: The article body section (under "Article:") must be exactly ${targetWords} words. Count carefully before finalising. Do not pad with filler — expand by adding more evidence, more perspectives, or deeper analysis.
 
 Each article must follow this exact structure:
 
@@ -608,22 +538,18 @@ Each article must follow this exact structure:
 - [Exactly what this article covers and why]
 - [One specific angle it leaves out and why that matters]
 
-**Article (${targetWords} words):**
+**Article (400-500 words):**
 Paragraph 1 — Lead (2-3 sentences): State the single most important development, when it happened, who it involves, and why it matters right now.
 
-Paragraph 2 — Background (3-5 sentences): Explain the context. What situation led to this development? What was the state of affairs before? Include at least one specific figure, date, or named source.
+Paragraph 2 — Background (3-4 sentences): Explain the context. What situation led to this development? What was the state of affairs before? Include at least one specific figure, date, or named source.
 
-Paragraph 3 — Perspective 1 (3-5 sentences): The official or institutional position. What is the government, company, or organisation saying? Quote or paraphrase their stated rationale specifically.
+Paragraph 3 — Perspective 1 (3-4 sentences): The official or institutional position. What is the government, company, or organisation saying? Quote or paraphrase their stated rationale specifically.
 
-Paragraph 4 — Perspective 2 (3-5 sentences): An expert, academic, or analyst view. What does independent analysis say about this? Is the official position supported or challenged by evidence?
+Paragraph 4 — Perspective 2 (3-4 sentences): An expert, academic, or analyst view. What does independent analysis say about this? Is the official position supported or challenged by evidence?
 
-Paragraph 5 — Perspective 3 (3-5 sentences): The ground-level or affected-group view. How are students, citizens, workers, or the target audience actually experiencing this? What concerns or reactions have emerged?
+Paragraph 5 — Perspective 3 (3-4 sentences): The ground-level or affected-group view. How are students, citizens, workers, or the target audience actually experiencing this? What concerns or reactions have emerged?
 
-Paragraph 6 — Deeper Analysis (3-5 sentences): Examine what is NOT being said in mainstream coverage. What structural bias, missing data, or conflict of interest shapes how this story is being told? Be specific.
-
-Paragraph 7 — Student Relevance (2-4 sentences): State specifically how this development connects to the student's board exams, entrance tests, career path, or immediate environment. Be concrete — e.g. "This policy is directly relevant to CBSE Class 12 Economics Chapter 6 on balance of payments" not "Students should stay informed about this."
-
-Paragraph 8 — Conclusion (2-3 sentences): Summarise the key takeaway. What should a well-informed student remember about this story one week from now?
+Paragraph 6 — Student Relevance (2-3 sentences): State specifically how this development connects to the student's board exams, entrance tests, career path, or immediate environment. Be concrete — e.g. "This policy is directly relevant to CBSE Class 12 Economics Chapter 6 on balance of payments" not "Students should stay informed about this."
 
 **Critical Analysis:**
 - [One specific logical flaw or hidden assumption in the mainstream coverage of this story]
@@ -666,14 +592,11 @@ Do not pad articles with generic sentences. Every sentence must carry specific i
       : `Refining brief (P0 + ${refinementCount} refinement(s) stacked)…`, false);
     document.getElementById("btn-news-generate").disabled = true;
 
-    // Scale max_tokens with slider: 3 articles × 1.4 tokens/word + 1200 overhead
-    const newsMaxTokens = Math.ceil(targetWords * 1.4 * 3) + 1200;
-
     try {
       const backendResponse = await callMargoBackend({
         model: "auto",
         prompt: aiPrompt,
-        max_tokens: newsMaxTokens,
+        max_tokens: 3500,
         stream: false
       });
 
@@ -868,36 +791,30 @@ async function handleSearchRun() {
 
   // Build the AI prompt
   let aiPrompt;
-  // Read slider value for search article length too
-  const searchSlider = document.getElementById("article-length-slider");
-  const searchTargetWords = searchSlider ? parseInt(searchSlider.value, 10) : 500;
-
   if (isFirstSearch) {
     aiPrompt = `You are Margo, a trust-first search assistant for students.
 
 User query:
 "${S0}"
 
-Write ONE complete, student-friendly article-style answer of exactly ${searchTargetWords} words (in the article body). Count carefully.
+Write ONE complete, student-friendly article-style answer.
 
-The answer should feel like a well-written article, not bullet notes.
+The answer should feel like a well-written short article, not bullet notes.
 Write naturally, without explicitly labeling sections like "thesis", "scope", or "conclusion".
 
 Structure it like this:
 1. A clear headline on the first line.
 2. A natural byline/context line on the second line.
-3. A short lead paragraph (2-3 sentences) that frames the topic and states the key fact or question.
-4. A background paragraph (3-5 sentences) with specific context, named sources, or data.
-5. Multiple body paragraphs that explain the issue clearly, develop the central idea with supporting evidence, present at least 2-3 distinct perspectives, and include critical analysis of what is NOT being said in mainstream coverage.
-6. A student relevance paragraph that is specific and actionable — connect this to exams, career paths, or daily life concretely.
-7. A short concluding paragraph (2-3 sentences) that gives the main takeaway.
+3. A short lead paragraph that frames the topic.
+4. A body that explains the issue clearly, develops one central idea, includes supporting evidence, and naturally mentions assumptions, limits, and critical analysis where relevant.
+5. A short concluding paragraph that gives the main takeaway.
 
 After the article, add this exact heading on a new line:
 Top 5 Sources:
 
 Then list 5 source names or result titles, one per line.
 
-Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suitable for students. Every sentence must carry specific information — no filler.`;
+Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suitable for students.`;
   } else {
     // Format the full follow-up history
     const historyBlock = s1History
@@ -914,23 +831,21 @@ ${historyBlock}
 
 Your task: answer the LATEST follow-up in the context of everything that came before. The full history tells you how the student's understanding has evolved and what they are now trying to pinpoint. Do not ignore earlier follow-ups — they provide crucial context for the latest question.
 
-Write ONE complete, student-friendly article-style answer of exactly ${searchTargetWords} words (in the article body). Count carefully.
+Write ONE complete, student-friendly article-style answer.
 
 Structure it like this:
 1. A clear headline on the first line (reflecting the latest focus).
 2. A natural byline/context line on the second line.
-3. A short lead paragraph (2-3 sentences) that connects to the original query and frames the latest angle.
-4. A background paragraph with specific context, named sources, or data.
-5. Multiple body paragraphs answering the latest question with evidence, at least 2-3 distinct perspectives, and critical analysis of what is NOT being said in mainstream coverage.
-6. A student relevance paragraph that is specific and actionable.
-7. A short concluding paragraph (2-3 sentences) with the main takeaway.
+3. A short lead paragraph that connects to the original query and frames the latest angle.
+4. A body that answers the latest question clearly, with evidence, and notes any relevant assumptions or limits.
+5. A short concluding paragraph with the main takeaway.
 
 After the article, add this exact heading on a new line:
 Top 5 Sources:
 
 Then list 5 source names or result titles, one per line.
 
-Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suitable for students. Every sentence must carry specific information — no filler.`;
+Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suitable for students.`;
   }
 
   const followUpCount = s1History.length;
@@ -939,14 +854,10 @@ Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suita
     : `Running follow-up search (S0 + ${followUpCount} follow-up(s) stacked)…`, false);
   document.getElementById("btn-search-run").disabled = true;
 
-  // Scale max_tokens with slider: ~1.4 tokens/word + 400 overhead for structure/headings
-  const searchMaxTokens = Math.ceil(searchTargetWords * 1.4) + 400;
-
   try {
     const backendResponse = await callMargoBackend({
       model: "auto",
       prompt: aiPrompt,
-      max_tokens: searchMaxTokens,
       stream: false
     });
 
