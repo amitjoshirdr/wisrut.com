@@ -452,6 +452,11 @@ function parseArticles(backendResponse) {
     }
 
     const P1 = userPrompt;
+	
+	// Debug
+	console.log("NEWS PROMPT SENT:", P1);
+	
+	
     setStatus("news-status", "Curating articles for your brief...", false);
     document.getElementById("btn-news-generate").disabled = true;
 
@@ -499,8 +504,15 @@ function parseArticles(backendResponse) {
 					stream: false
 				  });
 
-      // Save P1
+      // Debug
+	  console.log("NEWS RESPONSE:", backendResponse);
+	  
+	  // Save P1
       localStorage.setItem(LSKEYS.newsP1, P1);
+
+	
+		
+		
 
       // Parse the AI response into 3 structured articles
       const articles = parseArticles(backendResponse);
