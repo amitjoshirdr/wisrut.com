@@ -297,49 +297,49 @@
   // Splits AI response into 3 article objects by looking for
   // "Article Idea 1", "Article Idea 2", "Article Idea 3" markers.
   // Falls back to splitting by "---" if those markers aren't found.
-  function parseArticles(backendResponse) {
-    // Try to split by "Article Idea N:" pattern
-    const byArticleIdea = backendResponse.split(/(?=\*{0,2}Article Idea \d)/i);
 
-    // Filter out the header/intro before "Article Idea 1"
-    const articleChunks = byArticleIdea.filter(chunk =>
-      /Article Idea \d/i.test(chunk)
-    );
+function parseArticles(backendResponse) {
+  if (!backendResponse || typeof backendResponse !== "string") {
+    return [];
+  }
 
-    if (articleChunks.length >= 2) {
-      // We got proper article chunks — build objects
-      return articleChunks.slice(0, 3).map((chunk, i) => {
-        // Extract title: first non-empty line
-        const lines = chunk.split("\n").map(l => l.trim()).filter(Boolean);
-        const titleLine = lines[0] || `Article ${i + 1}`;
-        // Clean up asterisks from title
-        const cleanTitle = titleLine.replace(/\*+/g, "").replace(/^Article Idea \d[:\-–]?\s*/i, "").trim();
+  // Split into chunks by lines containing only --- 
+  const rawChunks = backendResponse
+    .split(/\n-{3,}\n/g)
+    .map(c => c.trim())
+    .filter(c => c.length > 0);
 
-        // Extract assumptions, scope, critical analysis blocks
-        const assumptions = extractSection(chunk, "Assumptions");
-        const scope = extractSection(chunk, "Scope");
-        const critical = extractSection(chunk, "Critical Analysis");
+  // Turn each chunk into an article object
+  return rawChunks.slice(0, 3).map((chunk, index) => {
+    const lines = chunk.split("\n").map(l => l.trim()).filter(Boolean);
 
-        const meta = `Assumptions · Scope · Critical Analysis`;
-        const summary = assumptions
-          ? assumptions.split("<br>")[0].replace(/<[^>]+>/g, "").trim()
-          : chunk.slice(0, 120).replace(/\*+/g, "").trim();
+    // First line = headline
+    const headline = lines[0] || `Article ${index + 1}`;
 
-        const fullText = [
-          assumptions ? `<strong>Assumptions</strong><br>${assumptions}` : "",
-          scope ? `<strong>Scope</strong><br>${scope}` : "",
-          critical ? `<strong>Critical Analysis</strong><br>${critical}` : ""
-        ].filter(Boolean).join("<hr>");
+    // Second line = byline (optional)
+    const byline = lines[1] && !/^\s*$/.test(lines[1])
+      ? lines[1]
+      : "By Margo News Desk";
 
-        return {
-          id: `a${i + 1}`,
-          title: `Article ${i + 1} – ${cleanTitle}`,
-          meta,
-          summary,
-          fullText: fullText || markdownToHtml(chunk)
-        };
-      });
-    }
+    // Rest = article body
+    const bodyLines = lines.slice(2);
+    const bodyText = bodyLines.join("\n\n");
+
+    // Summary: first 1–2 sentences of body for the card
+    const summarySentence = (bodyText.match(/[^.!?]+[.!?]/g) || [bodyText])
+      .slice(0, 2)
+      .join(" ")
+      .trim();
+
+    return {
+      id: `a${index + 1}`,
+      title: headline,
+      meta: byline,
+      summary: summarySentence || "Tap to read the full article.",
+      fullText: markdownToHtml(bodyText)
+    };
+  });
+}
 
     // Fallback: split by "---"
     const byHr = backendResponse.split(/\n---+\n/).filter(s => s.trim().length > 50);
@@ -398,48 +398,47 @@
   }
 
   function renderNewsArticles(articles) {
-    const container = document.getElementById("news-articles");
-    const detailEl = document.getElementById("news-article-detail");
-    if (!container || !detailEl) return;
+  const container = document.getElementById("news-articles");
+  const detailEl = document.getElementById("news-article-detail");
+  if (!container || !detailEl) return;
 
-    container.innerHTML = "";
+  container.innerHTML = "";
 
-    if (!Array.isArray(articles) || articles.length === 0) {
-      container.innerHTML = "<p>No articles yet. Generate a brief to see results.</p>";
-      detailEl.innerHTML = "No article selected yet.";
-      return;
-    }
-
-    articles.forEach((article) => {
-      const card = document.createElement("div");
-      card.className = "article-card";
-
-      // Clicking a card shows its full content (rendered HTML, not raw markdown)
-      card.addEventListener("click", () => {
-        detailEl.innerHTML = `
-          <strong>${article.title}</strong><br>
-          <em style="font-size:0.8rem;color:#666">${article.meta}</em>
-          <hr>
-          ${article.fullText || markdownToHtml(article.summary) || "No content."}
-        `;
-      });
-
-      const titleEl = document.createElement("h3");
-      titleEl.textContent = article.title;
-
-      const metaEl = document.createElement("div");
-      metaEl.className = "article-meta";
-      metaEl.textContent = article.meta;
-
-      const summaryEl = document.createElement("div");
-      summaryEl.textContent = article.summary;
-
-      card.appendChild(titleEl);
-      card.appendChild(metaEl);
-      card.appendChild(summaryEl);
-      container.appendChild(card);
-    });
+  if (!Array.isArray(articles) || articles.length === 0) {
+    container.innerHTML = "<p>No articles yet. Generate a brief to see results.</p>";
+    detailEl.innerHTML = "No article selected yet.";
+    return;
   }
+
+  articles.forEach((article) => {
+    const card = document.createElement("div");
+    card.className = "article-card";
+
+    card.addEventListener("click", () => {
+      detailEl.innerHTML = `
+        <strong style="font-size:1.05rem;">${article.title}</strong><br>
+        <span style="font-size:0.8rem;color:#666">${article.meta}</span>
+        <hr>
+        <div>${article.fullText}</div>
+      `;
+    });
+
+    const titleEl = document.createElement("h3");
+    titleEl.textContent = article.title;
+
+    const metaEl = document.createElement("div");
+    metaEl.className = "article-meta";
+    metaEl.textContent = article.meta;
+
+    const summaryEl = document.createElement("div");
+    summaryEl.textContent = article.summary;
+
+    card.appendChild(titleEl);
+    card.appendChild(metaEl);
+    card.appendChild(summaryEl);
+    container.appendChild(card);
+  });
+}
 
   async function handleNewsGenerate() {
     const promptEl = document.getElementById("news-prompt");
@@ -460,44 +459,44 @@
         model: "auto",
         prompt: `You are Margo, a trust-first news assistant for students.
 
-Given this student profile and interest:
-"${P1}"
+			Given this student profile and interest:
+			"${P1}"
 
-Write exactly 3 structured article ideas. Format each article as:
+			Write exactly 3 structured article ideas. Format each article as:
 
-Article Idea 1: [Title]
+			Article Idea 1: [Title]
 
-**Assumptions:**
-- [point]
-- [point]
+			**Assumptions:**
+			- [point]
+			- [point]
 
-**Scope:**
-- [point]
-- [point]
+			**Scope:**
+			- [point]
+			- [point]
 
-**Critical Analysis:**
-- [point]
-- [point]
+			**Critical Analysis:**
+			- [point]
+			- [point]
 
----
+			---
 
-Article Idea 2: [Title]
+			Article Idea 2: [Title]
 
-**Assumptions:**
-...
-(same format)
+			**Assumptions:**
+			...
+			(same format)
 
----
+			---
 
-Article Idea 3: [Title]
+			Article Idea 3: [Title]
 
-**Assumptions:**
-...
-(same format)
+			**Assumptions:**
+			...
+			(same format)
 
-Keep each section concise and student-friendly.`,
-        stream: false
-      });
+			Keep each section concise and student-friendly.`,
+					stream: false
+				  });
 
       // Save P1
       localStorage.setItem(LSKEYS.newsP1, P1);
@@ -572,73 +571,142 @@ Keep each section concise and student-friendly.`,
     });
   }
 
-  async function handleSearchRun() {
-    const inputEl = document.getElementById("search-input");
-    const answerEl = document.getElementById("search-answer");
-    if (!inputEl || !answerEl) return;
+		// Parse the search response into:
+		// 1) headline
+		// 2) byline
+		// 3) article body
+		// 4) top 5 source/result lines
+	function parseSearchResponse(rawText) {
+		  if (!rawText || typeof rawText !== "string") {
+			return {
+			  headline: "Search answer",
+			  byline: "By Margo Search",
+			  bodyHtml: "No response available.",
+			  results: []
+			};
+		  }
 
-    const query = (inputEl.value || "").trim();
-    if (!query) {
-      setStatus("search-status", "Please enter a search query.", true);
-      return;
-    }
+		  // Split article body from the "Top 5 Sources:" section
+		  const parts = rawText.split(/\bTop 5 Sources:\b/i);
+		  const articlePart = (parts[0] || "").trim();
+		  const sourcesPart = (parts[1] || "").trim();
 
-    const S1 = query;
-    setStatus("search-status", "Running search and generating answer...", false);
-    document.getElementById("btn-search-run").disabled = true;
+		  // Break article part into non-empty lines
+		  const lines = articlePart
+			.split("\n")
+			.map(line => line.trim())
+			.filter(Boolean);
 
-    try {
-      const backendResponse = await callMargoBackend({
-        model: "auto",
-        prompt: `You are Margo, a trust-first search assistant for students.
+		  const headline = lines[0] || "Search answer";
+		  const byline = lines[1] || "By Margo Search";
 
-Answer this question in a clear, student-friendly way with inline citations where possible:
-"${S1}"
+		  // Everything after headline + byline becomes the article body
+		  const bodyText = lines.slice(2).join("\n\n").trim();
 
-Then list 5 key sources or result titles at the end under the heading: **Top 5 Sources:**`,
-        stream: false
-      });
+		  // Convert the body to simple HTML so markdown-like text displays cleanly
+		  const bodyHtml = markdownToHtml(bodyText || "No article body available.");
 
-      // Split answer from sources
-      const parts = backendResponse.split(/\*{0,2}Top 5 Sources:\*{0,2}/i);
-      const answerText = parts[0] || backendResponse;
-      const sourcesText = parts[1] || "";
+		  // Parse sources/results into a clean 5-item list
+		  const results = sourcesPart
+			.split("\n")
+			.map(line => line.replace(/^[\s\-\*\d\.\)\(]+/, "").trim())
+			.filter(line => line.length > 3)
+			.slice(0, 5)
+			.map((line, index) => ({
+			  id: `r${index + 1}`,
+			  title: line,
+			  snippet: ""
+			}));
 
-      // Parse sources as a list
-      const sourceLines = sourcesText
-        .split("\n")
-        .map(l => l.replace(/^[\s\-\*\d\.]+/, "").trim())
-        .filter(l => l.length > 5)
-        .slice(0, 5);
+		  return {
+			headline,
+			byline,
+			bodyHtml,
+			results
+		  };
+		}
 
-      const results = sourceLines.map((line, i) => ({
-        id: `r${i + 1}`,
-        title: line.slice(0, 80),
-        snippet: ""
-      }));
+async function handleSearchRun() {
+  const inputEl = document.getElementById("search-input");
+  const answerEl = document.getElementById("search-answer");
 
-      // Save state
-      localStorage.setItem(LSKEYS.searchS1, S1);
-      localStorage.setItem(LSKEYS.searchAnswer, answerText);
-      setJSONToLocalStorage(LSKEYS.searchResults, results);
+  if (!inputEl || !answerEl) return;
 
-      // Update UI with rendered HTML (no raw asterisks)
-      answerEl.innerHTML = markdownToHtml(answerText);
-      renderSearchResults(results);
-      setStatus("search-status", "Search updated.", false);
-
-    } catch (err) {
-      console.error("Search error", err);
-      setStatus(
-        "search-status",
-        `Could not complete search: ${err.message || "Unknown error"}.`,
-        true
-      );
-    } finally {
-      document.getElementById("btn-search-run").disabled = false;
-    }
+  const query = (inputEl.value || "").trim();
+  if (!query) {
+    setStatus("search-status", "Please enter a search query.", true);
+    return;
   }
 
+  // In your model, first query acts like S0, then the evolving query is S1.
+  // For now we store only the current refined form.
+  const S1 = query;
+
+  setStatus("search-status", "Running search and generating answer...", false);
+  document.getElementById("btn-search-run").disabled = true;
+
+  try {
+    const backendResponse = await callMargoBackend({
+      model: "auto",
+      prompt: `You are Margo, a trust-first search assistant for students.
+
+		User query:
+		"${S1}"
+
+		Write ONE complete, student-friendly article-style answer.
+
+		The answer should feel like a well-written short article, not bullet notes.
+		Write naturally, without explicitly labeling sections like "thesis", "scope", or "conclusion".
+
+		Structure it like this:
+		1. A clear headline on the first line.
+		2. A natural byline/context line on the second line.
+		3. A short lead paragraph that frames the topic.
+		4. A body that explains the issue clearly, develops one central idea, includes supporting evidence, and naturally mentions assumptions, limits, and critical analysis where relevant.
+		5. A short concluding paragraph that gives the main takeaway.
+
+		After the article, add this exact heading on a new line:
+		Top 5 Sources:
+
+		Then list 5 source names or result titles, one per line.
+
+		Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suitable for students.`,
+			  stream: false
+			});
+
+			// Parse the returned text into article-style answer + results list
+			const parsed = parseSearchResponse(backendResponse);
+
+			// Save current search state
+			localStorage.setItem(LSKEYS.searchS1, S1);
+
+			// Save the rendered answer as HTML-ready data
+			const fullAnswerHtml = `
+			  <strong style="font-size:1.05rem;">${parsed.headline}</strong><br>
+			  <span style="font-size:0.8rem;color:#666">${parsed.byline}</span>
+			  <hr>
+			  <div>${parsed.bodyHtml}</div>
+			`;
+
+			localStorage.setItem(LSKEYS.searchAnswer, fullAnswerHtml);
+			setJSONToLocalStorage(LSKEYS.searchResults, parsed.results);
+
+			// Update UI
+			answerEl.innerHTML = fullAnswerHtml;
+			renderSearchResults(parsed.results);
+
+			setStatus("search-status", "Search updated.", false);
+		  } catch (err) {
+			console.error("Search error", err);
+			setStatus(
+			  "search-status",
+			  `Could not complete search: ${err.message || "Unknown error"}.`,
+			  true
+			);
+		  } finally {
+			document.getElementById("btn-search-run").disabled = false;
+		  }
+}
   function handleSearchReset() {
     localStorage.removeItem(LSKEYS.searchS1);
     localStorage.removeItem(LSKEYS.searchAnswer);
