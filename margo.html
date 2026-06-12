@@ -129,6 +129,20 @@
 </head>
 
 <body>
+
+	<div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+  <a
+    href="https://wisrut.com"
+    style="display: inline-block; padding: 0.5rem 0.9rem; background: #222; color: #fff; text-decoration: none; border-radius: 6px; font-size: 0.9rem;"
+  >
+    ← Back to Wisrut
+  </a>
+
+  <div style="font-size: 0.9rem; color: #666;">
+    Margo by Wisrut
+  </div>
+</div>
+
   <h1>Margo – Student News Brief & Search</h1>
 
   <!-- NEWS BRIEF SECTION (P0 / P1) -->
@@ -384,18 +398,25 @@ function parseArticles(backendResponse) {
   // NEWS BRIEF LOGIC (P0 / P1)
   // =============================
 
-  function initNewsFromStorage() {
-    const savedP1 = localStorage.getItem(LSKEYS.newsP1);
-    const newsPromptEl = document.getElementById("news-prompt");
-    if (savedP1 && newsPromptEl) newsPromptEl.value = savedP1;
+	function initNewsFromStorage() {
+	  const savedP1Raw = localStorage.getItem(LSKEYS.newsP1);
+	  const savedP1 = savedP1Raw ? savedP1Raw.trim() : "";
+	  const newsPromptEl = document.getElementById("news-prompt");
 
-    const savedArticles = getJSONFromLocalStorage(LSKEYS.newsArticles);
-    renderNewsArticles(
-      Array.isArray(savedArticles) && savedArticles.length > 0
-        ? savedArticles
-        : []
-    );
-  }
+	  // Only restore if there is meaningful text
+	  if (savedP1 && newsPromptEl) {
+		newsPromptEl.value = savedP1;
+	  } else if (newsPromptEl) {
+		newsPromptEl.value = "";
+	  }
+
+	  const savedArticles = getJSONFromLocalStorage(LSKEYS.newsArticles);
+	  renderNewsArticles(
+		Array.isArray(savedArticles) && savedArticles.length > 0
+		  ? savedArticles
+		  : []
+	  );
+	}
 
   function renderNewsArticles(articles) {
   const container = document.getElementById("news-articles");
