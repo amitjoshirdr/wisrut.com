@@ -133,11 +133,11 @@
 
   <!-- NEWS BRIEF SECTION (P0 / P1) -->
   <section class="section" id="news-section">
-    <h2>News Brief (P0 / P1)</h2>
+    <h2>News Brief</h2>
 
     <!-- News prompt area -->
     <label for="news-prompt">
-      Your news brief prompt (P0/P1)
+      Please type your news brief prompt. 
     </label>
     <!-- P0 = first 50 words, P1 = evolving refinement; we store only the current P1 here -->
     <textarea
@@ -217,379 +217,463 @@
   </section>
 
   <!-- APP LOGIC -->
-  <script>
-    // =============================
-    // CONFIG & LOCAL STORAGE KEYS
-    // =============================
+<script>
+  // =============================
+  // CONFIG & LOCAL STORAGE KEYS
+  // =============================
 
-    // Backend URL: your Cloudflare Worker (confirmed working with Status 200) [file:23][web:4]
-    const MARGOBACKENDURL = "https://margo-api.amitjoshirdr.workers.dev";
+  const MARGOBACKENDURL = "https://margo-api.amitjoshirdr.workers.dev";
 
-    // Keys used in localStorage to persist state across sessions
-    const LSKEYS = {
-      newsP1: "margop1refinement",     // evolving prompt for news brief (P1)
-      newsArticles: "margonewsarticles", // cached list of article objects
-      searchS1: "margosearchs1",       // evolving search state (S1)
-      searchAnswer: "margosearchanswer",
-      searchResults: "margosearchresults"
-    };
+  const LSKEYS = {
+    newsP1: "margop1refinement",
+    newsArticles: "margonewsarticles",
+    searchS1: "margosearchs1",
+    searchAnswer: "margosearchanswer",
+    searchResults: "margosearchresults"
+  };
 
-    // =============================
-    // HELPER FUNCTIONS
-    // =============================
+  // =============================
+  // HELPER FUNCTIONS
+  // =============================
 
-    // Set a status message under a section
-    function setStatus(id, message, isError = false) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.textContent = message;
-      el.style.color = isError ? "red" : "#444";
+  function setStatus(id, message, isError = false) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = message;
+    el.style.color = isError ? "red" : "#444";
+  }
+
+  function getJSONFromLocalStorage(key) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setJSONToLocalStorage(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {}
+  }
+
+  // Convert markdown bold (**text**) and horizontal rules (---) to simple HTML
+  function markdownToHtml(text) {
+    if (!text) return "";
+    return text
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")  // **bold** → <strong>
+      .replace(/\*(.*?)\*/g, "<em>$1</em>")              // *italic* → <em>
+      .replace(/^---+$/gm, "<hr>")                       // --- → <hr>
+      .replace(/\n/g, "<br>");                           // newlines → <br>
+  }
+
+  // Call the Margo backend Worker
+  async function callMargoBackend(payload) {
+    const response = await fetch(`${MARGOBACKENDURL}/api/generate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Backend error ${response.status}: ${text}`);
     }
 
-    // Safely parse JSON from localStorage
-    function getJSONFromLocalStorage(key) {
-      try {
-        const raw = localStorage.getItem(key);
-        if (!raw) return null;
-        return JSON.parse(raw);
-      } catch (e) {
-        console.warn("Failed to parse localStorage JSON for", key, e);
-        return null;
-      }
+    const data = await response.json();
+    if (!data || typeof data.response !== "string") {
+      throw new Error("Unexpected backend response format (missing 'response').");
     }
 
-    // Save JSON to localStorage
-    function setJSONToLocalStorage(key, value) {
-      try {
-        localStorage.setItem(key, JSON.stringify(value));
-      } catch (e) {
-        console.warn("Failed to store localStorage JSON for", key, e);
-      }
-    }
+    return data.response;
+  }
 
-    // Call the Margo backend Worker with a simple JSON payload.
-    // Expects: { model, prompt, stream }
-    // Returns: Promise<string> resolving to data.response [file:23][web:4]
-    async function callMargoBackend(payload) {
-      const response = await fetch(`${MARGOBACKENDURL}/api/generate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
+  // =============================
+  // ARTICLE PARSER
+  // =============================
 
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`Backend error ${response.status}: ${text}`);
-      }
+  // Splits AI response into 3 article objects by looking for
+  // "Article Idea 1", "Article Idea 2", "Article Idea 3" markers.
+  // Falls back to splitting by "---" if those markers aren't found.
+  function parseArticles(backendResponse) {
+    // Try to split by "Article Idea N:" pattern
+    const byArticleIdea = backendResponse.split(/(?=\*{0,2}Article Idea \d)/i);
 
-      const data = await response.json();
-      if (!data || typeof data.response !== "string") {
-        throw new Error("Unexpected backend response format (missing 'response').");
-      }
+    // Filter out the header/intro before "Article Idea 1"
+    const articleChunks = byArticleIdea.filter(chunk =>
+      /Article Idea \d/i.test(chunk)
+    );
 
-      return data.response;
-    }
+    if (articleChunks.length >= 2) {
+      // We got proper article chunks — build objects
+      return articleChunks.slice(0, 3).map((chunk, i) => {
+        // Extract title: first non-empty line
+        const lines = chunk.split("\n").map(l => l.trim()).filter(Boolean);
+        const titleLine = lines[0] || `Article ${i + 1}`;
+        // Clean up asterisks from title
+        const cleanTitle = titleLine.replace(/\*+/g, "").replace(/^Article Idea \d[:\-–]?\s*/i, "").trim();
 
-    // =============================
-    // NEWS BRIEF LOGIC (P0 / P1)
-    // =============================
+        // Extract assumptions, scope, critical analysis blocks
+        const assumptions = extractSection(chunk, "Assumptions");
+        const scope = extractSection(chunk, "Scope");
+        const critical = extractSection(chunk, "Critical Analysis");
 
-    function initNewsFromStorage() {
-      // Load P1 refined prompt
-      const savedP1 = localStorage.getItem(LSKEYS.newsP1);
-      const newsPromptEl = document.getElementById("news-prompt");
-      if (savedP1 && newsPromptEl) {
-        newsPromptEl.value = savedP1;
-      }
+        const meta = `Assumptions · Scope · Critical Analysis`;
+        const summary = assumptions
+          ? assumptions.split("<br>")[0].replace(/<[^>]+>/g, "").trim()
+          : chunk.slice(0, 120).replace(/\*+/g, "").trim();
 
-      // Load cached articles
-      const savedArticles = getJSONFromLocalStorage(LSKEYS.newsArticles);
-      if (Array.isArray(savedArticles) && savedArticles.length > 0) {
-        renderNewsArticles(savedArticles);
-      } else {
-        renderNewsArticles([]);
-      }
-    }
+        const fullText = [
+          assumptions ? `<strong>Assumptions</strong><br>${assumptions}` : "",
+          scope ? `<strong>Scope</strong><br>${scope}` : "",
+          critical ? `<strong>Critical Analysis</strong><br>${critical}` : ""
+        ].filter(Boolean).join("<hr>");
 
-    // Render list of articles as cards
-    function renderNewsArticles(articles) {
-      const container = document.getElementById("news-articles");
-      const detailEl = document.getElementById("news-article-detail");
-      if (!container || !detailEl) return;
-
-      container.innerHTML = ""; // clear
-
-      if (!Array.isArray(articles) || articles.length === 0) {
-        container.innerHTML = "<p>No articles yet. Generate a brief to see results.</p>";
-        detailEl.textContent = "No article selected yet.";
-        return;
-      }
-
-      articles.forEach((article, index) => {
-        const card = document.createElement("div");
-        card.className = "article-card";
-
-        // When clicked, show full details
-        card.addEventListener("click", () => {
-          const textParts = [
-            `Title: ${article.title || "Untitled"}`,
-            article.meta ? `Meta: ${article.meta}` : "",
-            "",
-            article.fullText || article.summary || "No content."
-          ].filter(Boolean);
-          detailEl.textContent = textParts.join("\n");
-        });
-
-        const titleEl = document.createElement("h3");
-        titleEl.textContent = article.title || `Article ${index + 1}`;
-
-        const metaEl = document.createElement("div");
-        metaEl.className = "article-meta";
-        metaEl.textContent = article.meta || "No metadata.";
-
-        const summaryEl = document.createElement("div");
-        summaryEl.textContent = article.summary || "No summary.";
-
-        card.appendChild(titleEl);
-        card.appendChild(metaEl);
-        card.appendChild(summaryEl);
-        container.appendChild(card);
+        return {
+          id: `a${i + 1}`,
+          title: `Article ${i + 1} – ${cleanTitle}`,
+          meta,
+          summary,
+          fullText: fullText || markdownToHtml(chunk)
+        };
       });
     }
 
-    // Generate / update news brief using current P1
-    async function handleNewsGenerate() {
-      const promptEl = document.getElementById("news-prompt");
-      if (!promptEl) return;
-
-      const userPrompt = (promptEl.value || "").trim();
-      if (!userPrompt) {
-        setStatus("news-status", "Please enter a prompt for your news brief.", true);
-        return;
-      }
-
-      // Conceptual model:
-      // - first time: userPrompt is P0 and P1 starts as P0
-      // - later: user edits same textarea, P1 evolves
-      const P1 = userPrompt;
-
-      setStatus("news-status", "Curating articles for your brief...", false);
-      document.getElementById("btn-news-generate").disabled = true;
-
-      try {
-        // Ask backend to create a brief based on P1
-        const backendResponse = await callMargoBackend({
-          model: "auto",
-          prompt: `MARGONEWSBRIEF\nP1: ${P1}\n\nCreate a trust-first news brief with 3 article ideas, each with assumptions, scope, and critical analysis.`,
-          stream: false
-        });
-
-        // Save current P1 for returning sessions
-        localStorage.setItem(LSKEYS.newsP1, P1);
-
-        // For now, create 3 mock articles out of the response
-        const baseText = backendResponse || "";
-        const articles = [
-          {
-            id: "a1",
-            title: "Article 1 – Overview",
-            meta: "Scope & assumptions for your brief.",
-            summary: baseText.slice(0, 150) || "Overview summary.",
-            fullText: baseText + "\n\n[Assumption / Scope / Critical Analysis placeholder]"
-          },
-          {
-            id: "a2",
-            title: "Article 2 – Critical angle",
-            meta: "Critical analysis for your profile.",
-            summary: baseText.slice(100, 250) || "Critical angle summary.",
-            fullText: baseText + "\n\n[Critical analysis placeholder]"
-          },
-          {
-            id: "a3",
-            title: "Article 3 – Background",
-            meta: "Deep background context.",
-            summary: baseText.slice(200, 350) || "Background summary.",
-            fullText: baseText + "\n\n[Background context placeholder]"
-          }
-        ];
-
-        // Persist articles
-        setJSONToLocalStorage(LSKEYS.newsArticles, articles);
-
-        // Update UI
-        renderNewsArticles(articles);
-        setStatus("news-status", "News brief updated.", false);
-      } catch (err) {
-        console.error("News brief error", err);
-        setStatus(
-          "news-status",
-          `Could not generate brief: ${err.message || "Unknown error"}.`,
-          true
-        );
-      } finally {
-        document.getElementById("btn-news-generate").disabled = false;
-      }
-    }
-
-    // Hard reset for news brief
-    function handleNewsReset() {
-      localStorage.removeItem(LSKEYS.newsP1);
-      localStorage.removeItem(LSKEYS.newsArticles);
-
-      const promptEl = document.getElementById("news-prompt");
-      const detailEl = document.getElementById("news-article-detail");
-
-      if (promptEl) promptEl.value = "";
-      if (detailEl) detailEl.textContent = "No article selected yet.";
-
-      renderNewsArticles([]);
-      setStatus("news-status", "News brief reset. Start fresh with a new prompt.", false);
-    }
-
-    // =============================
-    // SEARCH LOGIC (S0 / S1)
-    // =============================
-
-    function initSearchFromStorage() {
-      const savedS1 = localStorage.getItem(LSKEYS.searchS1);
-      const searchInputEl = document.getElementById("search-input");
-      if (savedS1 && searchInputEl) {
-        searchInputEl.value = savedS1;
-      }
-
-      const savedAnswer = localStorage.getItem(LSKEYS.searchAnswer);
-      const answerEl = document.getElementById("search-answer");
-      if (savedAnswer && answerEl) {
-        answerEl.textContent = savedAnswer;
-      }
-
-      const savedResults = getJSONFromLocalStorage(LSKEYS.searchResults);
-      if (Array.isArray(savedResults) && savedResults.length > 0) {
-        renderSearchResults(savedResults);
-      } else {
-        renderSearchResults([]);
-      }
-    }
-
-    function renderSearchResults(results) {
-      const listEl = document.getElementById("search-results-list");
-      if (!listEl) return;
-
-      listEl.innerHTML = ""; // clear
-
-      if (!Array.isArray(results) || results.length === 0) {
-        listEl.innerHTML = "<li>No results yet.</li>";
-        return;
-      }
-
-      results.slice(0, 5).forEach((item, index) => {
-        const li = document.createElement("li");
-        li.textContent =
-          (item.title || `Result ${index + 1}`) +
-          (item.snippet ? ` – ${item.snippet}` : "");
-        listEl.appendChild(li);
+    // Fallback: split by "---"
+    const byHr = backendResponse.split(/\n---+\n/).filter(s => s.trim().length > 50);
+    if (byHr.length >= 2) {
+      return byHr.slice(0, 3).map((chunk, i) => {
+        const lines = chunk.split("\n").map(l => l.trim()).filter(Boolean);
+        const titleLine = (lines[0] || `Article ${i + 1}`).replace(/\*+/g, "").trim();
+        return {
+          id: `a${i + 1}`,
+          title: `Article ${i + 1} – ${titleLine.slice(0, 60)}`,
+          meta: "Scope · Assumptions · Critical Analysis",
+          summary: lines.slice(1, 3).join(" ").replace(/\*+/g, "").slice(0, 150),
+          fullText: markdownToHtml(chunk)
+        };
       });
     }
 
-    // Handle search run (S0/S1)
-    async function handleSearchRun() {
-      const inputEl = document.getElementById("search-input");
-      const answerEl = document.getElementById("search-answer");
-      if (!inputEl || !answerEl) return;
-
-      const query = (inputEl.value || "").trim();
-      if (!query) {
-        setStatus("search-status", "Please enter a search query.", true);
-        return;
+    // Last resort: show the whole response as one article
+    return [
+      {
+        id: "a1",
+        title: "Brief summary",
+        meta: "Full AI response",
+        summary: backendResponse.replace(/\*+/g, "").slice(0, 150),
+        fullText: markdownToHtml(backendResponse)
       }
+    ];
+  }
 
-      // Treat the input as current S1 (first time S0 → S1)
-      const S1 = query;
+  // Extract a named section (e.g. "Assumptions", "Scope") from a chunk
+  function extractSection(text, sectionName) {
+    const regex = new RegExp(
+      `\\*{0,2}${sectionName}\\*{0,2}[:\\s]*([\\s\\S]*?)(?=\\*{0,2}(?:Assumptions|Scope|Critical Analysis)\\*{0,2}[:\\s]|$)`,
+      "i"
+    );
+    const match = text.match(regex);
+    if (!match) return "";
+    return markdownToHtml(match[1].trim());
+  }
 
-      setStatus("search-status", "Running search and generating answer...", false);
-      document.getElementById("btn-search-run").disabled = true;
+  // =============================
+  // NEWS BRIEF LOGIC (P0 / P1)
+  // =============================
 
-      try {
-        // Ask backend to answer search question with citations
-        const backendResponse = await callMargoBackend({
-          model: "auto",
-          prompt: `MARGOSEARCH\nS1: ${S1}\n\nAnswer the question concisely with inline citations and highlight 5 key sources.`,
-          stream: false
-        });
+  function initNewsFromStorage() {
+    const savedP1 = localStorage.getItem(LSKEYS.newsP1);
+    const newsPromptEl = document.getElementById("news-prompt");
+    if (savedP1 && newsPromptEl) newsPromptEl.value = savedP1;
 
-        const answerText = backendResponse || "";
+    const savedArticles = getJSONFromLocalStorage(LSKEYS.newsArticles);
+    renderNewsArticles(
+      Array.isArray(savedArticles) && savedArticles.length > 0
+        ? savedArticles
+        : []
+    );
+  }
 
-        // Create simple mock results from answer text for now
-        const results = Array.from({ length: 5 }).map((_, i) => ({
-          id: `r${i + 1}`,
-          title: `Result ${i + 1} (mock)`,
-          snippet: answerText.slice(i * 40, i * 40 + 60) || ""
-        }));
+  function renderNewsArticles(articles) {
+    const container = document.getElementById("news-articles");
+    const detailEl = document.getElementById("news-article-detail");
+    if (!container || !detailEl) return;
 
-        // Save S1 and outputs
-        localStorage.setItem(LSKEYS.searchS1, S1);
-        localStorage.setItem(LSKEYS.searchAnswer, answerText);
-        setJSONToLocalStorage(LSKEYS.searchResults, results);
+    container.innerHTML = "";
 
-        // Update UI
-        answerEl.textContent = answerText;
-        renderSearchResults(results);
-        setStatus("search-status", "Search updated.", false);
-      } catch (err) {
-        console.error("Search error", err);
-        setStatus(
-          "search-status",
-          `Could not complete search: ${err.message || "Unknown error"}.`,
-          true
-        );
-      } finally {
-        document.getElementById("btn-search-run").disabled = false;
-      }
+    if (!Array.isArray(articles) || articles.length === 0) {
+      container.innerHTML = "<p>No articles yet. Generate a brief to see results.</p>";
+      detailEl.innerHTML = "No article selected yet.";
+      return;
     }
 
-    // Hard reset for search
-    function handleSearchReset() {
-      localStorage.removeItem(LSKEYS.searchS1);
-      localStorage.removeItem(LSKEYS.searchAnswer);
-      localStorage.removeItem(LSKEYS.searchResults);
+    articles.forEach((article) => {
+      const card = document.createElement("div");
+      card.className = "article-card";
 
-      const inputEl = document.getElementById("search-input");
-      const answerEl = document.getElementById("search-answer");
+      // Clicking a card shows its full content (rendered HTML, not raw markdown)
+      card.addEventListener("click", () => {
+        detailEl.innerHTML = `
+          <strong>${article.title}</strong><br>
+          <em style="font-size:0.8rem;color:#666">${article.meta}</em>
+          <hr>
+          ${article.fullText || markdownToHtml(article.summary) || "No content."}
+        `;
+      });
 
-      if (inputEl) inputEl.value = "";
-      if (answerEl) {
-        answerEl.textContent = "Ask a question to see an answer here.";
-      }
+      const titleEl = document.createElement("h3");
+      titleEl.textContent = article.title;
 
-      renderSearchResults([]);
-      setStatus("search-status", "Search reset. Start a fresh query.", false);
+      const metaEl = document.createElement("div");
+      metaEl.className = "article-meta";
+      metaEl.textContent = article.meta;
+
+      const summaryEl = document.createElement("div");
+      summaryEl.textContent = article.summary;
+
+      card.appendChild(titleEl);
+      card.appendChild(metaEl);
+      card.appendChild(summaryEl);
+      container.appendChild(card);
+    });
+  }
+
+  async function handleNewsGenerate() {
+    const promptEl = document.getElementById("news-prompt");
+    if (!promptEl) return;
+
+    const userPrompt = (promptEl.value || "").trim();
+    if (!userPrompt) {
+      setStatus("news-status", "Please enter a prompt for your news brief.", true);
+      return;
     }
 
-    // =============================
-    // INITIALIZATION
-    // =============================
+    const P1 = userPrompt;
+    setStatus("news-status", "Curating articles for your brief...", false);
+    document.getElementById("btn-news-generate").disabled = true;
 
-    function initApp() {
-      // NEWS
-      document
-        .getElementById("btn-news-generate")
-        .addEventListener("click", handleNewsGenerate);
-      document
-        .getElementById("btn-news-reset")
-        .addEventListener("click", handleNewsReset);
-      initNewsFromStorage();
+    try {
+      const backendResponse = await callMargoBackend({
+        model: "auto",
+        prompt: `You are Margo, a trust-first news assistant for students.
 
-      // SEARCH
-      document
-        .getElementById("btn-search-run")
-        .addEventListener("click", handleSearchRun);
-      document
-        .getElementById("btn-search-reset")
-        .addEventListener("click", handleSearchReset);
-      initSearchFromStorage();
+Given this student profile and interest:
+"${P1}"
+
+Write exactly 3 structured article ideas. Format each article as:
+
+Article Idea 1: [Title]
+
+**Assumptions:**
+- [point]
+- [point]
+
+**Scope:**
+- [point]
+- [point]
+
+**Critical Analysis:**
+- [point]
+- [point]
+
+---
+
+Article Idea 2: [Title]
+
+**Assumptions:**
+...
+(same format)
+
+---
+
+Article Idea 3: [Title]
+
+**Assumptions:**
+...
+(same format)
+
+Keep each section concise and student-friendly.`,
+        stream: false
+      });
+
+      // Save P1
+      localStorage.setItem(LSKEYS.newsP1, P1);
+
+      // Parse the AI response into 3 structured articles
+      const articles = parseArticles(backendResponse);
+
+      setJSONToLocalStorage(LSKEYS.newsArticles, articles);
+      renderNewsArticles(articles);
+      setStatus("news-status", "News brief updated.", false);
+
+    } catch (err) {
+      console.error("News brief error", err);
+      setStatus(
+        "news-status",
+        `Could not generate brief: ${err.message || "Unknown error"}.`,
+        true
+      );
+    } finally {
+      document.getElementById("btn-news-generate").disabled = false;
+    }
+  }
+
+  function handleNewsReset() {
+    localStorage.removeItem(LSKEYS.newsP1);
+    localStorage.removeItem(LSKEYS.newsArticles);
+
+    const promptEl = document.getElementById("news-prompt");
+    const detailEl = document.getElementById("news-article-detail");
+    if (promptEl) promptEl.value = "";
+    if (detailEl) detailEl.innerHTML = "No article selected yet.";
+
+    renderNewsArticles([]);
+    setStatus("news-status", "News brief reset. Start fresh with a new prompt.", false);
+  }
+
+  // =============================
+  // SEARCH LOGIC (S0 / S1)
+  // =============================
+
+  function initSearchFromStorage() {
+    const savedS1 = localStorage.getItem(LSKEYS.searchS1);
+    const searchInputEl = document.getElementById("search-input");
+    if (savedS1 && searchInputEl) searchInputEl.value = savedS1;
+
+    const savedAnswer = localStorage.getItem(LSKEYS.searchAnswer);
+    const answerEl = document.getElementById("search-answer");
+    if (savedAnswer && answerEl) answerEl.innerHTML = markdownToHtml(savedAnswer);
+
+    const savedResults = getJSONFromLocalStorage(LSKEYS.searchResults);
+    renderSearchResults(
+      Array.isArray(savedResults) && savedResults.length > 0 ? savedResults : []
+    );
+  }
+
+  function renderSearchResults(results) {
+    const listEl = document.getElementById("search-results-list");
+    if (!listEl) return;
+    listEl.innerHTML = "";
+
+    if (!Array.isArray(results) || results.length === 0) {
+      listEl.innerHTML = "<li>No results yet.</li>";
+      return;
     }
 
-    document.addEventListener("DOMContentLoaded", initApp);
-  </script>
+    results.slice(0, 5).forEach((item, index) => {
+      const li = document.createElement("li");
+      li.textContent =
+        (item.title || `Result ${index + 1}`) +
+        (item.snippet ? ` – ${item.snippet}` : "");
+      listEl.appendChild(li);
+    });
+  }
+
+  async function handleSearchRun() {
+    const inputEl = document.getElementById("search-input");
+    const answerEl = document.getElementById("search-answer");
+    if (!inputEl || !answerEl) return;
+
+    const query = (inputEl.value || "").trim();
+    if (!query) {
+      setStatus("search-status", "Please enter a search query.", true);
+      return;
+    }
+
+    const S1 = query;
+    setStatus("search-status", "Running search and generating answer...", false);
+    document.getElementById("btn-search-run").disabled = true;
+
+    try {
+      const backendResponse = await callMargoBackend({
+        model: "auto",
+        prompt: `You are Margo, a trust-first search assistant for students.
+
+Answer this question in a clear, student-friendly way with inline citations where possible:
+"${S1}"
+
+Then list 5 key sources or result titles at the end under the heading: **Top 5 Sources:**`,
+        stream: false
+      });
+
+      // Split answer from sources
+      const parts = backendResponse.split(/\*{0,2}Top 5 Sources:\*{0,2}/i);
+      const answerText = parts[0] || backendResponse;
+      const sourcesText = parts[1] || "";
+
+      // Parse sources as a list
+      const sourceLines = sourcesText
+        .split("\n")
+        .map(l => l.replace(/^[\s\-\*\d\.]+/, "").trim())
+        .filter(l => l.length > 5)
+        .slice(0, 5);
+
+      const results = sourceLines.map((line, i) => ({
+        id: `r${i + 1}`,
+        title: line.slice(0, 80),
+        snippet: ""
+      }));
+
+      // Save state
+      localStorage.setItem(LSKEYS.searchS1, S1);
+      localStorage.setItem(LSKEYS.searchAnswer, answerText);
+      setJSONToLocalStorage(LSKEYS.searchResults, results);
+
+      // Update UI with rendered HTML (no raw asterisks)
+      answerEl.innerHTML = markdownToHtml(answerText);
+      renderSearchResults(results);
+      setStatus("search-status", "Search updated.", false);
+
+    } catch (err) {
+      console.error("Search error", err);
+      setStatus(
+        "search-status",
+        `Could not complete search: ${err.message || "Unknown error"}.`,
+        true
+      );
+    } finally {
+      document.getElementById("btn-search-run").disabled = false;
+    }
+  }
+
+  function handleSearchReset() {
+    localStorage.removeItem(LSKEYS.searchS1);
+    localStorage.removeItem(LSKEYS.searchAnswer);
+    localStorage.removeItem(LSKEYS.searchResults);
+
+    const inputEl = document.getElementById("search-input");
+    const answerEl = document.getElementById("search-answer");
+    if (inputEl) inputEl.value = "";
+    if (answerEl) answerEl.innerHTML = "Ask a question to see an answer here.";
+
+    renderSearchResults([]);
+    setStatus("search-status", "Search reset. Start a fresh query.", false);
+  }
+
+  // =============================
+  // INITIALIZATION
+  // =============================
+
+  function initApp() {
+    document.getElementById("btn-news-generate")
+      .addEventListener("click", handleNewsGenerate);
+    document.getElementById("btn-news-reset")
+      .addEventListener("click", handleNewsReset);
+    initNewsFromStorage();
+
+    document.getElementById("btn-search-run")
+      .addEventListener("click", handleSearchRun);
+    document.getElementById("btn-search-reset")
+      .addEventListener("click", handleSearchReset);
+    initSearchFromStorage();
+  }
+
+  document.addEventListener("DOMContentLoaded", initApp);
+</script>
+
+
 </body>
 </html>
