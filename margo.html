@@ -404,7 +404,6 @@ function parseArticles(backendResponse) {
 	  const savedP1 = savedP1Raw ? savedP1Raw.trim() : "";
 	  const newsPromptEl = document.getElementById("news-prompt");
 
-	  // Only restore if there is meaningful text
 	  if (savedP1 && newsPromptEl) {
 		newsPromptEl.value = savedP1;
 	  } else if (newsPromptEl) {
@@ -559,20 +558,26 @@ function parseArticles(backendResponse) {
   // SEARCH LOGIC (S0 / S1)
   // =============================
 
-  function initSearchFromStorage() {
-    const savedS1 = localStorage.getItem(LSKEYS.searchS1);
-    const searchInputEl = document.getElementById("search-input");
-    if (savedS1 && searchInputEl) searchInputEl.value = savedS1;
+	function initSearchFromStorage() {
+	  const savedS1 = localStorage.getItem(LSKEYS.searchS1);
+	  const searchInputEl = document.getElementById("search-input");
+	  if (savedS1 && searchInputEl) {
+		searchInputEl.value = savedS1;
+	  }
 
-    const savedAnswer = localStorage.getItem(LSKEYS.searchAnswer);
-    const answerEl = document.getElementById("search-answer");
-    if (savedAnswer && answerEl) answerEl.innerHTML = markdownToHtml(savedAnswer);
+	  const savedAnswer = localStorage.getItem(LSKEYS.searchAnswer);
+	  const answerEl = document.getElementById("search-answer");
+	  if (savedAnswer && answerEl) {
+		answerEl.innerHTML = savedAnswer;
+	  }
 
-    const savedResults = getJSONFromLocalStorage(LSKEYS.searchResults);
-    renderSearchResults(
-      Array.isArray(savedResults) && savedResults.length > 0 ? savedResults : []
-    );
-  }
+	  const savedResults = getJSONFromLocalStorage(LSKEYS.searchResults);
+	  renderSearchResults(
+		Array.isArray(savedResults) && savedResults.length > 0
+		  ? savedResults
+		  : []
+	  );
+	}
 
   function renderSearchResults(results) {
     const listEl = document.getElementById("search-results-list");
