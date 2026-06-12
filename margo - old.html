@@ -240,11 +240,9 @@
   const MARGOBACKENDURL = "https://margo-api.amitjoshirdr.workers.dev";
 
   const LSKEYS = {
-    newsP0: "margop0original",        // first prompt string, locked after first submit
-    newsP1: "margop1history",         // JSON array of all refinements in order
+    newsP1: "margop1refinement",
     newsArticles: "margonewsarticles",
-    searchS0: "margosearchs0",        // first search query string, locked after first submit
-    searchS1: "margos1history",       // JSON array of all follow-up queries in order
+    searchS1: "margosearchs1",
     searchAnswer: "margosearchanswer",
     searchResults: "margosearchresults"
   };
@@ -382,24 +380,14 @@ function parseArticles(backendResponse) {
   // =============================
 
 	function initNewsFromStorage() {
+	  const savedP1Raw = localStorage.getItem(LSKEYS.newsP1);
+	  const savedP1 = savedP1Raw ? savedP1Raw.trim() : "";
 	  const newsPromptEl = document.getElementById("news-prompt");
-	  const savedP0 = localStorage.getItem(LSKEYS.newsP0) || "";
 
-	  // P1 is now a JSON array of all refinements; show the latest one in the textarea
-	  const p1History = getJSONFromLocalStorage(LSKEYS.newsP1) || [];
-	  const latestP1 = p1History.length > 0 ? p1History[p1History.length - 1] : "";
-
-	  if (newsPromptEl) {
-		newsPromptEl.value = latestP1;
-		newsPromptEl.placeholder = savedP0
-		  ? "Type your next refinement here and click Generate / Update…"
-		  : "Example: I am a Class 11 student preparing for CBSE boards. Show me daily, bias-aware news about Indian economy and science.";
-	  }
-
-	  // Show a hint if this is a refinement session (P0 already locked)
-	  if (savedP0) {
-		const count = p1History.length;
-		setStatus("news-status", `Refinement mode — ${count} refinement(s) stacked on your original prompt. Add another or Hard Reset to start over.`, false);
+	  if (savedP1 && newsPromptEl) {
+		newsPromptEl.value = savedP1;
+	  } else if (newsPromptEl) {
+		newsPromptEl.value = "";
 	  }
 
 	  const savedArticles = getJSONFromLocalStorage(LSKEYS.newsArticles);
@@ -463,180 +451,89 @@ function parseArticles(backendResponse) {
       return;
     }
 
-    // --- P0 / P1 logic ---
-    // P0  = original prompt string, locked on first submission (max 50 words).
-    // P1  = JSON array of every refinement typed since P0, in order.
-    //       Each new submission APPENDS to this array (never overwrites).
-    //       The AI always receives P0 + the full P1 history so nothing is lost.
-
-    let P0 = localStorage.getItem(LSKEYS.newsP0) || "";
-    const isFirstSubmit = !P0;
-
-    if (isFirstSubmit) {
-      // Enforce 50-word limit on P0
-      const words = userPrompt.split(/\s+/).filter(Boolean);
-      if (words.length > 50) {
-        setStatus("news-status", "Your first prompt must be 50 words or fewer. Please shorten it.", true);
-        return;
-      }
-      P0 = userPrompt;
-      localStorage.setItem(LSKEYS.newsP0, P0);
-      // P1 history starts empty on first submit
-      setJSONToLocalStorage(LSKEYS.newsP1, []);
-    } else {
-      // Append this new refinement to the existing history
-      const p1History = getJSONFromLocalStorage(LSKEYS.newsP1) || [];
-      p1History.push(userPrompt);
-
-      // Enforce 1000-word total limit across all refinements
-      const totalWords = p1History.join(" ").split(/\s+/).filter(Boolean).length;
-      if (totalWords > 1000) {
-        setStatus("news-status", "Your total refinements exceed 1000 words. Please use Hard Reset to start a new brief.", true);
-        return;
-      }
-
-      setJSONToLocalStorage(LSKEYS.newsP1, p1History);
-    }
-
-    // Reload history (includes the one we just appended, if refinement)
-    const p1History = getJSONFromLocalStorage(LSKEYS.newsP1) || [];
-
-    // Debug
-    console.log("NEWS P0:", P0);
-    console.log("NEWS P1 history:", p1History);
-
-    // Build the AI prompt
-    let aiPrompt;
-    if (isFirstSubmit) {
-      aiPrompt = `You are Margo, a trust-first news assistant for students.
-
-Given this student profile and interest:
-"${P0}"
-
-Write exactly 3 structured article ideas. Format each article as:
-
-Article Idea 1: [Title]
-
-**Assumptions:**
-- [point]
-- [point]
-
-**Scope:**
-- [point]
-- [point]
-
-**Critical Analysis:**
-- [point]
-- [point]
-
----
-
-Article Idea 2: [Title]
-
-**Assumptions:**
-...
-(same format)
-
----
-
-Article Idea 3: [Title]
-
-**Assumptions:**
-...
-(same format)
-
-Keep each section concise and student-friendly.`;
-    } else {
-      // Format the full refinement history so the AI sees every step
-      const historyBlock = p1History
-        .map((entry, i) => `Refinement ${i + 1}: "${entry}"`)
-        .join("\n");
-
-      aiPrompt = `You are Margo, a trust-first news assistant for students.
-
-The student's original standing charter (P0 — their core profile and interests, always respected):
-"${P0}"
-
-The student's refinement history (every correction or adjustment they have made, in order):
-${historyBlock}
-
-Your task: generate articles that honour P0 AND reflect the full arc of the student's refinements. Earlier refinements give context; the latest one is their most current focus. Do not ignore any earlier refinements — they all shaped what the student wants.
-
-Write exactly 3 structured article ideas. Format each article as:
-
-Article Idea 1: [Title]
-
-**Assumptions:**
-- [point]
-- [point]
-
-**Scope:**
-- [point]
-- [point]
-
-**Critical Analysis:**
-- [point]
-- [point]
-
----
-
-Article Idea 2: [Title]
-
-**Assumptions:**
-...
-(same format)
-
----
-
-Article Idea 3: [Title]
-
-**Assumptions:**
-...
-(same format)
-
-Keep each section concise and student-friendly.`;
-    }
-
-    const refinementCount = p1History.length;
-    setStatus("news-status", isFirstSubmit
-      ? "Curating your first brief…"
-      : `Refining brief (P0 + ${refinementCount} refinement(s) stacked)…`, false);
+    const P1 = userPrompt;
+	
+	// Debug
+	console.log("NEWS PROMPT SENT:", P1);
+	
+	
+    setStatus("news-status", "Curating articles for your brief...", false);
     document.getElementById("btn-news-generate").disabled = true;
 
     try {
       const backendResponse = await callMargoBackend({
         model: "auto",
-        prompt: aiPrompt,
-        stream: false
-      });
+        prompt: `You are Margo, a trust-first news assistant for students.
+
+			Given this student profile and interest:
+			"${P1}"
+
+			Write exactly 3 structured article ideas. Format each article as:
+
+			Article Idea 1: [Title]
+
+			**Assumptions:**
+			- [point]
+			- [point]
+
+			**Scope:**
+			- [point]
+			- [point]
+
+			**Critical Analysis:**
+			- [point]
+			- [point]
+
+			---
+
+			Article Idea 2: [Title]
+
+			**Assumptions:**
+			...
+			(same format)
+
+			---
+
+			Article Idea 3: [Title]
+
+			**Assumptions:**
+			...
+			(same format)
+
+			Keep each section concise and student-friendly.`,
+					stream: false
+				  });
 
       // Debug
 	  console.log("NEWS RESPONSE:", backendResponse);
+	  
+	  // Save P1
+      localStorage.setItem(LSKEYS.newsP1, P1);
 
+	
+		
+		
+
+      // Parse the AI response into 3 structured articles
       const articles = parseArticles(backendResponse);
+
       setJSONToLocalStorage(LSKEYS.newsArticles, articles);
       renderNewsArticles(articles);
-
-      // Clear the textarea so the user knows to type a NEW refinement next time
-      if (!isFirstSubmit) {
-        promptEl.value = "";
-        promptEl.placeholder = "Type your next refinement here…";
-      }
-
-      setStatus("news-status", isFirstSubmit
-        ? "News brief generated. Refine it by typing below and clicking Generate / Update."
-        : `News brief updated — ${refinementCount} refinement(s) stacked on your original prompt.`, false);
+      setStatus("news-status", "News brief updated.", false);
 
     } catch (err) {
       console.error("News brief error", err);
-      setStatus("news-status", `Could not generate brief: ${err.message || "Unknown error"}.`, true);
+      setStatus(
+        "news-status",
+        `Could not generate brief: ${err.message || "Unknown error"}.`,
+        true
+      );
     } finally {
       document.getElementById("btn-news-generate").disabled = false;
     }
   }
 
   function handleNewsReset() {
-    localStorage.removeItem(LSKEYS.newsP0);
     localStorage.removeItem(LSKEYS.newsP1);
     localStorage.removeItem(LSKEYS.newsArticles);
 
@@ -654,30 +551,16 @@ Keep each section concise and student-friendly.`;
   // =============================
 
 	function initSearchFromStorage() {
+	  const savedS1 = localStorage.getItem(LSKEYS.searchS1);
 	  const searchInputEl = document.getElementById("search-input");
-	  const savedS0 = localStorage.getItem(LSKEYS.searchS0) || "";
-
-	  // S1 is a JSON array of follow-up queries; show the latest in the input
-	  const s1History = getJSONFromLocalStorage(LSKEYS.searchS1) || [];
-	  const latestS1 = s1History.length > 0 ? s1History[s1History.length - 1] : "";
-
-	  if (searchInputEl) {
-		searchInputEl.value = latestS1;
-		searchInputEl.placeholder = savedS0
-		  ? "Type your follow-up question here…"
-		  : "Example: Explain the new NEP policy for school students";
+	  if (savedS1 && searchInputEl) {
+		searchInputEl.value = savedS1;
 	  }
 
 	  const savedAnswer = localStorage.getItem(LSKEYS.searchAnswer);
 	  const answerEl = document.getElementById("search-answer");
 	  if (savedAnswer && answerEl) {
 		answerEl.innerHTML = savedAnswer;
-	  }
-
-	  // Show a hint if this is a follow-up session (S0 already locked)
-	  if (savedS0) {
-		const count = s1History.length;
-		setStatus("search-status", `Follow-up mode — ${count} follow-up(s) stacked on your original query. Ask another or Start Fresh Search to reset.`, false);
 	  }
 
 	  const savedResults = getJSONFromLocalStorage(LSKEYS.searchResults);
@@ -774,105 +657,49 @@ async function handleSearchRun() {
     return;
   }
 
-  // --- S0 / S1 logic ---
-  // S0  = original query string, locked on first search.
-  // S1  = JSON array of every follow-up query typed since S0, in order.
-  //       Each new search APPENDS to this array (never overwrites).
-  //       The AI always receives S0 + the full S1 history so nothing is lost.
+  // In your model, first query acts like S0, then the evolving query is S1.
+  // For now we store only the current refined form.
+  const S1 = query;
 
-  let S0 = localStorage.getItem(LSKEYS.searchS0) || "";
-  const isFirstSearch = !S0;
-
-  if (isFirstSearch) {
-    S0 = query;
-    localStorage.setItem(LSKEYS.searchS0, S0);
-    setJSONToLocalStorage(LSKEYS.searchS1, []);
-  } else {
-    const s1History = getJSONFromLocalStorage(LSKEYS.searchS1) || [];
-    s1History.push(query);
-    setJSONToLocalStorage(LSKEYS.searchS1, s1History);
-  }
-
-  const s1History = getJSONFromLocalStorage(LSKEYS.searchS1) || [];
-
-  // Debug
-  console.log("SEARCH S0:", S0);
-  console.log("SEARCH S1 history:", s1History);
-
-  // Build the AI prompt
-  let aiPrompt;
-  if (isFirstSearch) {
-    aiPrompt = `You are Margo, a trust-first search assistant for students.
-
-User query:
-"${S0}"
-
-Write ONE complete, student-friendly article-style answer.
-
-The answer should feel like a well-written short article, not bullet notes.
-Write naturally, without explicitly labeling sections like "thesis", "scope", or "conclusion".
-
-Structure it like this:
-1. A clear headline on the first line.
-2. A natural byline/context line on the second line.
-3. A short lead paragraph that frames the topic.
-4. A body that explains the issue clearly, develops one central idea, includes supporting evidence, and naturally mentions assumptions, limits, and critical analysis where relevant.
-5. A short concluding paragraph that gives the main takeaway.
-
-After the article, add this exact heading on a new line:
-Top 5 Sources:
-
-Then list 5 source names or result titles, one per line.
-
-Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suitable for students.`;
-  } else {
-    // Format the full follow-up history
-    const historyBlock = s1History
-      .map((entry, i) => `Follow-up ${i + 1}: "${entry}"`)
-      .join("\n");
-
-    aiPrompt = `You are Margo, a trust-first search assistant for students.
-
-The student's original question (S0 — the topic that started this search session):
-"${S0}"
-
-The student's follow-up history (every subsequent question, in order):
-${historyBlock}
-
-Your task: answer the LATEST follow-up in the context of everything that came before. The full history tells you how the student's understanding has evolved and what they are now trying to pinpoint. Do not ignore earlier follow-ups — they provide crucial context for the latest question.
-
-Write ONE complete, student-friendly article-style answer.
-
-Structure it like this:
-1. A clear headline on the first line (reflecting the latest focus).
-2. A natural byline/context line on the second line.
-3. A short lead paragraph that connects to the original query and frames the latest angle.
-4. A body that answers the latest question clearly, with evidence, and notes any relevant assumptions or limits.
-5. A short concluding paragraph with the main takeaway.
-
-After the article, add this exact heading on a new line:
-Top 5 Sources:
-
-Then list 5 source names or result titles, one per line.
-
-Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suitable for students.`;
-  }
-
-  const followUpCount = s1History.length;
-  setStatus("search-status", isFirstSearch
-    ? "Running search…"
-    : `Running follow-up search (S0 + ${followUpCount} follow-up(s) stacked)…`, false);
+  setStatus("search-status", "Running search and generating answer...", false);
   document.getElementById("btn-search-run").disabled = true;
 
   try {
     const backendResponse = await callMargoBackend({
       model: "auto",
-      prompt: aiPrompt,
-      stream: false
-    });
+      prompt: `You are Margo, a trust-first search assistant for students.
 
+		User query:
+		"${S1}"
+
+		Write ONE complete, student-friendly article-style answer.
+
+		The answer should feel like a well-written short article, not bullet notes.
+		Write naturally, without explicitly labeling sections like "thesis", "scope", or "conclusion".
+
+		Structure it like this:
+		1. A clear headline on the first line.
+		2. A natural byline/context line on the second line.
+		3. A short lead paragraph that frames the topic.
+		4. A body that explains the issue clearly, develops one central idea, includes supporting evidence, and naturally mentions assumptions, limits, and critical analysis where relevant.
+		5. A short concluding paragraph that gives the main takeaway.
+
+		After the article, add this exact heading on a new line:
+		Top 5 Sources:
+
+		Then list 5 source names or result titles, one per line.
+
+		Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suitable for students.`,
+			  stream: false
+			});
+
+			// Parse the returned text into article-style answer + results list
 			const parsed = parseSearchResponse(backendResponse);
 
+			// Save current search state
+			localStorage.setItem(LSKEYS.searchS1, S1);
+
+			// Save the rendered answer as HTML-ready data
 			const fullAnswerHtml = `
 			  <strong style="font-size:1.05rem;">${parsed.headline}</strong><br>
 			  <span style="font-size:0.8rem;color:#666">${parsed.byline}</span>
@@ -883,29 +710,24 @@ Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suita
 			localStorage.setItem(LSKEYS.searchAnswer, fullAnswerHtml);
 			setJSONToLocalStorage(LSKEYS.searchResults, parsed.results);
 
+			// Update UI
 			answerEl.innerHTML = fullAnswerHtml;
 			renderSearchResults(parsed.results);
 
-			// Clear input so user knows to type a NEW follow-up next time
-			if (!isFirstSearch) {
-			  inputEl.value = "";
-			  inputEl.placeholder = "Type your next follow-up question here…";
-			}
-
-			setStatus("search-status", isFirstSearch
-			  ? "Search complete. Ask a follow-up to go deeper."
-			  : `Follow-up answer generated — ${followUpCount} follow-up(s) stacked on your original query.`, false);
-
+			setStatus("search-status", "Search updated.", false);
 		  } catch (err) {
 			console.error("Search error", err);
-			setStatus("search-status", `Could not complete search: ${err.message || "Unknown error"}.`, true);
+			setStatus(
+			  "search-status",
+			  `Could not complete search: ${err.message || "Unknown error"}.`,
+			  true
+			);
 		  } finally {
 			document.getElementById("btn-search-run").disabled = false;
 		  }
 }
   function handleSearchReset() {
-    localStorage.removeItem(LSKEYS.searchS0);
-    localStorage.removeItem(LSKEYS.searchS1);  // clears the JSON array
+    localStorage.removeItem(LSKEYS.searchS1);
     localStorage.removeItem(LSKEYS.searchAnswer);
     localStorage.removeItem(LSKEYS.searchResults);
 
