@@ -1066,30 +1066,29 @@ Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suita
   // INITIALIZATION
   // =============================
 
-	function initApp() {
-	  document.getElementById("btn-news-generate")
-		.addEventListener("click", handleNewsGenerate);
-	  document.getElementById("btn-news-reset")
-		.addEventListener("click", handleNewsReset);
-	  initNewsFromStorage();
+function initApp() {
+  document.getElementById("btn-news-generate")
+    .addEventListener("click", handleNewsGenerate);
+  document.getElementById("btn-news-reset")
+    .addEventListener("click", handleNewsReset);
+  initNewsFromStorage();
 
-	  document.getElementById("btn-search-run")
-		.addEventListener("click", handleSearchRun);
-	  document.getElementById("btn-search-reset")
-		.addEventListener("click", handleSearchReset);
-	  initSearchFromStorage();
+  document.getElementById("btn-search-run")
+    .addEventListener("click", handleSearchRun);
+  document.getElementById("btn-search-reset")
+    .addEventListener("click", handleSearchReset);
+  initSearchFromStorage();
 
-	  // Support button wiring
-	  const supportBtn = document.getElementById("support-margo-button");
-	  if (supportBtn) {
-		supportBtn.addEventListener("click", () => {
-		  // TODO: replace with your real Razorpay payment link
-		  window.open("YOUR_RAZORPAY_PAYMENT_LINK_HERE", "_blank");
-		});
-	  }
-	}
+  // Support button wiring – PUT YOUR RAZORPAY LINK HERE
+  const supportBtn = document.getElementById("support-margo-button");
+  if (supportBtn) {
+    supportBtn.addEventListener("click", () => {
+      window.open("https://rzp.io/rzp/fjD6HZp", "_blank");
+    });
+  }
+}
 
-	document.addEventListener("DOMContentLoaded", initApp);
+document.addEventListener("DOMContentLoaded", initApp);
 </script>
 
 
