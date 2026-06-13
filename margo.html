@@ -199,6 +199,13 @@
       cursor: pointer;
       height: 4px;
     }
+	
+	.support-btn.secondary {
+	  background: #f2f2f2;
+	  color: #222;
+	}
+	
+	
   </style>
 </head>
 
@@ -331,11 +338,14 @@
     Margo stays free for students. We use light ads to cover hosting and curation costs, and also offer a voluntary way to support the project if you find it useful.
   </p>
 
-  <div class="support-actions">
-    <button class="support-btn" id="support-margo-button">
-      Support Margo
-    </button>
-  </div>
+	<div class="support-actions">
+	  <button class="support-btn" id="support-margo-button">
+		Support via UPI
+	  </button>
+	  <button class="support-btn secondary" id="support-margo-standard">
+		More payment options
+	  </button>
+	</div>
 
   <p class="support-note">
     If you support Margo, you help independent student‑focused news curation continue.
@@ -1079,16 +1089,24 @@ function initApp() {
     .addEventListener("click", handleSearchReset);
   initSearchFromStorage();
 
-  // Support button wiring – PUT YOUR RAZORPAY LINK HERE
+  // UPI support button
   const supportBtn = document.getElementById("support-margo-button");
   if (supportBtn) {
     supportBtn.addEventListener("click", () => {
       window.open("https://rzp.io/rzp/fjD6HZp", "_blank");
     });
   }
-}
 
+  // Standard payment button (cards, netbanking, etc.)
+  const supportStdBtn = document.getElementById("support-margo-standard");
+  if (supportStdBtn) {
+    supportStdBtn.addEventListener("click", () => {
+      window.open("https://rzp.io/rzp/j6b7rTpw", "_blank");
+    });
+  }
+}
 document.addEventListener("DOMContentLoaded", initApp);
+
 </script>
 
 
