@@ -1,17 +1,40 @@
-Copyright (c) 2026 Amit Joshi
+Copyright (c) 2026
+Amit Joshi (Wisrut / Margo)
 
 All rights reserved.
 
-This codebase, including HTML, CSS, JavaScript, and Cloudflare Worker scripts,
-is made publicly viewable for educational and demonstration purposes only.
+This codebase, including but not limited to:
 
-You may:
-  - View and study the code.
-  - Use the live site as an end user.
+HTML, CSS, and JavaScript files for the Margo news and search interface
 
-You may not:
-  - Copy, modify, or redistribute this code or any substantial portion of it.
-  - Reuse this code to build a competing product.
-  - Remove or alter references to "Margo" or "Wisrut".
+Backend scripts and logic
+
+Prompt designs, article structures, and response formatting logic is made publicly viewable for educational and demonstration purposes only.
+
+You are permitted to:
+
+View and read the source code.
+
+Learn from the ideas, structure, and implementation.
+
+Use the live website (wisrut.com and related domains) as an end user.
+
+You are not permitted to:
+
+Copy, reuse, or redistribute this code, in whole or in part, in any other project or product.
+
+Modify this code and publish, host, or sell it as your own work.
+
+Remove or alter any references to “Margo”, “Wisrut”, or the original author.
+
+Use this code to build a competing or derivative service without prior written permission from the author.
+
+No part of this code may be reproduced, stored in a retrieval system, or transmitted in any form or by any means, electronic, mechanical, or otherwise, without the prior written consent of the copyright holder, except as allowed above for personal learning and viewing.
+
+This software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and noninfringement. In no event shall the author be liable for any claim, damages, or other liability arising from, out of, or in connection with the software or the use or other dealings in the software.
+
+For collaboration, licensing, or commercial use enquiries, please contact:
+
+Name: Amit Joshi
 
 For collaboration or licensing enquiries, please contact: [amitjoshi.work@outlook.com]
