@@ -13,7 +13,45 @@
       padding: 1rem;
       background: #f7f7f7;
     }
+	
+	.support-actions {
+	  display: flex;
+	  gap: 0.75rem;
+	  flex-wrap: wrap;
+	  margin: 1rem 0;
+	}
 
+	.support-btn {
+	  display: inline-block;
+	  padding: 0.75rem 1rem;
+	  background: #222;
+	  color: #fff;
+	  text-decoration: none;
+	  border-radius: 6px;
+	  border: none;
+	  cursor: pointer;
+	}
+
+	.support-note {
+	  font-size: 0.85rem;
+	  color: #555;
+	  margin-top: 0.5rem;
+	}
+
+	.site-footer {
+	  margin-top: 2rem;
+	  padding-top: 1rem;
+	  border-top: 1px solid #ddd;
+	  font-size: 0.9rem;
+	}
+
+	.site-footer nav {
+	  display: flex;
+	  gap: 1rem;
+	  flex-wrap: wrap;
+	  margin-top: 0.5rem;
+	}
+	
     h1, h2 {
       margin-top: 1.5rem;
       margin-bottom: 0.5rem;
@@ -286,6 +324,33 @@
   </section>
 
   <!-- APP LOGIC -->
+  
+  <section class="section" id="support-section">
+  <h2>Support Margo</h2>
+  <p>
+    Margo stays free for students. We use light ads to cover hosting and curation costs, and also offer a voluntary way to support the project if you find it useful.
+  </p>
+
+  <div class="support-actions">
+    <button class="support-btn" id="support-margo-button">
+      Support Margo
+    </button>
+  </div>
+
+  <p class="support-note">
+    If you support Margo, you help independent student‑focused news curation continue.
+  </p>
+</section>
+
+<footer class="site-footer">
+  <p>© 2026 Margo by Wisrut. Free for students.</p>
+  <nav>
+    <a href="#news-section">News Brief</a>
+    <a href="#search-section">Search</a>
+    <a href="#support-section">Support Margo</a>
+  </nav>
+</footer>
+  
 <script>
   // =============================
   // CONFIG & LOCAL STORAGE KEYS
@@ -1001,21 +1066,30 @@ Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suita
   // INITIALIZATION
   // =============================
 
-  function initApp() {
-    document.getElementById("btn-news-generate")
-      .addEventListener("click", handleNewsGenerate);
-    document.getElementById("btn-news-reset")
-      .addEventListener("click", handleNewsReset);
-    initNewsFromStorage();
+	function initApp() {
+	  document.getElementById("btn-news-generate")
+		.addEventListener("click", handleNewsGenerate);
+	  document.getElementById("btn-news-reset")
+		.addEventListener("click", handleNewsReset);
+	  initNewsFromStorage();
 
-    document.getElementById("btn-search-run")
-      .addEventListener("click", handleSearchRun);
-    document.getElementById("btn-search-reset")
-      .addEventListener("click", handleSearchReset);
-    initSearchFromStorage();
-  }
+	  document.getElementById("btn-search-run")
+		.addEventListener("click", handleSearchRun);
+	  document.getElementById("btn-search-reset")
+		.addEventListener("click", handleSearchReset);
+	  initSearchFromStorage();
 
-  document.addEventListener("DOMContentLoaded", initApp);
+	  // Support button wiring
+	  const supportBtn = document.getElementById("support-margo-button");
+	  if (supportBtn) {
+		supportBtn.addEventListener("click", () => {
+		  // TODO: replace with your real Razorpay payment link
+		  window.open("YOUR_RAZORPAY_PAYMENT_LINK_HERE", "_blank");
+		});
+	  }
+	}
+
+	document.addEventListener("DOMContentLoaded", initApp);
 </script>
 
 
