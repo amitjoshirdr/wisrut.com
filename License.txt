@@ -1,0 +1,17 @@
+Copyright (c) 2026 Amit Joshi
+
+All rights reserved.
+
+This codebase, including HTML, CSS, JavaScript, and Cloudflare Worker scripts,
+is made publicly viewable for educational and demonstration purposes only.
+
+You may:
+  - View and study the code.
+  - Use the live site as an end user.
+
+You may not:
+  - Copy, modify, or redistribute this code or any substantial portion of it.
+  - Reuse this code to build a competing product.
+  - Remove or alter references to "Margo" or "Wisrut".
+
+For collaboration or licensing enquiries, please contact: [amitjoshi.work@outlook.com]
