@@ -158,6 +158,13 @@
       padding: 0.75rem;
     }
 
+    .search-results {
+      font-size: 0.85rem;
+    }
+
+    .search-results ul {
+      padding-left: 1.1rem;
+    }
 
     /* Article length slider */
     .length-slider-wrap {
@@ -217,7 +224,7 @@
   </div>
 </div>
 
-  <h1>Margo – Student News Brief</h1>
+  <h1>Margo – Student News Brief & Search</h1>
 
   <!-- NEWS BRIEF SECTION (P0 / P1) -->
   <section class="section" id="news-section">
@@ -280,6 +287,49 @@
     </div>
   </section>
 
+  <!-- SEARCH SECTION (S0 / S1) -->
+  <section class="section" id="search-section">
+    <h2>Search</h2>
+
+    <!-- Search input -->
+    <label for="search-input">
+      Please type your search query
+    </label>
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Example: Explain the new NEP policy for school students"
+    />
+
+    <div>
+      <button id="btn-search-run">Search / Ask follow‑up</button>
+      <button id="btn-search-reset" class="secondary">Start fresh search</button>
+    </div>
+
+    <!-- Status text for search -->
+    <div id="search-status" class="status"></div>
+
+    <div class="row" style="margin-top: 1rem;">
+      <!-- Left: AI answer -->
+      <div class="col">
+        <h3>AI answer (with citations)</h3>
+        <div id="search-answer" class="ai-answer">
+          Ask a question to see an answer here.
+        </div>
+      </div>
+
+      <!-- Right: Top 5 results -->
+      <div class="col">
+        <h3>Top 5 results</h3>
+        <div id="search-results" class="search-results">
+          <ul id="search-results-list">
+            <li>No results yet.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- APP LOGIC -->
   
   <section class="section" id="support-section">
@@ -306,6 +356,7 @@
   <p>© 2026 Margo by Wisrut. Free for students.</p>
   <nav>
     <a href="#news-section">News Brief</a>
+    <a href="#search-section">Search</a>
     <a href="#support-section">Support Margo</a>
   </nav>
 </footer>
@@ -331,7 +382,11 @@
   const LSKEYS = {
     newsP0: "margop0original",        // first prompt string, locked after first submit
     newsP1: "margop1history",         // JSON array of all refinements in order
-    newsArticles: "margonewsarticles"
+    newsArticles: "margonewsarticles",
+    searchS0: "margosearchs0",        // first search query string, locked after first submit
+    searchS1: "margos1history",       // JSON array of all follow-up queries in order
+    searchAnswer: "margosearchanswer",
+    searchResults: "margosearchresults"
   };
 
   // =============================
@@ -737,6 +792,287 @@ Do not pad articles with generic sentences. Every sentence must carry specific i
   }
 
   // =============================
+  // SEARCH LOGIC (S0 / S1)
+  // =============================
+
+	function initSearchFromStorage() {
+	  const searchInputEl = document.getElementById("search-input");
+	  const savedS0 = localStorage.getItem(LSKEYS.searchS0) || "";
+
+	  // S1 is a JSON array of follow-up queries; show the latest in the input
+	  const s1History = getJSONFromLocalStorage(LSKEYS.searchS1) || [];
+	  const latestS1 = s1History.length > 0 ? s1History[s1History.length - 1] : "";
+
+	  if (searchInputEl) {
+		searchInputEl.value = latestS1;
+		searchInputEl.placeholder = savedS0
+		  ? "Type your follow-up question here…"
+		  : "Example: Explain the new NEP policy for school students";
+	  }
+
+	  const savedAnswer = localStorage.getItem(LSKEYS.searchAnswer);
+	  const answerEl = document.getElementById("search-answer");
+	  if (savedAnswer && answerEl) {
+		answerEl.innerHTML = savedAnswer;
+	  }
+
+	  // Show a hint if this is a follow-up session (S0 already locked)
+	  if (savedS0) {
+		const count = s1History.length;
+		setStatus("search-status", `Follow-up mode — ${count} follow-up(s) stacked on your original query. Ask another or Start Fresh Search to reset.`, false);
+	  }
+
+	  const savedResults = getJSONFromLocalStorage(LSKEYS.searchResults);
+	  renderSearchResults(
+		Array.isArray(savedResults) && savedResults.length > 0
+		  ? savedResults
+		  : []
+	  );
+	}
+
+  function renderSearchResults(results) {
+    const listEl = document.getElementById("search-results-list");
+    if (!listEl) return;
+    listEl.innerHTML = "";
+
+    if (!Array.isArray(results) || results.length === 0) {
+      listEl.innerHTML = "<li>No results yet.</li>";
+      return;
+    }
+
+    results.slice(0, 5).forEach((item, index) => {
+      const li = document.createElement("li");
+      li.textContent =
+        (item.title || `Result ${index + 1}`) +
+        (item.snippet ? ` – ${item.snippet}` : "");
+      listEl.appendChild(li);
+    });
+  }
+
+		// Parse the search response into:
+		// 1) headline
+		// 2) byline
+		// 3) article body
+		// 4) top 5 source/result lines
+	function parseSearchResponse(rawText) {
+		  if (!rawText || typeof rawText !== "string") {
+			return {
+			  headline: "Search answer",
+			  byline: "By Margo Search",
+			  bodyHtml: "No response available.",
+			  results: []
+			};
+		  }
+
+		  // Split article body from the "Top 5 Sources:" section
+		  const parts = rawText.split(/\bTop 5 Sources:\b/i);
+		  const articlePart = (parts[0] || "").trim();
+		  const sourcesPart = (parts[1] || "").trim();
+
+		  // Break article part into non-empty lines
+		  const lines = articlePart
+			.split("\n")
+			.map(line => line.trim())
+			.filter(Boolean);
+
+		  const headline = lines[0] || "Search answer";
+		  const byline = lines[1] || "By Margo Search";
+
+		  // Everything after headline + byline becomes the article body
+		  const bodyText = lines.slice(2).join("\n\n").trim();
+
+		  // Convert the body to simple HTML so markdown-like text displays cleanly
+		  const bodyHtml = markdownToHtml(bodyText || "No article body available.");
+
+		  // Parse sources/results into a clean 5-item list
+		  const results = sourcesPart
+			.split("\n")
+			.map(line => line.replace(/^[\s\-\*\d\.\)\(]+/, "").trim())
+			.filter(line => line.length > 3)
+			.slice(0, 5)
+			.map((line, index) => ({
+			  id: `r${index + 1}`,
+			  title: line,
+			  snippet: ""
+			}));
+
+		  return {
+			headline,
+			byline,
+			bodyHtml,
+			results
+		  };
+		}
+
+async function handleSearchRun() {
+  const inputEl = document.getElementById("search-input");
+  const answerEl = document.getElementById("search-answer");
+
+  if (!inputEl || !answerEl) return;
+
+  const query = (inputEl.value || "").trim();
+  if (!query) {
+    setStatus("search-status", "Please enter a search query.", true);
+    return;
+  }
+
+  // --- S0 / S1 logic ---
+  // S0  = original query string, locked on first search.
+  // S1  = JSON array of every follow-up query typed since S0, in order.
+  //       Each new search APPENDS to this array (never overwrites).
+  //       The AI always receives S0 + the full S1 history so nothing is lost.
+
+  let S0 = localStorage.getItem(LSKEYS.searchS0) || "";
+  const isFirstSearch = !S0;
+
+  if (isFirstSearch) {
+    S0 = query;
+    localStorage.setItem(LSKEYS.searchS0, S0);
+    setJSONToLocalStorage(LSKEYS.searchS1, []);
+  } else {
+    const s1History = getJSONFromLocalStorage(LSKEYS.searchS1) || [];
+    s1History.push(query);
+    setJSONToLocalStorage(LSKEYS.searchS1, s1History);
+  }
+
+  const s1History = getJSONFromLocalStorage(LSKEYS.searchS1) || [];
+
+  // Debug
+  console.log("SEARCH S0:", S0);
+  console.log("SEARCH S1 history:", s1History);
+
+  // Build the AI prompt
+  let aiPrompt;
+  // Read slider value for search article length too
+  const searchSlider = document.getElementById("article-length-slider");
+  const searchTargetWords = searchSlider ? parseInt(searchSlider.value, 10) : 500;
+
+  if (isFirstSearch) {
+    aiPrompt = `You are Margo, a trust-first search assistant for students.
+
+User query:
+"${S0}"
+
+Write ONE complete, student-friendly article-style answer of exactly ${searchTargetWords} words (in the article body). Count carefully.
+
+The answer should feel like a well-written article, not bullet notes.
+Write naturally, without explicitly labeling sections like "thesis", "scope", or "conclusion".
+
+Structure it like this:
+1. A clear headline on the first line.
+2. A natural byline/context line on the second line.
+3. A short lead paragraph (2-3 sentences) that frames the topic and states the key fact or question.
+4. A background paragraph (3-5 sentences) with specific context, named sources, or data.
+5. Multiple body paragraphs that explain the issue clearly, develop the central idea with supporting evidence, present at least 2-3 distinct perspectives, and include critical analysis of what is NOT being said in mainstream coverage.
+6. A student relevance paragraph that is specific and actionable — connect this to exams, career paths, or daily life concretely.
+7. A short concluding paragraph (2-3 sentences) that gives the main takeaway.
+
+After the article, add this exact heading on a new line:
+Top 5 Sources:
+
+Then list 5 source names or result titles, one per line.
+
+Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suitable for students. Every sentence must carry specific information — no filler.`;
+  } else {
+    // Format the full follow-up history
+    const historyBlock = s1History
+      .map((entry, i) => `Follow-up ${i + 1}: "${entry}"`)
+      .join("\n");
+
+    aiPrompt = `You are Margo, a trust-first search assistant for students.
+
+The student's original question (S0 — the topic that started this search session):
+"${S0}"
+
+The student's follow-up history (every subsequent question, in order):
+${historyBlock}
+
+Your task: answer the LATEST follow-up in the context of everything that came before. The full history tells you how the student's understanding has evolved and what they are now trying to pinpoint. Do not ignore earlier follow-ups — they provide crucial context for the latest question.
+
+Write ONE complete, student-friendly article-style answer of exactly ${searchTargetWords} words (in the article body). Count carefully.
+
+Structure it like this:
+1. A clear headline on the first line (reflecting the latest focus).
+2. A natural byline/context line on the second line.
+3. A short lead paragraph (2-3 sentences) that connects to the original query and frames the latest angle.
+4. A background paragraph with specific context, named sources, or data.
+5. Multiple body paragraphs answering the latest question with evidence, at least 2-3 distinct perspectives, and critical analysis of what is NOT being said in mainstream coverage.
+6. A student relevance paragraph that is specific and actionable.
+7. A short concluding paragraph (2-3 sentences) with the main takeaway.
+
+After the article, add this exact heading on a new line:
+Top 5 Sources:
+
+Then list 5 source names or result titles, one per line.
+
+Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suitable for students. Every sentence must carry specific information — no filler.`;
+  }
+
+  const followUpCount = s1History.length;
+  setStatus("search-status", isFirstSearch
+    ? "Running search…"
+    : `Running follow-up search (S0 + ${followUpCount} follow-up(s) stacked)…`, false);
+  document.getElementById("btn-search-run").disabled = true;
+
+  // Scale max_tokens with slider: ~1.4 tokens/word + 400 overhead for structure/headings
+  const searchMaxTokens = Math.ceil(searchTargetWords * 1.4) + 400;
+
+  try {
+    const backendResponse = await callMargoBackend({
+      model: "auto",
+      prompt: aiPrompt,
+      max_tokens: searchMaxTokens,
+      stream: false
+    });
+
+			const parsed = parseSearchResponse(backendResponse);
+
+			const fullAnswerHtml = `
+			  <strong style="font-size:1.05rem;">${parsed.headline}</strong><br>
+			  <span style="font-size:0.8rem;color:#666">${parsed.byline}</span>
+			  <hr>
+			  <div>${parsed.bodyHtml}</div>
+			`;
+
+			localStorage.setItem(LSKEYS.searchAnswer, fullAnswerHtml);
+			setJSONToLocalStorage(LSKEYS.searchResults, parsed.results);
+
+			answerEl.innerHTML = fullAnswerHtml;
+			renderSearchResults(parsed.results);
+
+			// Clear input so user knows to type a NEW follow-up next time
+			if (!isFirstSearch) {
+			  inputEl.value = "";
+			  inputEl.placeholder = "Type your next follow-up question here…";
+			}
+
+			setStatus("search-status", isFirstSearch
+			  ? "Search complete. Ask a follow-up to go deeper."
+			  : `Follow-up answer generated — ${followUpCount} follow-up(s) stacked on your original query.`, false);
+
+		  } catch (err) {
+			console.error("Search error", err);
+			setStatus("search-status", `Could not complete search: ${err.message || "Unknown error"}.`, true);
+		  } finally {
+			document.getElementById("btn-search-run").disabled = false;
+		  }
+}
+  function handleSearchReset() {
+    localStorage.removeItem(LSKEYS.searchS0);
+    localStorage.removeItem(LSKEYS.searchS1);  // clears the JSON array
+    localStorage.removeItem(LSKEYS.searchAnswer);
+    localStorage.removeItem(LSKEYS.searchResults);
+
+    const inputEl = document.getElementById("search-input");
+    const answerEl = document.getElementById("search-answer");
+    if (inputEl) inputEl.value = "";
+    if (answerEl) answerEl.innerHTML = "Ask a question to see an answer here.";
+
+    renderSearchResults([]);
+    setStatus("search-status", "Search reset. Start a fresh query.", false);
+  }
+
+  // =============================
   // INITIALIZATION
   // =============================
 
@@ -746,6 +1082,12 @@ function initApp() {
   document.getElementById("btn-news-reset")
     .addEventListener("click", handleNewsReset);
   initNewsFromStorage();
+
+  document.getElementById("btn-search-run")
+    .addEventListener("click", handleSearchRun);
+  document.getElementById("btn-search-reset")
+    .addEventListener("click", handleSearchReset);
+  initSearchFromStorage();
 
   // UPI support button
   const supportBtn = document.getElementById("support-margo-button");
