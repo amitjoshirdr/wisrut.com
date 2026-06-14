@@ -243,6 +243,27 @@
       placeholder="Example: Explain the new NEP policy for school students"
     />
 
+	    <!-- Article length slider -->
+    <div class="length-slider-wrap">
+      <div class="length-slider-label">
+        <span>Article length</span>
+        <strong id="length-display">500 words</strong>
+      </div>
+      <input
+        type="range"
+        id="article-length-slider"
+        min="400"
+        max="2000"
+        step="50"
+        value="500"
+      />
+      <div class="length-slider-range">
+        <span>400 words</span>
+        <span>2000 words</span>
+      </div>
+    </div>
+	
+	<!-- Controls for generating and resetting -->
     <div>
       <button id="btn-search-run">Search / Ask follow‑up</button>
       <button id="btn-search-reset" class="secondary">Start fresh search</button>
