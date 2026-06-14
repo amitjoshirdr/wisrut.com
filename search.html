@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Margo – Student News Brief & Search</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    /* Basic layout styling */
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f7f7f7;
+    }
+	
+	.support-actions {
+	  display: flex;
+	  gap: 0.75rem;
+	  flex-wrap: wrap;
+	  margin: 1rem 0;
+	}
+
+	.support-btn {
+	  display: inline-block;
+	  padding: 0.75rem 1rem;
+	  background: #222;
+	  color: #fff;
+	  text-decoration: none;
+	  border-radius: 6px;
+	  border: none;
+	  cursor: pointer;
+	}
+
+	.support-note {
+	  font-size: 0.85rem;
+	  color: #555;
+	  margin-top: 0.5rem;
+	}
+
+	.site-footer {
+	  margin-top: 2rem;
+	  padding-top: 1rem;
+	  border-top: 1px solid #ddd;
+	  font-size: 0.9rem;
+	}
+
+	.site-footer nav {
+	  display: flex;
+	  gap: 1rem;
+	  flex-wrap: wrap;
+	  margin-top: 0.5rem;
+	}
+	
+    h1, h2 {
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .section {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .col {
+      flex: 1 1 300px;
+      min-width: 0;
+    }
+
+	textarea,
+	input[type="text"] {
+	  width: 100%;
+	  box-sizing: border-box;
+	  padding: 0.5rem;
+	  margin-bottom: 0.5rem;
+	  border-radius: 4px;
+	  border: 1px solid #ccc;
+	  font-family: inherit;
+	  font-size: 0.9rem;
+	  text-indent: 0;
+	  line-height: 1.4;
+	}
+
+    button {
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      border: none;
+      background: #222;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    button.secondary {
+      background: #888;
+    }
+
+    button:disabled {
+      background: #aaa;
+      cursor: default;
+    }
+
+    .status {
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+
+    .articles {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .article-card {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 0.75rem;
+      background: #fafafa;
+      cursor: pointer;
+    }
+
+    .article-card h3 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1rem;
+    }
+
+    .article-meta {
+      font-size: 0.8rem;
+      color: #666;
+      margin-bottom: 0.25rem;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 0.85rem;
+      background: #f0f0f0;
+      padding: 0.75rem;
+      border-radius: 6px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .ai-answer {
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      background: #f9f9ff;
+      border-radius: 6px;
+      padding: 0.75rem;
+    }
+
+    .search-results {
+      font-size: 0.85rem;
+    }
+
+    .search-results ul {
+      padding-left: 1.1rem;
+    }
+
+    /* Article length slider */
+    .length-slider-wrap {
+      margin: 0.75rem 0 0.5rem 0;
+    }
+
+    .length-slider-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #444;
+      margin-bottom: 0.3rem;
+    }
+
+    .length-slider-label strong {
+      font-size: 0.95rem;
+      color: #111;
+    }
+
+    .length-slider-range {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #999;
+      margin-top: 0.15rem;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #222;
+      cursor: pointer;
+      height: 4px;
+    }
+	
+	.support-btn.secondary {
+	  background: #f2f2f2;
+	  color: #222;
+	}
+	
+	
+  </style>
+</head>
+
+<body>
+
+	<div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+  <a
+    href="https://wisrut.com"
+    style="display: inline-block; padding: 0.5rem 0.9rem; background: #222; color: #fff; text-decoration: none; border-radius: 6px; font-size: 0.9rem;"
+  >
+    ← Back to Wisrut
+  </a>
+
+  <div style="font-size: 0.9rem; color: #666;">
+    Margo Search by Wisrut
+  </div>
+</div>
+
+  <h1>Margo Search</h1>
+
+  <!-- SEARCH SECTION (S0 / S1) -->
+  <section class="section" id="search-section">
+    <h2>Search</h2>
+
+    <!-- Search input -->
+    <label for="search-input">
+      Please type your search query
+    </label>
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Example: Explain the new NEP policy for school students"
+    />
+
+    <div>
+      <button id="btn-search-run">Search / Ask follow‑up</button>
+      <button id="btn-search-reset" class="secondary">Start fresh search</button>
+    </div>
+
+    <!-- Status text for search -->
+    <div id="search-status" class="status"></div>
+
+    <div class="row" style="margin-top: 1rem;">
+      <!-- Left: AI answer -->
+      <div class="col">
+        <h3>AI answer (with citations)</h3>
+        <div id="search-answer" class="ai-answer">
+          Ask a question to see an answer here.
+        </div>
+      </div>
+
+      <!-- Right: Top 5 results -->
+      <div class="col">
+        <h3>Top 5 results</h3>
+        <div id="search-results" class="search-results">
+          <ul id="search-results-list">
+            <li>No results yet.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP LOGIC -->
+  
+  <section class="section" id="support-section">
+  <h2>Support Margo</h2>
+  <p>
+    Margo stays free for students. We use light ads to cover hosting and curation costs, and also offer a voluntary way to support the project if you find it useful.
+  </p>
+
+	<div class="support-actions">
+	  <button class="support-btn" id="support-margo-button">
+		Support via UPI
+	  </button>
+	  <button class="support-btn secondary" id="support-margo-standard">
+		More payment options
+	  </button>
+	</div>
+
+  <p class="support-note">
+    If you support Margo, you help independent student‑focused news curation continue.
+  </p>
+</section>
+
+<footer class="site-footer">
+  <p>© 2026 Margo by Wisrut. Free for students.</p>
+  <nav>
+    <a href="#news-section">News Brief</a>
+    <a href="#search-section">Search</a>
+    <a href="#support-section">Support Margo</a>
+  </nav>
+</footer>
+  
+<script>
+  // =============================
+  // CONFIG & LOCAL STORAGE KEYS
+  // =============================
+
+  const MARGOBACKENDURL = "https://margo-api.amitjoshirdr.workers.dev";
+
+  // Live-update the word count label when the slider moves
+  document.addEventListener("DOMContentLoaded", () => {
+    const slider = document.getElementById("article-length-slider");
+    const display = document.getElementById("length-display");
+    if (slider && display) {
+      slider.addEventListener("input", () => {
+        display.textContent = `${slider.value} words`;
+      });
+    }
+  });
+
+  const LSKEYS = {
+    newsP0: "margop0original",        // first prompt string, locked after first submit
+    newsP1: "margop1history",         // JSON array of all refinements in order
+    newsArticles: "margonewsarticles",
+    searchS0: "margosearchs0",        // first search query string, locked after first submit
+    searchS1: "margos1history",       // JSON array of all follow-up queries in order
+    searchAnswer: "margosearchanswer",
+    searchResults: "margosearchresults"
+  };
+
+  // =============================
+  // HELPER FUNCTIONS
+  // =============================
+
+  function setStatus(id, message, isError = false) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = message;
+    el.style.color = isError ? "red" : "#444";
+  }
+
+  function getJSONFromLocalStorage(key) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setJSONToLocalStorage(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {}
+  }
+
+  // Convert markdown bold (**text**) and horizontal rules (---) to simple HTML
+  function markdownToHtml(text) {
+    if (!text) return "";
+    return text
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")  // **bold** → <strong>
+      .replace(/\*(.*?)\*/g, "<em>$1</em>")              // *italic* → <em>
+      .replace(/^---+$/gm, "<hr>")                       // --- → <hr>
+      .replace(/\n/g, "<br>");                           // newlines → <br>
+  }
+
+  // Call the Margo backend Worker
+  async function callMargoBackend(payload) {
+    const response = await fetch(`${MARGOBACKENDURL}/api/generate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Backend error ${response.status}: ${text}`);
+    }
+
+    const data = await response.json();
+    if (!data || typeof data.response !== "string") {
+      throw new Error("Unexpected backend response format (missing 'response').");
+    }
+
+    return data.response;
+  }
+
+  // =============================
+  // ARTICLE PARSER
+  // =============================
+
+  // Splits AI response into 3 article objects by looking for
+  // "Article Idea 1", "Article Idea 2", "Article Idea 3" markers.
+  // Falls back to splitting by "---" if those markers aren't found.
+
+function parseArticles(backendResponse) {
+  if (!backendResponse || typeof backendResponse !== "string") {
+    return [];
+  }
+
+  // Split into chunks by lines containing only ---
+  const rawChunks = backendResponse
+    .split(/\n-{3,}\n/g)
+    .map(c => c.trim())
+    .filter(c => c.length > 0);
+
+  if (rawChunks.length >= 2) {
+    return rawChunks.slice(0, 3).map((chunk, index) => {
+      const lines = chunk.split("\n").map(l => l.trim()).filter(Boolean);
+
+      const headline = lines[0] || `Article ${index + 1}`;
+      const byline =
+        lines[1] && !/^\s*$/.test(lines[1])
+          ? lines[1]
+          : "By Margo News Desk";
+
+      const bodyText = lines.slice(2).join("\n\n");
+
+      // Extract just the article body (between **Article...:** and **Critical Analysis:**)
+      // so the card summary shows a real sentence, not a bullet point
+      const articleBodyMatch = chunk.match(
+        /\*{0,2}Article[^*\n]*\*{0,2}[:\s]*([\s\S]*?)(?=\*{0,2}Critical Analysis|$)/i
+      );
+      const articleBodyRaw = articleBodyMatch
+        ? articleBodyMatch[1].trim()
+        : bodyText;
+
+      // Card summary: first 2 sentences of the actual article prose
+      const summarySentence = (articleBodyRaw.match(/[^.!?]+[.!?]/g) || [articleBodyRaw])
+        .slice(0, 2)
+        .join(" ")
+        .trim();
+
+      return {
+        id: `a${index + 1}`,
+        title: headline,
+        meta: byline,
+        summary: summarySentence || "Tap to read the full article.",
+        fullText: markdownToHtml(bodyText)
+      };
+    });
+  }
+
+  // Last resort: show the whole response as one article
+  return [
+    {
+      id: "a1",
+      title: "Brief summary",
+      meta: "Full AI response",
+      summary: backendResponse.replace(/\*+/g, "").slice(0, 150),
+      fullText: markdownToHtml(backendResponse)
+    }
+  ];
+}
+
+  // Extract a named section (e.g. "Assumptions", "Scope") from a chunk
+  function extractSection(text, sectionName) {
+    const regex = new RegExp(
+      `\\*{0,2}${sectionName}\\*{0,2}[:\\s]*([\\s\\S]*?)(?=\\*{0,2}(?:Assumptions|Scope|Critical Analysis)\\*{0,2}[:\\s]|$)`,
+      "i"
+    );
+    const match = text.match(regex);
+    if (!match) return "";
+    return markdownToHtml(match[1].trim());
+  }
+
+  // =============================
+  // SEARCH LOGIC (S0 / S1)
+  // =============================
+
+	function initSearchFromStorage() {
+	  const searchInputEl = document.getElementById("search-input");
+	  const savedS0 = localStorage.getItem(LSKEYS.searchS0) || "";
+
+	  // S1 is a JSON array of follow-up queries; show the latest in the input
+	  const s1History = getJSONFromLocalStorage(LSKEYS.searchS1) || [];
+	  const latestS1 = s1History.length > 0 ? s1History[s1History.length - 1] : "";
+
+	  if (searchInputEl) {
+		searchInputEl.value = latestS1;
+		searchInputEl.placeholder = savedS0
+		  ? "Type your follow-up question here…"
+		  : "Example: Explain the new NEP policy for school students";
+	  }
+
+	  const savedAnswer = localStorage.getItem(LSKEYS.searchAnswer);
+	  const answerEl = document.getElementById("search-answer");
+	  if (savedAnswer && answerEl) {
+		answerEl.innerHTML = savedAnswer;
+	  }
+
+	  // Show a hint if this is a follow-up session (S0 already locked)
+	  if (savedS0) {
+		const count = s1History.length;
+		setStatus("search-status", `Follow-up mode — ${count} follow-up(s) stacked on your original query. Ask another or Start Fresh Search to reset.`, false);
+	  }
+
+	  const savedResults = getJSONFromLocalStorage(LSKEYS.searchResults);
+	  renderSearchResults(
+		Array.isArray(savedResults) && savedResults.length > 0
+		  ? savedResults
+		  : []
+	  );
+	}
+
+  function renderSearchResults(results) {
+    const listEl = document.getElementById("search-results-list");
+    if (!listEl) return;
+    listEl.innerHTML = "";
+
+    if (!Array.isArray(results) || results.length === 0) {
+      listEl.innerHTML = "<li>No results yet.</li>";
+      return;
+    }
+
+    results.slice(0, 5).forEach((item, index) => {
+      const li = document.createElement("li");
+      li.textContent =
+        (item.title || `Result ${index + 1}`) +
+        (item.snippet ? ` – ${item.snippet}` : "");
+      listEl.appendChild(li);
+    });
+  }
+
+		// Parse the search response into:
+		// 1) headline
+		// 2) byline
+		// 3) article body
+		// 4) top 5 source/result lines
+	function parseSearchResponse(rawText) {
+		  if (!rawText || typeof rawText !== "string") {
+			return {
+			  headline: "Search answer",
+			  byline: "By Margo Search",
+			  bodyHtml: "No response available.",
+			  results: []
+			};
+		  }
+
+		  // Split article body from the "Top 5 Sources:" section
+		  const parts = rawText.split(/\bTop 5 Sources:\b/i);
+		  const articlePart = (parts[0] || "").trim();
+		  const sourcesPart = (parts[1] || "").trim();
+
+		  // Break article part into non-empty lines
+		  const lines = articlePart
+			.split("\n")
+			.map(line => line.trim())
+			.filter(Boolean);
+
+		  const headline = lines[0] || "Search answer";
+		  const byline = lines[1] || "By Margo Search";
+
+		  // Everything after headline + byline becomes the article body
+		  const bodyText = lines.slice(2).join("\n\n").trim();
+
+		  // Convert the body to simple HTML so markdown-like text displays cleanly
+		  const bodyHtml = markdownToHtml(bodyText || "No article body available.");
+
+		  // Parse sources/results into a clean 5-item list
+		  const results = sourcesPart
+			.split("\n")
+			.map(line => line.replace(/^[\s\-\*\d\.\)\(]+/, "").trim())
+			.filter(line => line.length > 3)
+			.slice(0, 5)
+			.map((line, index) => ({
+			  id: `r${index + 1}`,
+			  title: line,
+			  snippet: ""
+			}));
+
+		  return {
+			headline,
+			byline,
+			bodyHtml,
+			results
+		  };
+		}
+
+async function handleSearchRun() {
+  const inputEl = document.getElementById("search-input");
+  const answerEl = document.getElementById("search-answer");
+
+  if (!inputEl || !answerEl) return;
+
+  const query = (inputEl.value || "").trim();
+  if (!query) {
+    setStatus("search-status", "Please enter a search query.", true);
+    return;
+  }
+
+  // --- S0 / S1 logic ---
+  // S0  = original query string, locked on first search.
+  // S1  = JSON array of every follow-up query typed since S0, in order.
+  //       Each new search APPENDS to this array (never overwrites).
+  //       The AI always receives S0 + the full S1 history so nothing is lost.
+
+  let S0 = localStorage.getItem(LSKEYS.searchS0) || "";
+  const isFirstSearch = !S0;
+
+  if (isFirstSearch) {
+    S0 = query;
+    localStorage.setItem(LSKEYS.searchS0, S0);
+    setJSONToLocalStorage(LSKEYS.searchS1, []);
+  } else {
+    const s1History = getJSONFromLocalStorage(LSKEYS.searchS1) || [];
+    s1History.push(query);
+    setJSONToLocalStorage(LSKEYS.searchS1, s1History);
+  }
+
+  const s1History = getJSONFromLocalStorage(LSKEYS.searchS1) || [];
+
+  // Debug
+  console.log("SEARCH S0:", S0);
+  console.log("SEARCH S1 history:", s1History);
+
+  // Build the AI prompt
+  let aiPrompt;
+  // Read slider value for search article length too
+  const searchSlider = document.getElementById("article-length-slider");
+  const searchTargetWords = searchSlider ? parseInt(searchSlider.value, 10) : 500;
+
+  if (isFirstSearch) {
+    aiPrompt = `You are Margo, a trust-first search assistant for students.
+
+	User query:
+	"${S0}"
+
+	Write ONE complete, student-friendly article-style answer of exactly ${searchTargetWords} words (in the article body). Count carefully.
+
+	The answer should feel like a well-written article, not bullet notes.
+	Write naturally, without explicitly labeling sections like "thesis", "scope", or "conclusion".
+
+	Structure it like this:
+	1. A clear headline on the first line.
+	2. A natural byline/context line on the second line.
+	3. A short lead paragraph (2-3 sentences) that frames the topic and states the key fact or question.
+	4. A background paragraph (3-5 sentences) with specific context, named sources, or data.
+	5. Multiple body paragraphs that explain the issue clearly, develop the central idea with supporting evidence, present at least 2-3 distinct perspectives, and include critical analysis of what is NOT being said in mainstream coverage.
+	6. A student relevance paragraph that is specific and actionable — connect this to exams, career paths, or daily life concretely.
+	7. A short concluding paragraph (2-3 sentences) that gives the main takeaway.
+
+	After the article, add this exact heading on a new line:
+	Top 5 Sources:
+
+	Then list 5 source names or result titles, one per line.
+
+	Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suitable for students. Every sentence must carry specific information — no filler.`;
+	  } else {
+		// Format the full follow-up history
+		const historyBlock = s1History
+		  .map((entry, i) => `Follow-up ${i + 1}: "${entry}"`)
+		  .join("\n");
+
+		aiPrompt = `You are Margo, a trust-first search assistant for students.
+
+	The student's original question (S0 — the topic that started this search session):
+	"${S0}"
+
+	The student's follow-up history (every subsequent question, in order):
+	${historyBlock}
+
+	Your task: answer the LATEST follow-up in the context of everything that came before. The full history tells you how the student's understanding has evolved and what they are now trying to pinpoint. Do not ignore earlier follow-ups — they provide crucial context for the latest question.
+
+	Write ONE complete, student-friendly article-style answer of exactly ${searchTargetWords} words (in the article body). Count carefully.
+
+	Structure it like this:
+	1. A clear headline on the first line (reflecting the latest focus).
+	2. A natural byline/context line on the second line.
+	3. A short lead paragraph (2-3 sentences) that connects to the original query and frames the latest angle.
+	4. A background paragraph with specific context, named sources, or data.
+	5. Multiple body paragraphs answering the latest question with evidence, at least 2-3 distinct perspectives, and critical analysis of what is NOT being said in mainstream coverage.
+	6. A student relevance paragraph that is specific and actionable.
+	7. A short concluding paragraph (2-3 sentences) with the main takeaway.
+
+	After the article, add this exact heading on a new line:
+	Top 5 Sources:
+
+	Then list 5 source names or result titles, one per line.
+
+	Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suitable for students. Every sentence must carry specific information — no filler.`;
+	  }
+
+	  const followUpCount = s1History.length;
+	  setStatus("search-status", isFirstSearch
+		? "Running search…"
+		: `Running follow-up search (S0 + ${followUpCount} follow-up(s) stacked)…`, false);
+	  document.getElementById("btn-search-run").disabled = true;
+
+	  // Scale max_tokens with slider: ~1.4 tokens/word + 400 overhead for structure/headings
+	  const searchMaxTokens = Math.ceil(searchTargetWords * 1.4) + 400;
+
+	  try {
+		const backendResponse = await callMargoBackend({
+		  model: "auto",
+		  prompt: aiPrompt,
+		  max_tokens: searchMaxTokens,
+		  stream: false
+		});
+
+			const parsed = parseSearchResponse(backendResponse);
+
+			const fullAnswerHtml = `
+			  <strong style="font-size:1.05rem;">${parsed.headline}</strong><br>
+			  <span style="font-size:0.8rem;color:#666">${parsed.byline}</span>
+			  <hr>
+			  <div>${parsed.bodyHtml}</div>
+			`;
+
+			localStorage.setItem(LSKEYS.searchAnswer, fullAnswerHtml);
+			setJSONToLocalStorage(LSKEYS.searchResults, parsed.results);
+
+			answerEl.innerHTML = fullAnswerHtml;
+			renderSearchResults(parsed.results);
+
+			// Clear input so user knows to type a NEW follow-up next time
+			if (!isFirstSearch) {
+			  inputEl.value = "";
+			  inputEl.placeholder = "Type your next follow-up question here…";
+			}
+
+			setStatus("search-status", isFirstSearch
+			  ? "Search complete. Ask a follow-up to go deeper."
+			  : `Follow-up answer generated — ${followUpCount} follow-up(s) stacked on your original query.`, false);
+
+		  } catch (err) {
+			console.error("Search error", err);
+			setStatus("search-status", `Could not complete search: ${err.message || "Unknown error"}.`, true);
+		  } finally {
+			document.getElementById("btn-search-run").disabled = false;
+		  }
+}
+  function handleSearchReset() {
+    localStorage.removeItem(LSKEYS.searchS0);
+    localStorage.removeItem(LSKEYS.searchS1);  // clears the JSON array
+    localStorage.removeItem(LSKEYS.searchAnswer);
+    localStorage.removeItem(LSKEYS.searchResults);
+
+    const inputEl = document.getElementById("search-input");
+    const answerEl = document.getElementById("search-answer");
+    if (inputEl) inputEl.value = "";
+    if (answerEl) answerEl.innerHTML = "Ask a question to see an answer here.";
+
+    renderSearchResults([]);
+    setStatus("search-status", "Search reset. Start a fresh query.", false);
+  }
+
+  // =============================
+  // INITIALIZATION
+  // =============================
+
+function initApp() {
+  document.getElementById("btn-news-generate")
+    .addEventListener("click", handleNewsGenerate);
+  document.getElementById("btn-news-reset")
+    .addEventListener("click", handleNewsReset);
+  initNewsFromStorage();
+
+  document.getElementById("btn-search-run")
+    .addEventListener("click", handleSearchRun);
+  document.getElementById("btn-search-reset")
+    .addEventListener("click", handleSearchReset);
+  initSearchFromStorage();
+
+  // UPI support button
+  const supportBtn = document.getElementById("support-margo-button");
+  if (supportBtn) {
+    supportBtn.addEventListener("click", () => {
+      window.open("https://rzp.io/rzp/fjD6HZp", "_blank");
+    });
+  }
+
+  // Standard payment button (cards, netbanking, etc.)
+  const supportStdBtn = document.getElementById("support-margo-standard");
+  if (supportStdBtn) {
+    supportStdBtn.addEventListener("click", () => {
+      window.open("https://rzp.io/rzp/j6b7rTpw", "_blank");
+    });
+  }
+}
+document.addEventListener("DOMContentLoaded", initApp);
+
+</script>
+
+
+</body>
+</html>
