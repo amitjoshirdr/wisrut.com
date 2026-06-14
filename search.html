@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Margo – Search</title>
+  <title>Margo – Student News Brief</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
@@ -220,11 +220,72 @@
   </a>
 
   <div style="font-size: 0.9rem; color: #666;">
-    Margo Search 
+    Margo NEWS Brief
   </div>
 </div>
 
-  <h1>Margo Search</h1>
+  <h1>Margo – Student News Brief & Search</h1>
+
+  <!-- NEWS BRIEF SECTION (P0 / P1) -->
+  <section class="section" id="news-section">
+    <h2>News Brief</h2>
+
+    <!-- News prompt area -->
+    <label for="news-prompt">
+      Please type your news brief prompt. 
+    </label>
+    <!-- P0 = first 50 words, P1 = evolving refinement; we store only the current P1 here -->
+    <textarea
+      id="news-prompt"
+      rows="3"
+      placeholder="Example: I am a Class 11 student preparing for CBSE boards. Show me daily, bias-aware news about Indian economy and science."></textarea>
+
+    <!-- Article length slider -->
+    <div class="length-slider-wrap">
+      <div class="length-slider-label">
+        <span>Article length</span>
+        <strong id="length-display">500 words</strong>
+      </div>
+      <input
+        type="range"
+        id="article-length-slider"
+        min="400"
+        max="2000"
+        step="50"
+        value="500"
+      />
+      <div class="length-slider-range">
+        <span>400 words</span>
+        <span>2000 words</span>
+      </div>
+    </div>
+
+    <!-- Controls for generating and resetting -->
+    <div>
+      <button id="btn-news-generate">Generate / Update Brief</button>
+      <button id="btn-news-reset" class="secondary">Hard reset news brief</button>
+    </div>
+
+    <!-- Status text for news -->
+    <div id="news-status" class="status"></div>
+
+    <!-- Articles list + selected details -->
+    <div class="row" style="margin-top: 1rem;">
+      <!-- Left: article cards -->
+      <div class="col">
+        <h3>Articles (click to read)</h3>
+        <div id="news-articles" class="articles">
+          <!-- Article cards will be rendered here -->
+        </div>
+      </div>
+
+      <!-- Right: selected article details -->
+      <div class="col">
+        <h3>Selected article</h3>
+        <pre id="news-article-detail">No article selected yet.</pre>
+      </div>
+    </div>
+  </section>
 
   <!-- SEARCH SECTION (S0 / S1) -->
   <section class="section" id="search-section">
