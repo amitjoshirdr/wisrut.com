@@ -6,52 +6,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
-    /* Basic layout styling */
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
       padding: 1rem;
       background: #f7f7f7;
     }
-	
-	.support-actions {
-	  display: flex;
-	  gap: 0.75rem;
-	  flex-wrap: wrap;
-	  margin: 1rem 0;
-	}
 
-	.support-btn {
-	  display: inline-block;
-	  padding: 0.75rem 1rem;
-	  background: #222;
-	  color: #fff;
-	  text-decoration: none;
-	  border-radius: 6px;
-	  border: none;
-	  cursor: pointer;
-	}
+    .support-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
 
-	.support-note {
-	  font-size: 0.85rem;
-	  color: #555;
-	  margin-top: 0.5rem;
-	}
+    .support-btn {
+      display: inline-block;
+      padding: 0.75rem 1rem;
+      background: #222;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
 
-	.site-footer {
-	  margin-top: 2rem;
-	  padding-top: 1rem;
-	  border-top: 1px solid #ddd;
-	  font-size: 0.9rem;
-	}
+    .support-btn.secondary {
+      background: #f2f2f2;
+      color: #222;
+    }
 
-	.site-footer nav {
-	  display: flex;
-	  gap: 1rem;
-	  flex-wrap: wrap;
-	  margin-top: 0.5rem;
-	}
-	
+    .support-note {
+      font-size: 0.85rem;
+      color: #555;
+      margin-top: 0.5rem;
+    }
+
+    .site-footer {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #ddd;
+      font-size: 0.9rem;
+    }
+
+    .site-footer nav {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
     h1, h2 {
       margin-top: 1.5rem;
       margin-bottom: 0.5rem;
@@ -76,19 +80,19 @@
       min-width: 0;
     }
 
-	textarea,
-	input[type="text"] {
-	  width: 100%;
-	  box-sizing: border-box;
-	  padding: 0.5rem;
-	  margin-bottom: 0.5rem;
-	  border-radius: 4px;
-	  border: 1px solid #ccc;
-	  font-family: inherit;
-	  font-size: 0.9rem;
-	  text-indent: 0;
-	  line-height: 1.4;
-	}
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+      font-size: 0.9rem;
+      text-indent: 0;
+      line-height: 1.4;
+    }
 
     button {
       padding: 0.5rem 1rem;
@@ -114,42 +118,6 @@
       margin-top: 0.25rem;
     }
 
-    .articles {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .article-card {
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      padding: 0.75rem;
-      background: #fafafa;
-      cursor: pointer;
-    }
-
-    .article-card h3 {
-      margin: 0 0 0.25rem 0;
-      font-size: 1rem;
-    }
-
-    .article-meta {
-      font-size: 0.8rem;
-      color: #666;
-      margin-bottom: 0.25rem;
-    }
-
-    pre {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-size: 0.85rem;
-      background: #f0f0f0;
-      padding: 0.75rem;
-      border-radius: 6px;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
     .ai-answer {
       font-size: 0.9rem;
       white-space: pre-wrap;
@@ -166,7 +134,6 @@
       padding-left: 1.1rem;
     }
 
-    /* Article length slider */
     .length-slider-wrap {
       margin: 0.75rem 0 0.5rem 0;
     }
@@ -199,51 +166,35 @@
       cursor: pointer;
       height: 4px;
     }
-	
-	.support-btn.secondary {
-	  background: #f2f2f2;
-	  color: #222;
-	}
-	
-	
   </style>
 </head>
 
 <body>
 
-	<div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
-  <a
-    href="https://wisrut.com"
-    style="display: inline-block; padding: 0.5rem 0.9rem; background: #222; color: #fff; text-decoration: none; border-radius: 6px; font-size: 0.9rem;"
-  >
-    ← Back to Wisrut
-  </a>
-
-  <div style="font-size: 0.9rem; color: #666;">
-    Margo SEARCH
+  <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+    <a
+      href="https://wisrut.com"
+      style="display: inline-block; padding: 0.5rem 0.9rem; background: #222; color: #fff; text-decoration: none; border-radius: 6px; font-size: 0.9rem;"
+    >
+      ← Back to Wisrut
+    </a>
+    <div style="font-size: 0.9rem; color: #666;">Margo SEARCH</div>
   </div>
-</div>
 
   <h1>Margo – Search</h1>
 
-  <!-- NEWS BRIEF SECTION (P0 / P1) -->
-
-
-  <!-- SEARCH SECTION (S0 / S1) -->
+  <!-- SEARCH SECTION -->
   <section class="section" id="search-section">
     <h2>Search</h2>
 
-    <!-- Search input -->
-    <label for="search-input">
-      Please type your search query
-    </label>
+    <label for="search-input">Please type your search query</label>
     <input
       type="text"
       id="search-input"
       placeholder="Example: Explain the new NEP policy for school students"
     />
 
-	    <!-- Article length slider -->
+    <!-- Article length slider -->
     <div class="length-slider-wrap">
       <div class="length-slider-label">
         <span>Article length</span>
@@ -262,14 +213,12 @@
         <span>2000 words</span>
       </div>
     </div>
-	
-	<!-- Controls for generating and resetting -->
+
     <div>
       <button id="btn-search-run">Search / Ask follow‑up</button>
       <button id="btn-search-reset" class="secondary">Start fresh search</button>
     </div>
 
-    <!-- Status text for search -->
     <div id="search-status" class="status"></div>
 
     <div class="row" style="margin-top: 1rem;">
@@ -293,67 +242,45 @@
     </div>
   </section>
 
-  <!-- APP LOGIC -->
-  
+  <!-- SUPPORT SECTION -->
   <section class="section" id="support-section">
-  <h2>Support Margo</h2>
-  <p>
-    Margo stays free for students. We use light ads to cover hosting and curation costs, and also offer a voluntary way to support the project if you find it useful.
-  </p>
+    <h2>Support Margo</h2>
+    <p>
+      Margo stays free for students. We use light ads to cover hosting and curation costs, and also offer a voluntary way to support the project if you find it useful.
+    </p>
+    <div class="support-actions">
+      <button class="support-btn" id="support-margo-button">Support via UPI</button>
+      <button class="support-btn secondary" id="support-margo-standard">More payment options</button>
+    </div>
+    <p class="support-note">
+      If you support Margo, you help independent student‑focused news curation continue.
+    </p>
+  </section>
 
-	<div class="support-actions">
-	  <button class="support-btn" id="support-margo-button">
-		Support via UPI
-	  </button>
-	  <button class="support-btn secondary" id="support-margo-standard">
-		More payment options
-	  </button>
-	</div>
+  <footer class="site-footer">
+    <p>© 2026 Margo by Wisrut. Free for students.</p>
+    <nav>
+      <a href="#search-section">Search</a>
+      <a href="#support-section">Support Margo</a>
+    </nav>
+  </footer>
 
-  <p class="support-note">
-    If you support Margo, you help independent student‑focused news curation continue.
-  </p>
-</section>
-
-<footer class="site-footer">
-  <p>© 2026 Margo by Wisrut. Free for students.</p>
-  <nav>
-    <a href="#news-section">News Brief</a>
-    <a href="#search-section">Search</a>
-    <a href="#support-section">Support Margo</a>
-  </nav>
-</footer>
-  
 <script>
   // =============================
-  // CONFIG & LOCAL STORAGE KEYS
+  // CONFIG
   // =============================
 
   const MARGOBACKENDURL = "https://margo-api.amitjoshirdr.workers.dev";
 
-  // Live-update the word count label when the slider moves
-  document.addEventListener("DOMContentLoaded", () => {
-    const slider = document.getElementById("article-length-slider");
-    const display = document.getElementById("length-display");
-    if (slider && display) {
-      slider.addEventListener("input", () => {
-        display.textContent = `${slider.value} words`;
-      });
-    }
-  });
-
   const LSKEYS = {
-    newsP0: "margop0original",        // first prompt string, locked after first submit
-    newsP1: "margop1history",         // JSON array of all refinements in order
-    newsArticles: "margonewsarticles",
-    searchS0: "margosearchs0",        // first search query string, locked after first submit
-    searchS1: "margos1history",       // JSON array of all follow-up queries in order
+    searchS0: "margosearchs0",
+    searchS1: "margos1history",
     searchAnswer: "margosearchanswer",
     searchResults: "margosearchresults"
   };
 
   // =============================
-  // HELPER FUNCTIONS
+  // HELPERS
   // =============================
 
   function setStatus(id, message, isError = false) {
@@ -379,17 +306,15 @@
     } catch (e) {}
   }
 
-  // Convert markdown bold (**text**) and horizontal rules (---) to simple HTML
   function markdownToHtml(text) {
     if (!text) return "";
     return text
-      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")  // **bold** → <strong>
-      .replace(/\*(.*?)\*/g, "<em>$1</em>")              // *italic* → <em>
-      .replace(/^---+$/gm, "<hr>")                       // --- → <hr>
-      .replace(/\n/g, "<br>");                           // newlines → <br>
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*(.*?)\*/g, "<em>$1</em>")
+      .replace(/^---+$/gm, "<hr>")
+      .replace(/\n/g, "<br>");
   }
 
-  // Call the Margo backend Worker
   async function callMargoBackend(payload) {
     const response = await fetch(`${MARGOBACKENDURL}/api/generate`, {
       method: "POST",
@@ -411,387 +336,50 @@
   }
 
   // =============================
-  // ARTICLE PARSER
+  // SEARCH PARSER
   // =============================
 
-  // Splits AI response into 3 article objects by looking for
-  // "Article Idea 1", "Article Idea 2", "Article Idea 3" markers.
-  // Falls back to splitting by "---" if those markers aren't found.
-
-function parseArticles(backendResponse) {
-  if (!backendResponse || typeof backendResponse !== "string") {
-    return [];
-  }
-
-  // Split into chunks by lines containing only ---
-  const rawChunks = backendResponse
-    .split(/\n-{3,}\n/g)
-    .map(c => c.trim())
-    .filter(c => c.length > 0);
-
-  if (rawChunks.length >= 2) {
-    return rawChunks.slice(0, 3).map((chunk, index) => {
-      const lines = chunk.split("\n").map(l => l.trim()).filter(Boolean);
-
-      const headline = lines[0] || `Article ${index + 1}`;
-      const byline =
-        lines[1] && !/^\s*$/.test(lines[1])
-          ? lines[1]
-          : "By Margo News Desk";
-
-      const bodyText = lines.slice(2).join("\n\n");
-
-      // Extract just the article body (between **Article...:** and **Critical Analysis:**)
-      // so the card summary shows a real sentence, not a bullet point
-      const articleBodyMatch = chunk.match(
-        /\*{0,2}Article[^*\n]*\*{0,2}[:\s]*([\s\S]*?)(?=\*{0,2}Critical Analysis|$)/i
-      );
-      const articleBodyRaw = articleBodyMatch
-        ? articleBodyMatch[1].trim()
-        : bodyText;
-
-      // Card summary: first 2 sentences of the actual article prose
-      const summarySentence = (articleBodyRaw.match(/[^.!?]+[.!?]/g) || [articleBodyRaw])
-        .slice(0, 2)
-        .join(" ")
-        .trim();
-
+  function parseSearchResponse(rawText) {
+    if (!rawText || typeof rawText !== "string") {
       return {
-        id: `a${index + 1}`,
-        title: headline,
-        meta: byline,
-        summary: summarySentence || "Tap to read the full article.",
-        fullText: markdownToHtml(bodyText)
+        headline: "Search answer",
+        byline: "By Margo Search",
+        bodyHtml: "No response available.",
+        results: []
       };
-    });
-  }
-
-  // Last resort: show the whole response as one article
-  return [
-    {
-      id: "a1",
-      title: "Brief summary",
-      meta: "Full AI response",
-      summary: backendResponse.replace(/\*+/g, "").slice(0, 150),
-      fullText: markdownToHtml(backendResponse)
-    }
-  ];
-}
-
-  // Extract a named section (e.g. "Assumptions", "Scope") from a chunk
-  function extractSection(text, sectionName) {
-    const regex = new RegExp(
-      `\\*{0,2}${sectionName}\\*{0,2}[:\\s]*([\\s\\S]*?)(?=\\*{0,2}(?:Assumptions|Scope|Critical Analysis)\\*{0,2}[:\\s]|$)`,
-      "i"
-    );
-    const match = text.match(regex);
-    if (!match) return "";
-    return markdownToHtml(match[1].trim());
-  }
-
-  // =============================
-  // NEWS BRIEF LOGIC (P0 / P1)
-  // =============================
-
-	function initNewsFromStorage() {
-	  const newsPromptEl = document.getElementById("news-prompt");
-	  const savedP0 = localStorage.getItem(LSKEYS.newsP0) || "";
-
-	  // P1 is now a JSON array of all refinements; show the latest one in the textarea
-	  const p1History = getJSONFromLocalStorage(LSKEYS.newsP1) || [];
-	  const latestP1 = p1History.length > 0 ? p1History[p1History.length - 1] : "";
-
-	  if (newsPromptEl) {
-		newsPromptEl.value = latestP1;
-		newsPromptEl.placeholder = savedP0
-		  ? "Type your next refinement here and click Generate / Update…"
-		  : "Example: I am a Class 11 student preparing for CBSE boards. Show me daily, bias-aware news about Indian economy and science.";
-	  }
-
-	  // Show a hint if this is a refinement session (P0 already locked)
-	  if (savedP0) {
-		const count = p1History.length;
-		setStatus("news-status", `Refinement mode — ${count} refinement(s) stacked on your original prompt. Add another or Hard Reset to start over.`, false);
-	  }
-
-	  const savedArticles = getJSONFromLocalStorage(LSKEYS.newsArticles);
-	  renderNewsArticles(
-		Array.isArray(savedArticles) && savedArticles.length > 0
-		  ? savedArticles
-		  : []
-	  );
-	}
-
-  function renderNewsArticles(articles) {
-  const container = document.getElementById("news-articles");
-  const detailEl = document.getElementById("news-article-detail");
-  if (!container || !detailEl) return;
-
-  container.innerHTML = "";
-
-  if (!Array.isArray(articles) || articles.length === 0) {
-    container.innerHTML = "<p>No articles yet. Generate a brief to see results.</p>";
-    detailEl.innerHTML = "No article selected yet.";
-    return;
-  }
-
-  articles.forEach((article) => {
-    const card = document.createElement("div");
-    card.className = "article-card";
-
-    card.addEventListener("click", () => {
-      detailEl.innerHTML = `
-        <strong style="font-size:1.05rem;">${article.title}</strong><br>
-        <span style="font-size:0.8rem;color:#666">${article.meta}</span>
-        <hr>
-        <div>${article.fullText}</div>
-      `;
-    });
-
-    const titleEl = document.createElement("h3");
-    titleEl.textContent = article.title;
-
-    const metaEl = document.createElement("div");
-    metaEl.className = "article-meta";
-    metaEl.textContent = article.meta;
-
-    const summaryEl = document.createElement("div");
-    summaryEl.textContent = article.summary;
-
-    card.appendChild(titleEl);
-    card.appendChild(metaEl);
-    card.appendChild(summaryEl);
-    container.appendChild(card);
-  });
-}
-
-  async function handleNewsGenerate() {
-    const promptEl = document.getElementById("news-prompt");
-    if (!promptEl) return;
-
-    const userPrompt = (promptEl.value || "").trim();
-    if (!userPrompt) {
-      setStatus("news-status", "Please enter a prompt for your news brief.", true);
-      return;
     }
 
-    // --- P0 / P1 logic ---
-    // P0  = original prompt string, locked on first submission (max 50 words).
-    // P1  = JSON array of every refinement typed since P0, in order.
-    //       Each new submission APPENDS to this array (never overwrites).
-    //       The AI always receives P0 + the full P1 history so nothing is lost.
+    const parts = rawText.split(/\bTop 5 Sources:\b/i);
+    const articlePart = (parts[0] || "").trim();
+    const sourcesPart = (parts[1] || "").trim();
 
-    let P0 = localStorage.getItem(LSKEYS.newsP0) || "";
-    const isFirstSubmit = !P0;
+    const lines = articlePart
+      .split("\n")
+      .map(line => line.trim())
+      .filter(Boolean);
 
-    if (isFirstSubmit) {
-      // Enforce 50-word limit on P0
-      const words = userPrompt.split(/\s+/).filter(Boolean);
-      if (words.length > 50) {
-        setStatus("news-status", "Your first prompt must be 50 words or fewer. Please shorten it.", true);
-        return;
-      }
-      P0 = userPrompt;
-      localStorage.setItem(LSKEYS.newsP0, P0);
-      // P1 history starts empty on first submit
-      setJSONToLocalStorage(LSKEYS.newsP1, []);
-    } else {
-      // Append this new refinement to the existing history
-      const p1History = getJSONFromLocalStorage(LSKEYS.newsP1) || [];
-      p1History.push(userPrompt);
+    const headline = lines[0] || "Search answer";
+    const byline = lines[1] || "By Margo Search";
+    const bodyText = lines.slice(2).join("\n\n").trim();
+    const bodyHtml = markdownToHtml(bodyText || "No article body available.");
 
-      // Enforce 1000-word total limit across all refinements
-      const totalWords = p1History.join(" ").split(/\s+/).filter(Boolean).length;
-      if (totalWords > 1000) {
-        setStatus("news-status", "Your total refinements exceed 1000 words. Please use Hard Reset to start a new brief.", true);
-        return;
-      }
+    const results = sourcesPart
+      .split("\n")
+      .map(line => line.replace(/^[\s\-\*\d\.\)\(]+/, "").trim())
+      .filter(line => line.length > 3)
+      .slice(0, 5)
+      .map((line, index) => ({
+        id: `r${index + 1}`,
+        title: line,
+        snippet: ""
+      }));
 
-      setJSONToLocalStorage(LSKEYS.newsP1, p1History);
-    }
-
-    // Reload history (includes the one we just appended, if refinement)
-    const p1History = getJSONFromLocalStorage(LSKEYS.newsP1) || [];
-
-    // Debug
-    console.log("NEWS P0:", P0);
-    console.log("NEWS P1 history:", p1History);
-
-    // Read the user-selected article word count from the slider
-    const sliderEl = document.getElementById("article-length-slider");
-    const targetWords = sliderEl ? parseInt(sliderEl.value, 10) : 500;
-
-    // Shared article format instructions used in both first-submit and refinement prompts
-    const ARTICLE_FORMAT = `Write exactly 3 complete, high-quality news articles. Separate each article with a line containing only ---
-
-QUALITY RULES — every article must follow all of these without exception:
-1. Be specific. Name real events, real policies, real organisations, real data points. Never write vague phrases like "experts suggest", "critics argue", or "studies show" without saying which experts, which critics, which studies.
-2. Be journalistic. Write like a newspaper reporter, not a student summarising a topic. Lead with the most important fact. Then build context. Then give perspectives. Then close with implication.
-3. Be honest about what you know. If exact figures are unavailable, say so clearly rather than inventing plausible-sounding ones. If a quote cannot be verified, do not include it.
-4. Perspectives must be real and distinct. Include at least three viewpoints: e.g. the government/institution position, an expert or academic view, and the view of the affected group (students, citizens, workers). Do not blend them into one vague paragraph.
-5. The student angle must be specific and actionable — not generic encouragement. Tell the student exactly what this development means for their exams, career, or daily life.
-6. WORD COUNT: The article body section (under "Article:") must be exactly ${targetWords} words. Count carefully before finalising. Do not pad with filler — expand by adding more evidence, more perspectives, or deeper analysis.
-
-Each article must follow this exact structure:
-
-[Headline — specific, factual, newsworthy. Not vague. E.g. "India Raises Import Duty on Solar Panels to 40%, Threatening Green Energy Targets" not "India Makes Changes to Energy Policy"]
-
-[Byline — e.g. "By Margo News Desk | Indian Economy & Policy"]
-
-**Assumptions:**
-- [A specific assumption embedded in this article's framing — e.g. "Assumes government data on GDP growth is accurate and not revised"]
-- [A specific source limitation — e.g. "Based on Ministry press release; independent verification not yet available"]
-
-**Scope:**
-- [Exactly what this article covers and why]
-- [One specific angle it leaves out and why that matters]
-
-**Article (${targetWords} words):**
-Paragraph 1 — Lead (2-3 sentences): State the single most important development, when it happened, who it involves, and why it matters right now.
-
-Paragraph 2 — Background (3-5 sentences): Explain the context. What situation led to this development? What was the state of affairs before? Include at least one specific figure, date, or named source.
-
-Paragraph 3 — Perspective 1 (3-5 sentences): The official or institutional position. What is the government, company, or organisation saying? Quote or paraphrase their stated rationale specifically.
-
-Paragraph 4 — Perspective 2 (3-5 sentences): An expert, academic, or analyst view. What does independent analysis say about this? Is the official position supported or challenged by evidence?
-
-Paragraph 5 — Perspective 3 (3-5 sentences): The ground-level or affected-group view. How are students, citizens, workers, or the target audience actually experiencing this? What concerns or reactions have emerged?
-
-Paragraph 6 — Deeper Analysis (3-5 sentences): Examine what is NOT being said in mainstream coverage. What structural bias, missing data, or conflict of interest shapes how this story is being told? Be specific.
-
-Paragraph 7 — Student Relevance (2-4 sentences): State specifically how this development connects to the student's board exams, entrance tests, career path, or immediate environment. Be concrete — e.g. "This policy is directly relevant to CBSE Class 12 Economics Chapter 6 on balance of payments" not "Students should stay informed about this."
-
-Paragraph 8 — Conclusion (2-3 sentences): Summarise the key takeaway. What should a well-informed student remember about this story one week from now?
-
-**Critical Analysis:**
-- [One specific logical flaw or hidden assumption in the mainstream coverage of this story]
-- [One important perspective or data point that is structurally absent from most reporting on this topic, and why]
-
----`;
-
-    let aiPrompt;
-    if (isFirstSubmit) {
-      aiPrompt = `You are Margo, a trust-first news assistant for students. Your standard is that of a senior journalist at a respected newspaper — specific, fair, evidence-based, and honest about uncertainty.
-
-Student profile and interests:
-"${P0}"
-
-${ARTICLE_FORMAT}
-
-Do not pad articles with generic sentences. Every sentence must carry specific information. If you cannot produce a specific, well-evidenced article on a topic, choose a different topic where you can.`;
-
-    } else {
-      const historyBlock = p1History
-        .map((entry, i) => `Refinement ${i + 1}: "${entry}"`)
-        .join("\n");
-
-      aiPrompt = `You are Margo, a trust-first news assistant for students. Your standard is that of a senior journalist at a respected newspaper — specific, fair, evidence-based, and honest about uncertainty.
-
-Student's original standing charter (P0 — always respected):
-"${P0}"
-
-Student's refinement history (in order — honour all of them, latest is the current focus):
-${historyBlock}
-
-${ARTICLE_FORMAT}
-
-Do not pad articles with generic sentences. Every sentence must carry specific information. If you cannot produce a specific, well-evidenced article on a topic, choose a different topic where you can.`;
-    }
-
-    const refinementCount = p1History.length;
-    setStatus("news-status", isFirstSubmit
-      ? "Curating your first brief…"
-      : `Refining brief (P0 + ${refinementCount} refinement(s) stacked)…`, false);
-    document.getElementById("btn-news-generate").disabled = true;
-
-    // Scale max_tokens with slider: 3 articles × 1.4 tokens/word + 1200 overhead
-    const newsMaxTokens = Math.ceil(targetWords * 1.4 * 3) + 1200;
-
-    try {
-      const backendResponse = await callMargoBackend({
-        model: "auto",
-        prompt: aiPrompt,
-        max_tokens: newsMaxTokens,
-        stream: false
-      });
-
-      // Debug
-	  console.log("NEWS RESPONSE:", backendResponse);
-
-      const articles = parseArticles(backendResponse);
-      setJSONToLocalStorage(LSKEYS.newsArticles, articles);
-      renderNewsArticles(articles);
-
-      // Clear the textarea so the user knows to type a NEW refinement next time
-      if (!isFirstSubmit) {
-        promptEl.value = "";
-        promptEl.placeholder = "Type your next refinement here…";
-      }
-
-      setStatus("news-status", isFirstSubmit
-        ? "News brief generated. Refine it by typing below and clicking Generate / Update."
-        : `News brief updated — ${refinementCount} refinement(s) stacked on your original prompt.`, false);
-
-    } catch (err) {
-      console.error("News brief error", err);
-      setStatus("news-status", `Could not generate brief: ${err.message || "Unknown error"}.`, true);
-    } finally {
-      document.getElementById("btn-news-generate").disabled = false;
-    }
-  }
-
-  function handleNewsReset() {
-    localStorage.removeItem(LSKEYS.newsP0);
-    localStorage.removeItem(LSKEYS.newsP1);
-    localStorage.removeItem(LSKEYS.newsArticles);
-
-    const promptEl = document.getElementById("news-prompt");
-    const detailEl = document.getElementById("news-article-detail");
-    if (promptEl) promptEl.value = "";
-    if (detailEl) detailEl.innerHTML = "No article selected yet.";
-
-    renderNewsArticles([]);
-    setStatus("news-status", "News brief reset. Start fresh with a new prompt.", false);
+    return { headline, byline, bodyHtml, results };
   }
 
   // =============================
-  // SEARCH LOGIC (S0 / S1)
+  // RENDER
   // =============================
-
-	function initSearchFromStorage() {
-	  const searchInputEl = document.getElementById("search-input");
-	  const savedS0 = localStorage.getItem(LSKEYS.searchS0) || "";
-
-	  // S1 is a JSON array of follow-up queries; show the latest in the input
-	  const s1History = getJSONFromLocalStorage(LSKEYS.searchS1) || [];
-	  const latestS1 = s1History.length > 0 ? s1History[s1History.length - 1] : "";
-
-	  if (searchInputEl) {
-		searchInputEl.value = latestS1;
-		searchInputEl.placeholder = savedS0
-		  ? "Type your follow-up question here…"
-		  : "Example: Explain the new NEP policy for school students";
-	  }
-
-	  const savedAnswer = localStorage.getItem(LSKEYS.searchAnswer);
-	  const answerEl = document.getElementById("search-answer");
-	  if (savedAnswer && answerEl) {
-		answerEl.innerHTML = savedAnswer;
-	  }
-
-	  // Show a hint if this is a follow-up session (S0 already locked)
-	  if (savedS0) {
-		const count = s1History.length;
-		setStatus("search-status", `Follow-up mode — ${count} follow-up(s) stacked on your original query. Ask another or Start Fresh Search to reset.`, false);
-	  }
-
-	  const savedResults = getJSONFromLocalStorage(LSKEYS.searchResults);
-	  renderSearchResults(
-		Array.isArray(savedResults) && savedResults.length > 0
-		  ? savedResults
-		  : []
-	  );
-	}
 
   function renderSearchResults(results) {
     const listEl = document.getElementById("search-results-list");
@@ -812,106 +400,77 @@ Do not pad articles with generic sentences. Every sentence must carry specific i
     });
   }
 
-		// Parse the search response into:
-		// 1) headline
-		// 2) byline
-		// 3) article body
-		// 4) top 5 source/result lines
-	function parseSearchResponse(rawText) {
-		  if (!rawText || typeof rawText !== "string") {
-			return {
-			  headline: "Search answer",
-			  byline: "By Margo Search",
-			  bodyHtml: "No response available.",
-			  results: []
-			};
-		  }
+  // =============================
+  // SEARCH LOGIC (S0 / S1)
+  // =============================
 
-		  // Split article body from the "Top 5 Sources:" section
-		  const parts = rawText.split(/\bTop 5 Sources:\b/i);
-		  const articlePart = (parts[0] || "").trim();
-		  const sourcesPart = (parts[1] || "").trim();
+  function initSearchFromStorage() {
+    const searchInputEl = document.getElementById("search-input");
+    const savedS0 = localStorage.getItem(LSKEYS.searchS0) || "";
 
-		  // Break article part into non-empty lines
-		  const lines = articlePart
-			.split("\n")
-			.map(line => line.trim())
-			.filter(Boolean);
-
-		  const headline = lines[0] || "Search answer";
-		  const byline = lines[1] || "By Margo Search";
-
-		  // Everything after headline + byline becomes the article body
-		  const bodyText = lines.slice(2).join("\n\n").trim();
-
-		  // Convert the body to simple HTML so markdown-like text displays cleanly
-		  const bodyHtml = markdownToHtml(bodyText || "No article body available.");
-
-		  // Parse sources/results into a clean 5-item list
-		  const results = sourcesPart
-			.split("\n")
-			.map(line => line.replace(/^[\s\-\*\d\.\)\(]+/, "").trim())
-			.filter(line => line.length > 3)
-			.slice(0, 5)
-			.map((line, index) => ({
-			  id: `r${index + 1}`,
-			  title: line,
-			  snippet: ""
-			}));
-
-		  return {
-			headline,
-			byline,
-			bodyHtml,
-			results
-		  };
-		}
-
-async function handleSearchRun() {
-  const inputEl = document.getElementById("search-input");
-  const answerEl = document.getElementById("search-answer");
-
-  if (!inputEl || !answerEl) return;
-
-  const query = (inputEl.value || "").trim();
-  if (!query) {
-    setStatus("search-status", "Please enter a search query.", true);
-    return;
-  }
-
-  // --- S0 / S1 logic ---
-  // S0  = original query string, locked on first search.
-  // S1  = JSON array of every follow-up query typed since S0, in order.
-  //       Each new search APPENDS to this array (never overwrites).
-  //       The AI always receives S0 + the full S1 history so nothing is lost.
-
-  let S0 = localStorage.getItem(LSKEYS.searchS0) || "";
-  const isFirstSearch = !S0;
-
-  if (isFirstSearch) {
-    S0 = query;
-    localStorage.setItem(LSKEYS.searchS0, S0);
-    setJSONToLocalStorage(LSKEYS.searchS1, []);
-  } else {
     const s1History = getJSONFromLocalStorage(LSKEYS.searchS1) || [];
-    s1History.push(query);
-    setJSONToLocalStorage(LSKEYS.searchS1, s1History);
+    const latestS1 = s1History.length > 0 ? s1History[s1History.length - 1] : "";
+
+    if (searchInputEl) {
+      searchInputEl.value = latestS1;
+      searchInputEl.placeholder = savedS0
+        ? "Type your follow-up question here…"
+        : "Example: Explain the new NEP policy for school students";
+    }
+
+    const savedAnswer = localStorage.getItem(LSKEYS.searchAnswer);
+    const answerEl = document.getElementById("search-answer");
+    if (savedAnswer && answerEl) {
+      answerEl.innerHTML = savedAnswer;
+    }
+
+    if (savedS0) {
+      const count = s1History.length;
+      setStatus("search-status", `Follow-up mode — ${count} follow-up(s) stacked on your original query. Ask another or Start Fresh Search to reset.`, false);
+    }
+
+    const savedResults = getJSONFromLocalStorage(LSKEYS.searchResults);
+    renderSearchResults(
+      Array.isArray(savedResults) && savedResults.length > 0 ? savedResults : []
+    );
   }
 
-  const s1History = getJSONFromLocalStorage(LSKEYS.searchS1) || [];
+  async function handleSearchRun() {
+    const inputEl = document.getElementById("search-input");
+    const answerEl = document.getElementById("search-answer");
 
-  // Debug
-  console.log("SEARCH S0:", S0);
-  console.log("SEARCH S1 history:", s1History);
+    if (!inputEl || !answerEl) return;
 
-  // Build the AI prompt
-  let aiPrompt;
-  // Read slider value for search article length too
-  const searchSlider = document.getElementById("article-length-slider");
-  const searchTargetWords = searchSlider ? parseInt(searchSlider.value, 10) : 500;
+    const query = (inputEl.value || "").trim();
+    if (!query) {
+      setStatus("search-status", "Please enter a search query.", true);
+      return;
+    }
 
-  if (isFirstSearch) {
-    aiPrompt = `You are Margo, a trust-first search assistant for students.
+    let S0 = localStorage.getItem(LSKEYS.searchS0) || "";
+    const isFirstSearch = !S0;
+
+    if (isFirstSearch) {
+      S0 = query;
+      localStorage.setItem(LSKEYS.searchS0, S0);
+      setJSONToLocalStorage(LSKEYS.searchS1, []);
+    } else {
+      const s1History = getJSONFromLocalStorage(LSKEYS.searchS1) || [];
+      s1History.push(query);
+      setJSONToLocalStorage(LSKEYS.searchS1, s1History);
+    }
+
+    const s1History = getJSONFromLocalStorage(LSKEYS.searchS1) || [];
+
+    console.log("SEARCH S0:", S0);
+    console.log("SEARCH S1 history:", s1History);
+
+    const searchSlider = document.getElementById("article-length-slider");
+    const searchTargetWords = searchSlider ? parseInt(searchSlider.value, 10) : 500;
+
+    let aiPrompt;
+    if (isFirstSearch) {
+      aiPrompt = `You are Margo, a trust-first search assistant for students.
 
 User query:
 "${S0}"
@@ -936,13 +495,12 @@ Top 5 Sources:
 Then list 5 source names or result titles, one per line.
 
 Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suitable for students. Every sentence must carry specific information — no filler.`;
-  } else {
-    // Format the full follow-up history
-    const historyBlock = s1History
-      .map((entry, i) => `Follow-up ${i + 1}: "${entry}"`)
-      .join("\n");
+    } else {
+      const historyBlock = s1History
+        .map((entry, i) => `Follow-up ${i + 1}: "${entry}"`)
+        .join("\n");
 
-    aiPrompt = `You are Margo, a trust-first search assistant for students.
+      aiPrompt = `You are Margo, a trust-first search assistant for students.
 
 The student's original question (S0 — the topic that started this search session):
 "${S0}"
@@ -969,66 +527,68 @@ Top 5 Sources:
 Then list 5 source names or result titles, one per line.
 
 Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suitable for students. Every sentence must carry specific information — no filler.`;
+    }
+
+    const followUpCount = s1History.length;
+    setStatus("search-status", isFirstSearch
+      ? "Running search…"
+      : `Running follow-up search (S0 + ${followUpCount} follow-up(s) stacked)…`, false);
+    document.getElementById("btn-search-run").disabled = true;
+
+    const searchMaxTokens = Math.ceil(searchTargetWords * 1.4) + 400;
+
+    try {
+      const backendResponse = await callMargoBackend({
+        model: "auto",
+        prompt: aiPrompt,
+        max_tokens: searchMaxTokens,
+        stream: false
+      });
+
+      const parsed = parseSearchResponse(backendResponse);
+
+      const fullAnswerHtml = `
+        <strong style="font-size:1.05rem;">${parsed.headline}</strong><br>
+        <span style="font-size:0.8rem;color:#666">${parsed.byline}</span>
+        <hr>
+        <div>${parsed.bodyHtml}</div>
+      `;
+
+      localStorage.setItem(LSKEYS.searchAnswer, fullAnswerHtml);
+      setJSONToLocalStorage(LSKEYS.searchResults, parsed.results);
+
+      answerEl.innerHTML = fullAnswerHtml;
+      renderSearchResults(parsed.results);
+
+      if (!isFirstSearch) {
+        inputEl.value = "";
+        inputEl.placeholder = "Type your next follow-up question here…";
+      }
+
+      setStatus("search-status", isFirstSearch
+        ? "Search complete. Ask a follow-up to go deeper."
+        : `Follow-up answer generated — ${followUpCount} follow-up(s) stacked on your original query.`, false);
+
+    } catch (err) {
+      console.error("Search error", err);
+      setStatus("search-status", `Could not complete search: ${err.message || "Unknown error"}.`, true);
+    } finally {
+      document.getElementById("btn-search-run").disabled = false;
+    }
   }
 
-  const followUpCount = s1History.length;
-  setStatus("search-status", isFirstSearch
-    ? "Running search…"
-    : `Running follow-up search (S0 + ${followUpCount} follow-up(s) stacked)…`, false);
-  document.getElementById("btn-search-run").disabled = true;
-
-  // Scale max_tokens with slider: ~1.4 tokens/word + 400 overhead for structure/headings
-  const searchMaxTokens = Math.ceil(searchTargetWords * 1.4) + 400;
-
-  try {
-    const backendResponse = await callMargoBackend({
-      model: "auto",
-      prompt: aiPrompt,
-      max_tokens: searchMaxTokens,
-      stream: false
-    });
-
-			const parsed = parseSearchResponse(backendResponse);
-
-			const fullAnswerHtml = `
-			  <strong style="font-size:1.05rem;">${parsed.headline}</strong><br>
-			  <span style="font-size:0.8rem;color:#666">${parsed.byline}</span>
-			  <hr>
-			  <div>${parsed.bodyHtml}</div>
-			`;
-
-			localStorage.setItem(LSKEYS.searchAnswer, fullAnswerHtml);
-			setJSONToLocalStorage(LSKEYS.searchResults, parsed.results);
-
-			answerEl.innerHTML = fullAnswerHtml;
-			renderSearchResults(parsed.results);
-
-			// Clear input so user knows to type a NEW follow-up next time
-			if (!isFirstSearch) {
-			  inputEl.value = "";
-			  inputEl.placeholder = "Type your next follow-up question here…";
-			}
-
-			setStatus("search-status", isFirstSearch
-			  ? "Search complete. Ask a follow-up to go deeper."
-			  : `Follow-up answer generated — ${followUpCount} follow-up(s) stacked on your original query.`, false);
-
-		  } catch (err) {
-			console.error("Search error", err);
-			setStatus("search-status", `Could not complete search: ${err.message || "Unknown error"}.`, true);
-		  } finally {
-			document.getElementById("btn-search-run").disabled = false;
-		  }
-}
   function handleSearchReset() {
     localStorage.removeItem(LSKEYS.searchS0);
-    localStorage.removeItem(LSKEYS.searchS1);  // clears the JSON array
+    localStorage.removeItem(LSKEYS.searchS1);
     localStorage.removeItem(LSKEYS.searchAnswer);
     localStorage.removeItem(LSKEYS.searchResults);
 
     const inputEl = document.getElementById("search-input");
     const answerEl = document.getElementById("search-answer");
-    if (inputEl) inputEl.value = "";
+    if (inputEl) {
+      inputEl.value = "";
+      inputEl.placeholder = "Example: Explain the new NEP policy for school students";
+    }
     if (answerEl) answerEl.innerHTML = "Ask a question to see an answer here.";
 
     renderSearchResults([]);
@@ -1039,39 +599,39 @@ Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suita
   // INITIALIZATION
   // =============================
 
-function initApp() {
-  document.getElementById("btn-news-generate")
-    .addEventListener("click", handleNewsGenerate);
-  document.getElementById("btn-news-reset")
-    .addEventListener("click", handleNewsReset);
-  initNewsFromStorage();
+  function initApp() {
+    // Slider label live update
+    const slider = document.getElementById("article-length-slider");
+    const display = document.getElementById("length-display");
+    if (slider && display) {
+      slider.addEventListener("input", () => {
+        display.textContent = `${slider.value} words`;
+      });
+    }
 
-  document.getElementById("btn-search-run")
-    .addEventListener("click", handleSearchRun);
-  document.getElementById("btn-search-reset")
-    .addEventListener("click", handleSearchReset);
-  initSearchFromStorage();
+    // Search buttons
+    document.getElementById("btn-search-run").addEventListener("click", handleSearchRun);
+    document.getElementById("btn-search-reset").addEventListener("click", handleSearchReset);
+    initSearchFromStorage();
 
-  // UPI support button
-  const supportBtn = document.getElementById("support-margo-button");
-  if (supportBtn) {
-    supportBtn.addEventListener("click", () => {
-      window.open("https://rzp.io/rzp/fjD6HZp", "_blank");
-    });
+    // Support buttons
+    const supportBtn = document.getElementById("support-margo-button");
+    if (supportBtn) {
+      supportBtn.addEventListener("click", () => {
+        window.open("https://rzp.io/rzp/fjD6HZp", "_blank");
+      });
+    }
+
+    const supportStdBtn = document.getElementById("support-margo-standard");
+    if (supportStdBtn) {
+      supportStdBtn.addEventListener("click", () => {
+        window.open("https://rzp.io/rzp/j6b7rTpw", "_blank");
+      });
+    }
   }
 
-  // Standard payment button (cards, netbanking, etc.)
-  const supportStdBtn = document.getElementById("support-margo-standard");
-  if (supportStdBtn) {
-    supportStdBtn.addEventListener("click", () => {
-      window.open("https://rzp.io/rzp/j6b7rTpw", "_blank");
-    });
-  }
-}
-document.addEventListener("DOMContentLoaded", initApp);
-
+  document.addEventListener("DOMContentLoaded", initApp);
 </script>
-
 
 </body>
 </html>
