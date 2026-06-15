@@ -166,6 +166,37 @@
       cursor: pointer;
       height: 4px;
     }
+
+    /* Ad slot shared styles */
+    .ad-slot {
+      background: #f0f0f0;
+      border: 1px dashed #bbb;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: #999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Support section: content left, ad right */
+    .support-inner {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .support-content {
+      flex: 1 1 280px;
+      min-width: 0;
+    }
+
+    .support-ad {
+      flex: 0 0 160px;
+      min-height: 250px;
+    }
   </style>
 </head>
 
@@ -225,45 +256,81 @@
       <!-- Left: AI answer -->
       <div class="col">
         <h3>AI answer (with citations)</h3>
+
+        <!-- AD SLOT: TOP OF ARTICLE -->
+        <div id="ad-top" class="ad-slot" style="min-height: 60px; padding: 0.6rem; margin-bottom: 0.75rem;">
+          <!-- Replace this comment with your ad network script (e.g. Google AdSense) -->
+          Advertisement
+        </div>
+
         <div id="search-answer" class="ai-answer">
           Ask a question to see an answer here.
         </div>
+
+        <!-- AD SLOT: BOTTOM OF ARTICLE -->
+        <div id="ad-bottom" class="ad-slot" style="min-height: 60px; padding: 0.6rem; margin-top: 0.75rem;">
+          <!-- Replace this comment with your ad network script (e.g. Google AdSense) -->
+          Advertisement
+        </div>
+
       </div>
 
-      <!-- Right: Top 5 results -->
-      <div class="col">
-        <h3>Top 5 results</h3>
-        <div id="search-results" class="search-results">
-          <ul id="search-results-list">
-            <li>No results yet.</li>
-          </ul>
+      <!-- Right: High-value ad sidebar (300×600 Half Page — highest CPM display unit) -->
+      <div class="col" style="flex: 0 0 320px; min-width: 0;">
+        <div id="ad-sidebar" class="ad-slot" style="
+          width: 300px;
+          min-height: 600px;
+          padding: 0;
+          position: sticky;
+          top: 1rem;
+        ">
+          <!-- ═══════════════════════════════════════════
+               AD SLOT: 300×600 Half Page (sidebar)
+               Recommended: Google AdSense, Media.net,
+               or direct deal at ~$5–15 CPM
+               Replace this comment with your ad tag.
+          ════════════════════════════════════════════ -->
+          <span style="font-size:0.75rem; color:#bbb;">Advertisement<br>300 × 600</span>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ── Support Margo ── -->
-<section class="section" id="support-section">
-  <h2>Support Margo</h2>
-  <p>
-    Margo stays free for students. We use light ads to cover costs, and also offer a voluntary way to support the project if you find it useful.
-  </p>
+  <section class="section" id="support-section">
+    <h2>Support Margo</h2>
+    <div class="support-inner">
 
-  <!-- Only Razorpay Payment Button -->
-  <div id="margo-razorpay-button" style="margin-top: 0.75rem;">
-    <form>
-      <script
-        src="https://checkout.razorpay.com/v1/payment-button.js"
-        data-payment_button_id="pl_T1cW8snj5ecBYS"
-        async>
-      </script>
-    </form>
-  </div>
+      <!-- Left: support content -->
+      <div class="support-content">
+        <p>
+          Margo stays free for students. We use light ads to cover costs, and also offer a voluntary way to support the project if you find it useful.
+        </p>
 
-  <p class="support-note">
-    If you support Margo, you help independent student‑focused unlimited AI Search continue.
-  </p>
-</section>
+        <!-- Razorpay Payment Button -->
+        <div id="margo-razorpay-button" style="margin-top: 0.75rem;">
+          <form>
+            <script
+              src="https://checkout.razorpay.com/v1/payment-button.js"
+              data-payment_button_id="pl_T1cW8snj5ecBYS"
+              async>
+            </script>
+          </form>
+        </div>
+
+        <p class="support-note">
+          If you support Margo, you help independent student‑focused unlimited AI Search continue.
+        </p>
+      </div>
+
+      <!-- Right: Ad slot -->
+      <div class="ad-slot support-ad" id="ad-support-side">
+        <!-- Replace this comment with your ad network script (e.g. Google AdSense) -->
+        Advertisement
+      </div>
+
+    </div>
+  </section>
 
   <footer class="site-footer">
     <p>© 2026 Margo by Wisrut. Free for students.</p>
@@ -281,10 +348,10 @@
   const MARGOBACKENDURL = "https://margo-api.amitjoshirdr.workers.dev";
 
   const LSKEYS = {
-    searchS0: "margosearchs0",
-    searchS1: "margos1history",
-    searchAnswer: "margosearchanswer",
-    searchResults: "margosearchresults"
+    searchS0:      "margosearchs0",
+    searchS1:      "margos1history",
+    searchAnswer:  "margosearchanswer"
+    // Note: News keys have been moved to news.html
   };
 
   // =============================
@@ -386,29 +453,6 @@
   }
 
   // =============================
-  // RENDER
-  // =============================
-
-  function renderSearchResults(results) {
-    const listEl = document.getElementById("search-results-list");
-    if (!listEl) return;
-    listEl.innerHTML = "";
-
-    if (!Array.isArray(results) || results.length === 0) {
-      listEl.innerHTML = "<li>No results yet.</li>";
-      return;
-    }
-
-    results.slice(0, 5).forEach((item, index) => {
-      const li = document.createElement("li");
-      li.textContent =
-        (item.title || `Result ${index + 1}`) +
-        (item.snippet ? ` – ${item.snippet}` : "");
-      listEl.appendChild(li);
-    });
-  }
-
-  // =============================
   // SEARCH LOGIC (S0 / S1)
   // =============================
 
@@ -436,11 +480,6 @@
       const count = s1History.length;
       setStatus("search-status", `Follow-up mode — ${count} follow-up(s) stacked on your original query. Ask another or Start Fresh Search to reset.`, false);
     }
-
-    const savedResults = getJSONFromLocalStorage(LSKEYS.searchResults);
-    renderSearchResults(
-      Array.isArray(savedResults) && savedResults.length > 0 ? savedResults : []
-    );
   }
 
   async function handleSearchRun() {
@@ -563,10 +602,8 @@ Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suita
       `;
 
       localStorage.setItem(LSKEYS.searchAnswer, fullAnswerHtml);
-      setJSONToLocalStorage(LSKEYS.searchResults, parsed.results);
 
       answerEl.innerHTML = fullAnswerHtml;
-      renderSearchResults(parsed.results);
 
       if (!isFirstSearch) {
         inputEl.value = "";
@@ -589,7 +626,6 @@ Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suita
     localStorage.removeItem(LSKEYS.searchS0);
     localStorage.removeItem(LSKEYS.searchS1);
     localStorage.removeItem(LSKEYS.searchAnswer);
-    localStorage.removeItem(LSKEYS.searchResults);
 
     const inputEl = document.getElementById("search-input");
     const answerEl = document.getElementById("search-answer");
@@ -599,7 +635,6 @@ Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suita
     }
     if (answerEl) answerEl.innerHTML = "Ask a question to see an answer here.";
 
-    renderSearchResults([]);
     setStatus("search-status", "Search reset. Start a fresh query.", false);
   }
 
@@ -621,10 +656,6 @@ Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suita
     document.getElementById("btn-search-run").addEventListener("click", handleSearchRun);
     document.getElementById("btn-search-reset").addEventListener("click", handleSearchReset);
     initSearchFromStorage();
-
-    document.getElementById("btn-news-generate").addEventListener("click", handleNewsGenerate);
-    document.getElementById("btn-news-reset").addEventListener("click", handleNewsReset);
-    initNewsFromStorage();
 
     // ============================
     // Support buttons → scroll to Razorpay Payment Button
@@ -648,6 +679,9 @@ Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suita
         }
       });
     }
+  } // ← closes initApp()
+
+  document.addEventListener("DOMContentLoaded", initApp);
   </script>
 </body>
 </html>
