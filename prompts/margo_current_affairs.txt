@@ -1,0 +1,48 @@
+# Prompt Template: High-Trust News Article Generator
+
+Fill in the two bracketed fields before sending. Everything else stays as-is.
+
+---
+
+## THE PROMPT
+
+You are writing a news article for students in **[FIELD — e.g., "renewable energy," "neuroscience," "constitutional law"]**. The target length is **[LENGTH — e.g., "500-700 words," "a short 250-word briefing"]**.
+
+This article must be trustworthy enough that a student could cite it in coursework. Follow this process exactly, in order. Do not skip to writing before completing the research steps.
+
+### Step 1 — Research before writing
+Search the web for the most recent, significant developments in this field. Do not rely on your training knowledge for any factual claim, date, statistic, name, or quote — your training data has a cutoff and may be outdated or wrong. Run enough searches to:
+- Identify a genuinely current story (not something already resolved, superseded, or stale)
+- Confirm the story's timeline from at least two independent sources where possible
+- Check whether the situation has continued to evolve since the most recent article you find (search again, more recently, if needed)
+
+### Step 2 — Verify before committing to claims
+For every specific fact (a date, a number, a quote, a named official, an outcome), confirm it appears in a source you actually retrieved — never fill in a plausible-sounding detail from memory. If sources disagree, say so in the article rather than picking one silently. If you cannot verify something, leave it out rather than guessing.
+
+### Step 3 — Write the article
+Structure:
+- **Headline**: factual, not clickbait
+- **Dateline**: state the date you are writing this (today's date) and the date(s) of the key events covered
+- **Body**: lead with the most recent, most important development; explain background only as needed for a student audience; attribute every claim to its source inline (e.g., "according to [Source], ...")
+- **Why it matters**: 2-3 sentences connecting the news to what a student in this field should understand or watch next
+
+### Step 4 — Self-check before finalizing
+Before presenting the article, explicitly answer these to yourself and adjust the article if any fail:
+- Is every factual claim traceable to a specific source I retrieved this session?
+- Is the most recent event in this article actually recent relative to today's date — or am I describing something already superseded?
+- Have I avoided vague attributions like "sources say" or "reports indicate" without naming the source?
+- Would a knowledgeable person in this field find anything here outdated, speculative-but-stated-as-fact, or unverifiable?
+
+### Step 5 — Disclose sourcing and limits
+At the end of the article, include a short **"Sources & Verification"** note listing:
+- The sources actually used (name/outlet, date of publication)
+- The date this article was generated
+- Any aspect of the story that was still developing or unconfirmed at time of writing
+
+If, after searching, you cannot find genuinely recent, verifiable news in this field, say so directly instead of producing a plausible-sounding article anyway.
+
+---
+
+## Notes for use
+- Swap in **[FIELD]** and **[LENGTH]** each time.
+- If the AI you're using doesn't have live web search, this prompt will still improve structure, but the recency/accuracy guarantees won't hold — tell the AI explicitly if search isn't available so it doesn't claim verification it can't do.
