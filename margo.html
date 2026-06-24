@@ -693,35 +693,34 @@
       const sliderEl = document.getElementById("article-length-slider");
       const targetWords = sliderEl ? parseInt(sliderEl.value, 10) : 500;
 
-      // CHANGED: rewritten so the model (Gemini, with google_search tool
-      // wired in on the backend) is explicitly required to search before
-      // writing, verify every fact against what it retrieved, and skip
-      // anything it can't verify — instead of relying on "rigorous-sounding"
-      // framing that didn't actually enforce recency or sourcing.
+      // CHANGED (temporary, while live search is unavailable): this prompt
+      // no longer tells the model to search — none of the current fallback
+      // providers (OpenRouter/Groq) can. Instead it asks honestly for the
+      // most recent developments the model is aware of, and requires it to
+      // disclose that this is NOT live/verified news. This trades recency
+      // guarantees for something that works without search infrastructure.
+      // TODO: once live search is restored, revert to the search-first
+      // version of this prompt (see project notes / previous version).
       function buildArticleFormat(userContext) {
-        return `You have a live web search tool available. For this task you MUST use it — do not answer from memory alone.
+        return `TASK: Write exactly 3 complete, high-quality news articles for students, using the most recent developments you are aware of. Separate each article with a line containing only ---
 
-TASK: Write exactly 3 complete, high-quality news articles for students. Separate each article with a line containing only ---
+IMPORTANT — BE HONEST ABOUT RECENCY:
+You do not have live internet access for this task. Your knowledge has a training cutoff, so "recent" means the most recent things you know about, not necessarily what happened in the real world this week. Do not imply or claim these events are breaking news from today or this week unless you are certain of the date and it is genuinely close to your knowledge cutoff.
 
-STEP 1 — SEARCH FIRST (required, not optional):
-Before writing anything, search the web for genuinely recent developments relevant to the student's context below. Run multiple searches if the brief spans more than one topic or field. If your first search results turn out to already be old news, search again with more specific or more recent terms until you find something current.
-
-STEP 2 — VERIFY:
-For every date, statistic, quote, or named person/organisation you plan to use, confirm it came from a search result you actually retrieved this session. Never fill in a plausible-sounding fact from memory. If two sources disagree, say so in the article instead of silently picking one. If you cannot verify a detail, leave it out.
-
-STEP 3 — WRITE each article with this structure:
+STEP 1 — WRITE each article with this structure:
 - A factual, specific headline (no clickbait)
-- One line stating the date of the key event(s) covered, e.g. "Key development: [date]"
-- The article body (~${targetWords} words): lead with the most recent and most important fact, then necessary background, then named perspectives. Attribute every claim inline (e.g. "according to [named source], ..."). No vague attributions like "experts say" without naming the expert. Plain paragraphs, no markdown headers inside the body.
+- One line stating the approximate date of the key event(s) covered, as best you know it, e.g. "As of: [date/period]"
+- The article body (~${targetWords} words): lead with the most important fact, then necessary background, then named perspectives. Attribute every claim to a real, named source where possible (e.g. "according to [named source/organisation], ..."). Avoid vague attributions like "experts say" without naming the expert. Plain paragraphs, no markdown headers inside the body.
 - A short "What this means for students" closer (2-3 sentences) connecting the news to what someone in this field/exam context should understand or watch next.
 
-STEP 4 — SELF-CHECK before finalizing each article:
-- Is the central event dated, and is that date actually recent relative to today?
-- Is every specific fact traceable to a search result, not memory?
-- Have I named every source instead of saying "reports suggest"?
-If an article fails any of these checks, fix it before including it — do not include an article you couldn't verify.
+STEP 2 — SELF-CHECK before finalizing each article:
+- Have I avoided stating or implying this is breaking/live news?
+- Is every fact something I actually know, not something invented to sound plausible?
+- Have I named sources rather than using vague phrases?
 
-If, after searching, you cannot find genuinely recent, verifiable news for part of the brief, say so plainly in that article rather than writing a plausible-sounding piece anyway.
+STEP 3 — ADD A FOOTER to the very end of your full response (after all 3 articles), exactly in this form:
+---
+Note: These articles are based on the AI's training knowledge, not live search. For verified, up-to-the-minute news, please cross-check with a current news source.
 
 USER CONTEXT (who this is for, and what they want):
 ${userContext}`;
