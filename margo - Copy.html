@@ -510,9 +510,7 @@
         .replace(/\n/g, "<br>");
     }
 
-    // BACKEND CALL (CHANGED: now returns { text, grounded, sources } instead
-    // of a bare string, so the UI can show whether search-verification
-    // actually happened for this brief)
+    // BACKEND CALL (UNCHANGED)
     async function callMargoBackend(payload) {
       const response = await fetch(`${MARGOBACKENDURL}/api/generate`, {
         method: "POST",
@@ -525,13 +523,9 @@
       }
       const data = await response.json();
       if (!data || typeof data.response !== "string") {
-        throw new Error("Unexpected backend response format (missing 'response').");
+        throw new Error("Unexpected backend response format (missing \'response\').");
       }
-      return {
-        text: data.response,
-        grounded: !!data.grounded,
-        sources: Array.isArray(data.sources) ? data.sources : []
-      };
+      return data.response;
     }
 
     // ARTICLE PARSER (UNCHANGED)
@@ -693,48 +687,32 @@
       const sliderEl = document.getElementById("article-length-slider");
       const targetWords = sliderEl ? parseInt(sliderEl.value, 10) : 500;
 
-      // CHANGED: rewritten so the model (Gemini, with google_search tool
-      // wired in on the backend) is explicitly required to search before
-      // writing, verify every fact against what it retrieved, and skip
-      // anything it can't verify — instead of relying on "rigorous-sounding"
-      // framing that didn't actually enforce recency or sourcing.
-      function buildArticleFormat(userContext) {
-        return `You have a live web search tool available. For this task you MUST use it — do not answer from memory alone.
+      const ARTICLE_FORMAT = `Write exactly 3 complete, high-quality news articles. Separate each article with a line containing only ---
 
-TASK: Write exactly 3 complete, high-quality news articles for students. Separate each article with a line containing only ---
-
-STEP 1 — SEARCH FIRST (required, not optional):
-Before writing anything, search the web for genuinely recent developments relevant to the student's context below. Run multiple searches if the brief spans more than one topic or field. If your first search results turn out to already be old news, search again with more specific or more recent terms until you find something current.
-
-STEP 2 — VERIFY:
-For every date, statistic, quote, or named person/organisation you plan to use, confirm it came from a search result you actually retrieved this session. Never fill in a plausible-sounding fact from memory. If two sources disagree, say so in the article instead of silently picking one. If you cannot verify a detail, leave it out.
-
-STEP 3 — WRITE each article with this structure:
-- A factual, specific headline (no clickbait)
-- One line stating the date of the key event(s) covered, e.g. "Key development: [date]"
-- The article body (~${targetWords} words): lead with the most recent and most important fact, then necessary background, then named perspectives. Attribute every claim inline (e.g. "according to [named source], ..."). No vague attributions like "experts say" without naming the expert. Plain paragraphs, no markdown headers inside the body.
-- A short "What this means for students" closer (2-3 sentences) connecting the news to what someone in this field/exam context should understand or watch next.
-
-STEP 4 — SELF-CHECK before finalizing each article:
-- Is the central event dated, and is that date actually recent relative to today?
-- Is every specific fact traceable to a search result, not memory?
-- Have I named every source instead of saying "reports suggest"?
-If an article fails any of these checks, fix it before including it — do not include an article you couldn't verify.
-
-If, after searching, you cannot find genuinely recent, verifiable news for part of the brief, say so plainly in that article rather than writing a plausible-sounding piece anyway.
-
-USER CONTEXT (who this is for, and what they want):
-${userContext}`;
-      }
+QUALITY RULES:
+1. Be specific: name real events, policies, organisations, data points.
+2. Be journalistic: lead with the most important fact, then context, then perspectives.
+3. Each article must include: Assumptions & Scope, the Article body (~${targetWords} words), and Critical Analysis. The range of Assumptions and Scope, and critical analysis will be 2-4 sentences only. Prioritize the Article part.
+4. Do not use vague phrases like "experts suggest" without naming the expert.
+5. No markdown headers inside the article body; use plain paragraphs.
+6. Use a mix of Epistemological and Judicial frameworks to build the content so people can trust the article.
+7. The core aim is that people get trusted content.`;
 
       let fullPrompt;
       if (isFirstSubmit) {
-        fullPrompt = buildArticleFormat(`Original brief: ${P0}`);
+        fullPrompt = `${ARTICLE_FORMAT}
+
+USER CONTEXT (P0 — original brief, max 50 words):
+${P0}`;
       } else {
         const p1Text = p1History.map((r, i) => `Refinement ${i + 1}: ${r}`).join("\n");
-        fullPrompt = buildArticleFormat(
-          `Original brief (P0): ${P0}\n\nRefinements (P1 — in order, later ones take priority):\n${p1Text}`
-        );
+        fullPrompt = `${ARTICLE_FORMAT}
+
+USER CONTEXT:
+Original brief (P0): ${P0}
+
+Refinements (P1 — in order, later ones take priority):
+${p1Text}`;
       }
 
       const generateBtn = document.getElementById("btn-news-generate");
@@ -742,34 +720,24 @@ ${userContext}`;
       setStatus("news-status", "Generating your news brief… this may take 10–20 seconds.");
 
       try {
-        // CHANGED: model field is now just the OpenRouter fallback name —
-        // Gemini (with search) is tried first on the backend regardless
-        // of this value; this only matters if it falls through to OpenRouter.
-        const backendResult = await callMargoBackend({
-          model: "openai/gpt-4o-mini",
+        const aiResponse = await callMargoBackend({
+          model: "gpt-4o-mini",
           prompt: fullPrompt,
           maxtokens: Math.ceil(targetWords * 3 * 1.4),
           stream: false
         });
 
-        const articles = parseArticles(backendResult.text);
+        const articles = parseArticles(aiResponse);
         setJSONToLocalStorage(LSKEYS.newsArticles, articles);
         renderNewsArticles(articles);
 
         const count = p1History.length;
-        // NEW: surface whether this brief was actually verified by live
-        // search, since OpenRouter/Groq fallback (no search) can still
-        // fire if Gemini's call fails for any reason.
-        const groundingNote = backendResult.grounded
-          ? " Verified against live search results."
-          : " Note: generated without live search verification (fallback provider) — double-check key facts.";
         setStatus(
           "news-status",
-          (isFirstSubmit
+          isFirstSubmit
             ? "Brief generated! Tap a card to read the full article."
-            : `Brief updated (${count} refinement${count !== 1 ? "s" : ""} applied). Tap a card to read.`
-          ) + groundingNote,
-          !backendResult.grounded
+            : `Brief updated (${count} refinement${count !== 1 ? "s" : ""} applied). Tap a card to read.`,
+          false
         );
       } catch (err) {
         setStatus("news-status", `Error: ${err.message}`, true);
