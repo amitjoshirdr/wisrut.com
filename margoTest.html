@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Margo – Student News Brief</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+  <style>
+    /* ── Base layout ── */
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f7f7f7;
+    }
+
+    h1, h2 { margin-top: 1.5rem; margin-bottom: 0.5rem; }
+
+    .section {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    textarea, input[type="text"] {
+      width: 100%; box-sizing: border-box;
+      padding: 0.5rem; margin-bottom: 0.5rem;
+      border-radius: 4px; border: 1px solid #ccc;
+      font-family: inherit; font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    button {
+      padding: 0.5rem 1rem; border-radius: 4px;
+      border: none; background: #222; color: #fff;
+      cursor: pointer; font-size: 0.9rem;
+    }
+    button.secondary { background: #888; }
+    button:disabled { background: #aaa; cursor: default; }
+
+    .status { font-size: 0.85rem; margin-top: 0.25rem; }
+
+    /* ── Article length slider ── */
+    .length-slider-wrap { margin: 0.75rem 0 0.5rem 0; }
+    .length-slider-label {
+      display: flex; justify-content: space-between;
+      align-items: center; font-size: 0.85rem; color: #444; margin-bottom: 0.3rem;
+    }
+    .length-slider-label strong { font-size: 0.95rem; color: #111; }
+    .length-slider-range {
+      display: flex; justify-content: space-between;
+      font-size: 0.75rem; color: #999; margin-top: 0.15rem;
+    }
+    input[type="range"] { width: 100%; accent-color: #222; cursor: pointer; height: 4px; }
+
+    /* ── AD SLOT SHARED STYLE ── */
+    /* Used for all placeholder slots; swap inner content for real AdSense <ins> tags */
+    .ad-slot {
+      background: #f5f5f5;
+      border: 1px dashed #ccc;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #bbb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    /* Horizontal banner (top of page, above cards, above support) */
+    .ad-slot-banner {
+      min-height: 90px;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+    /* Sidebar tall slots (right of cards on desktop) */
+    .ad-slot-sidebar {
+      min-height: 250px;
+      width: 100%;
+    }
+
+    /* ── CARDS + SIDEBAR LAYOUT ── */
+    /* NEW: two-column layout on desktop: cards on left, sidebar ads on right */
+    #cards-and-sidebar {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      margin-top: 1rem;
+    }
+    /* Cards column takes available space */
+    #cards-column {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    /* Sidebar: fixed 300px on desktop, hidden on mobile */
+    #ads-sidebar {
+      flex: 0 0 300px;
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    /* On small screens, hide sidebar (no wasted vertical space) */
+    @media (max-width: 700px) {
+      #ads-sidebar { display: none; }
+    }
+
+    /* ── ARTICLE CARDS ── */
+    .articles { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .article-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      background: #fff;
+      cursor: pointer;
+      transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+      position: relative;
+    }
+    .article-card:hover {
+      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+      border-color: #333;
+      transform: translateY(-1px);
+    }
+    .article-card:active { transform: translateY(0); }
+
+    /* Number badge */
+    .article-card .card-num {
+      display: inline-block;
+      background: #222; color: #fff;
+      font-size: 0.7rem; font-weight: 700;
+      border-radius: 50%; width: 1.4rem; height: 1.4rem;
+      line-height: 1.4rem; text-align: center;
+      margin-bottom: 0.4rem;
+    }
+    /* CHANGED: headline only — larger, bolder, no meta or summary */
+    .article-card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.05rem;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+    /* "Tap to read" hint pill */
+    .card-read-hint {
+      display: inline-block;
+      font-size: 0.75rem; font-weight: 600;
+      color: #fff; background: #333;
+      border-radius: 20px; padding: 0.2rem 0.65rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── SUPPORT ── */
+    .support-note { font-size: 0.85rem; color: #555; margin-top: 0.5rem; }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      margin-top: 2rem; padding-top: 1rem;
+      border-top: 1px solid #ddd; font-size: 0.9rem;
+    }
+    .site-footer nav { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; }
+
+    /* ── MODAL OVERLAY READER ── */
+    #article-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 1.5rem 1rem;
+      box-sizing: border-box;
+      animation: fadeInOverlay 0.2s ease;
+    }
+    @keyframes fadeInOverlay { from { opacity:0; } to { opacity:1; } }
+
+    #article-modal {
+      background: #fff;
+      border-radius: 12px;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 1.5rem 1.75rem;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.22);
+      position: relative;
+      animation: slideUpModal 0.22s ease;
+    }
+    @keyframes slideUpModal {
+      from { transform: translateY(30px); opacity:0; }
+      to   { transform: translateY(0);    opacity:1; }
+    }
+
+    #modal-now-reading {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #fff;
+      background: #222;
+      border-radius: 6px 6px 0 0;
+      padding: 0.4rem 0.9rem;
+      margin: -1.5rem -1.75rem 1.2rem -1.75rem;
+    }
+    #modal-title { font-size: 1.2rem; font-weight: 700; line-height: 1.35; margin: 0 0 0.3rem 0; }
+    #modal-meta  { font-size: 0.82rem; color: #666; margin-bottom: 1rem; }
+    #modal-body  { font-size: 0.95rem; line-height: 1.7; color: #222; border-top: 1px solid #eee; padding-top: 1rem; }
+    #modal-body hr { border: none; border-top: 1px solid #e0e0e0; margin: 1.2rem 0; }
+
+    /* AdSense slot inside modal */
+    #modal-adsense-slot {
+      margin-top: 1.5rem;
+      min-height: 90px;
+    }
+
+    #modal-close-btn {
+      display: block; width: 100%; margin-top: 1.25rem; padding: 0.65rem;
+      background: #222; color: #fff; border: none; border-radius: 8px;
+      font-size: 0.95rem; cursor: pointer; letter-spacing: 0.01em;
+    }
+    #modal-close-btn:hover { background: #444; }
+
+    #modal-close-x {
+      position: absolute; top: 0.75rem; right: 1rem;
+      font-size: 1.4rem; font-weight: 300;
+      background: none; border: none; color: #888; cursor: pointer; padding: 0; line-height: 1;
+    }
+    #modal-close-x:hover { color: #222; }
+
+    body.modal-open { overflow: hidden; }
+
+    @media (max-width: 480px) {
+      #article-modal { padding: 1.25rem 1.1rem; }
+      #modal-now-reading { margin: -1.25rem -1.1rem 1rem -1.1rem; }
+    }
+  </style>
+  
+  
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8690358052933130"
+     crossorigin="anonymous"></script>
+	
+</head>
+
+<body>
+
+
+  <!-- Back nav -->
+  <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <a href="https://wisrut.com"
+       style="display:inline-block;padding:0.5rem 0.9rem;background:#222;color:#fff;text-decoration:none;border-radius:6px;font-size:0.9rem;">
+      ← Back to Wisrut
+    </a>
+    <div style="font-size:0.9rem;color:#666;">Margo Current Affairs by Wisrut</div>
+  </div>
+	
+
+	<h1>Margo Current Affairs</h1>
+	<p style="margin:0 0 0.75rem 0;color:#555;font-size:0.95rem;">
+	  Daily exam-focused current affairs for competitive exams, in one quick scroll.
+	</p>
+
+	<button id="how-to-toggle"
+			style="border:none;background:#222;color:#fff;border-radius:999px;
+				   padding:0.35rem 0.85rem;font-size:0.8rem;cursor:pointer;">
+	  How Margo works
+	</button>
+
+  <!-- AD SLOT 0: Top of page banner (existing) -->
+  <!-- Replace inner content with your AdSense <ins> tag -->
+	<div id="adsense-top-banner" class="ad-slot ad-slot-banner">
+    Advertisement
+  </div> -->
+
+	<section id="how-to-margo"
+			 style="display:none;margin-top:1rem;padding:0.9rem 1rem;
+					border-radius:10px;border:1px solid #ddd;background:#f5fdf9;">
+	  <h2 style="margin-top:0;margin-bottom:0.4rem;font-size:1.05rem;">
+		How Margo Current Affairs works
+	  </h2>
+
+	  <!-- Part A: First-time setup -->
+	  <h3 style="margin:0.4rem 0 0.2rem;font-size:0.95rem;">Step A: First time you use it</h3>
+	  <ol style="padding-left:1.1rem;margin:0;font-size:0.9rem;color:#333;">
+		<li style="margin-bottom:0.35rem;">
+		  In the prompt box, tell Margo <strong>who you are and what exam you’re preparing for</strong>.
+		  For example: “I am a 2nd year BA student preparing for bank PO and SSC CGL.”
+		</li>
+		<li style="margin-bottom:0.35rem;">
+		  Click <strong>Generate / Update Brief</strong>. Margo creates a set of current affairs cards
+		  tailored to your exams.
+		</li>
+		<li style="margin-bottom:0.35rem;">
+		  If the cards don’t feel right, refine your prompt (e.g. “focus more on economy and polity”)
+		  and click <strong>Generate / Update Brief</strong> again.
+		</li>
+		<li>
+		  Repeat this refinement a few times until the mix of topics feels right. After that,
+		  you rarely need to change the prompt.
+		</li>
+	  </ol>
+
+	  <!-- Part B: Daily use -->
+	  <h3 style="margin:0.8rem 0 0.2rem;font-size:0.95rem;">Step B: Daily current affairs habit</h3>
+	  <ol style="padding-left:1.1rem;margin:0;font-size:0.9rem;color:#333;">
+		<li style="margin-bottom:0.35rem;">
+		  Open Margo once a day. <strong>Do not</strong> touch the prompt most days.
+		</li>
+		<li style="margin-bottom:0.35rem;">
+		  Scan the cards to see the important exam-relevant updates for your context.
+		</li>
+		<li style="margin-bottom:0.35rem;">
+		  Tap a card to read the full article in reader view. Make notes in your notebook or app
+		  if needed.
+		</li>
+		<li style="margin-bottom:0.35rem;">
+		  Close the article, move on to the next card, and you’re done — no endless scrolling,
+		  no getting lost in general news.
+		</li>
+		<li>
+		  Only when your situation changes (new exam, new focus) come back to the prompt,
+		  adjust it, and click <strong>Generate / Update Brief</strong> again.
+		</li>
+	  </ol>
+
+	  <p style="margin-top:0.6rem;font-size:0.85rem;color:#555;">
+		Margo is designed for competitive exams where current affairs matters:
+		UPSC, SSC, banking, railways, defence, state PSCs, and similar tests. Use it
+		as your daily current affairs checkpoint, not as another time‑eating news app.
+	  </p>
+	</section>	
+	
+  <!-- ── News Brief Section ── -->
+  <section class="section" id="news-section">
+    <h2>Current Affairs</h2>
+
+    <label for="news-prompt">Please type your Current Affairs prompt.</label>
+    <textarea id="news-prompt" rows="3"
+      placeholder="Example: I am a Class 11 student preparing for CBSE boards. Show me daily, bias-aware news about Indian economy and science."></textarea>
+
+    <div class="length-slider-wrap">
+      <div class="length-slider-label">
+        <span>Article length</span>
+        <strong id="length-display">500 words</strong>
+      </div>
+      <input type="range" id="article-length-slider" min="400" max="2000" step="50" value="500" />
+      <div class="length-slider-range">
+        <span>400 words</span>
+        <span>2000 words</span>
+      </div>
+    </div>
+
+    <div>
+      <button id="btn-news-generate">Generate / Update Brief</button>
+      <button id="btn-news-reset" class="secondary">Hard reset news brief</button>
+    </div>
+
+    <div id="news-status" class="status"></div>
+
+    <!-- AD SLOT 1: Above article cards, below status -->
+    <!-- Replace inner content with your AdSense <ins> tag for a banner unit -->
+    <div id="adsense-above-cards" class="ad-slot ad-slot-banner" style="margin-top:1rem;">
+      Advertisement
+    </div>
+
+
+
+    <!-- Cards heading + helper -->
+    <div style="margin-top:0.75rem;">
+      <h3 style="margin-bottom:0.25rem;">Articles — click a card to read</h3>
+      <p id="cards-helper" style="font-size:0.82rem;color:#666;margin:0 0 0.75rem 0;">
+        👆 Tap any card below to open the full article in a reader view.
+      </p>
+    </div>
+
+    <!-- NEW: Two-column layout — cards left, sidebar ads right (desktop only) -->
+    <div id="cards-and-sidebar">
+
+      <!-- Cards column -->
+      <div id="cards-column">
+        <div id="news-articles" class="articles">
+          <!-- Article cards rendered here by JS -->
+        </div>
+      </div>
+
+      <!-- AD SIDEBAR: right of cards, desktop only -->
+      <!-- Replace inner content of each slot with your AdSense <ins> tags -->
+      <div id="ads-sidebar">
+        <div id="adsense-sidebar-1" class="ad-slot ad-slot-sidebar">
+          Advertisement
+        </div>
+        <div id="adsense-sidebar-2" class="ad-slot ad-slot-sidebar">
+          Advertisement
+        </div>
+      </div>
+
+    </div><!-- end cards-and-sidebar -->
+
+  </section>
+
+  <!-- AD SLOT 2: Above Support Margo section -->
+  <!-- Replace inner content with your AdSense <ins> tag for a banner unit -->
+  <div id="adsense-above-support" class="ad-slot ad-slot-banner">
+    Advertisement
+  </div>
+
+  <!-- ── Support Margo ── -->
+  <section class="section" id="support-section">
+    <h2>Support Margo</h2>
+    <p>
+      Margo stays free for students. We use light ads to cover costs, and also offer a voluntary way to support the project if you find it useful.
+    </p>
+
+    <!-- Razorpay Payment Button (permanent, reusable) -->
+    <div id="margo-razorpay-button" style="margin-top:0.75rem;">
+      <form>
+        <script
+          src="https://checkout.razorpay.com/v1/payment-button.js"
+          data-payment_button_id="pl_T1cW8snj5ecBYS"
+          async>
+        </script>
+      </form>
+    </div>
+
+    <p class="support-note">
+      If you support Margo, you help independent student‑focused news curation continue.
+    </p>
+  </section>
+
+  <footer class="site-footer">
+    <p>© 2026 Margo by Wisrut. Free for students.</p>
+    <nav>
+      <a href="#news-section">News Brief</a>
+      <a href="#support-section">Support Margo</a>
+	  <a href="/privacy.html">Privacy Policy</a>
+	  <a href="/terms.html">Terms of Use</a>
+    </nav>
+  </footer>
+
+  <!-- ── MODAL OVERLAY ── -->
+  <div id="article-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div id="article-modal">
+      <div id="modal-now-reading">📖 Now reading</div>
+      <button id="modal-close-x" aria-label="Close article">×</button>
+      <h2 id="modal-title"></h2>
+      <div id="modal-meta"></div>
+      <div id="modal-body"></div>
+      <!-- AD SLOT: inside reader modal, below article body -->
+      <!-- Replace inner content with your AdSense <ins> tag -->
+      <div id="modal-adsense-slot" class="ad-slot ad-slot-banner">
+        Advertisement
+      </div>
+      <button id="modal-close-btn">✕ Close article &amp; go back to cards</button>
+    </div>
+  </div>
+
+  <script>
+    // CONFIG & LOCAL STORAGE KEYS (UNCHANGED)
+    const MARGOBACKENDURL = "https://margo-api.amitjoshirdr.workers.dev";
+
+    const LSKEYS = {
+      newsP0: "margop0original",
+      newsP1: "margop1history",
+      newsArticles: "margonewsarticles"
+    };
+
+    // SLIDER LABEL
+    document.addEventListener("DOMContentLoaded", () => {
+      const slider  = document.getElementById("article-length-slider");
+      const display = document.getElementById("length-display");
+      if (slider && display) {
+        slider.addEventListener("input", () => {
+          display.textContent = `${slider.value} words`;
+        });
+      }
+    });
+
+	// 	HOW MARGO WORKS
+		document.addEventListener("DOMContentLoaded", () => {
+		  const btn = document.getElementById("how-to-toggle");
+		  const panel = document.getElementById("how-to-margo");
+		  if (btn && panel) {
+			btn.addEventListener("click", () => {
+			  const isHidden = panel.style.display === "none" || panel.style.display === "";
+			  panel.style.display = isHidden ? "block" : "none";
+			  btn.textContent = isHidden ? "Hide how Margo works" : "How Margo works";
+			});
+		  }
+		});
+		
+    // HELPERS (UNCHANGED)
+    function setStatus(id, message, isError = false) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = message;
+      el.style.color = isError ? "red" : "#444";
+    }
+
+    function getJSONFromLocalStorage(key) {
+      try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; }
+      catch(e) { return null; }
+    }
+
+    function setJSONToLocalStorage(key, value) {
+      try { localStorage.setItem(key, JSON.stringify(value)); } catch(e) {}
+    }
+
+    function markdownToHtml(text) {
+      if (!text) return "";
+      return text
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*(.*?)\*/g, "<em>$1</em>")
+        .replace(/^---+$/gm, "<hr>")
+        .replace(/\n/g, "<br>");
+    }
+
+    // BACKEND CALL (UNCHANGED)
+    async function callMargoBackend(payload) {
+      const response = await fetch(`${MARGOBACKENDURL}/api/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Backend error ${response.status}: ${text}`);
+      }
+      const data = await response.json();
+      if (!data || typeof data.response !== "string") {
+        throw new Error("Unexpected backend response format (missing \'response\').");
+      }
+      return data.response;
+    }
+
+    // ARTICLE PARSER (UNCHANGED)
+    function parseArticles(backendResponse) {
+      if (!backendResponse || typeof backendResponse !== "string") return [];
+
+      const rawChunks = backendResponse
+        .split(/\n-{3,}\n/g)
+        .map(c => c.trim())
+        .filter(c => c.length > 0);
+
+      if (rawChunks.length >= 2) {
+        return rawChunks.slice(0, 3).map((chunk, index) => {
+          const lines = chunk.split("\n").map(l => l.trim()).filter(Boolean);
+          const headline = lines[0] || `Article ${index + 1}`;
+          const byline = (lines[1] && !/^\s*$/.test(lines[1])) ? lines[1] : "By Margo News Desk";
+          const bodyText = lines.slice(2).join("\n\n");
+
+          const articleBodyMatch = chunk.match(
+            /\*{0,2}Article[^*\n]*\*{0,2}[:\s]*([\s\S]*?)(?=\*{0,2}Critical Analysis|$)/i
+          );
+          const articleBodyRaw = articleBodyMatch ? articleBodyMatch[1].trim() : bodyText;
+
+          return {
+            id: `a${index + 1}`,
+            title: headline,
+            meta: byline,
+            fullText: markdownToHtml(bodyText)
+          };
+        });
+      }
+
+      return [{
+        id: "a1",
+        title: "Brief summary",
+        meta: "Full AI response",
+        fullText: markdownToHtml(backendResponse)
+      }];
+    }
+
+    // MODAL OPEN / CLOSE
+    function openArticleModal(article) {
+      const overlay = document.getElementById("article-modal-overlay");
+      document.getElementById("modal-title").textContent = article.title;
+      document.getElementById("modal-meta").textContent  = article.meta;
+      document.getElementById("modal-body").innerHTML    = article.fullText;
+      overlay.style.display = "block";
+      document.body.classList.add("modal-open");
+      overlay.scrollTop = 0;
+    }
+
+    function closeArticleModal() {
+      document.getElementById("article-modal-overlay").style.display = "none";
+      document.body.classList.remove("modal-open");
+    }
+
+    document.getElementById("modal-close-btn").addEventListener("click", closeArticleModal);
+    document.getElementById("modal-close-x").addEventListener("click", closeArticleModal);
+    document.getElementById("article-modal-overlay").addEventListener("click", function(e) {
+      if (e.target === this) closeArticleModal();
+    });
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeArticleModal();
+    });
+
+    // CHANGED: renderNewsArticles — headline only on card
+    function renderNewsArticles(articles) {
+      const container = document.getElementById("news-articles");
+      if (!container) return;
+      container.innerHTML = "";
+
+      if (!Array.isArray(articles) || articles.length === 0) {
+        container.innerHTML = "<p>No articles yet. Generate a brief to see results.</p>";
+        return;
+      }
+
+      articles.forEach((article, index) => {
+        const card = document.createElement("div");
+        card.className = "article-card";
+        card.setAttribute("tabindex", "0");
+        card.setAttribute("role", "button");
+        card.setAttribute("aria-label", `Read article: ${article.title}`);
+
+        const openModal = () => openArticleModal(article);
+        card.addEventListener("click", openModal);
+        card.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") openModal(); });
+
+        // CHANGED: only number badge + headline + read hint — no meta or summary
+        card.innerHTML = `
+          <div class="card-num">${index + 1}</div>
+          <h3>${article.title}</h3>
+          <span class="card-read-hint">Read full article →</span>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // NEWS BRIEF LOGIC (UNCHANGED)
+    function initNewsFromStorage() {
+      const newsPromptEl = document.getElementById("news-prompt");
+      const savedP0 = localStorage.getItem(LSKEYS.newsP0) || "";
+      const p1History = getJSONFromLocalStorage(LSKEYS.newsP1) || [];
+      const latestP1 = p1History.length > 0 ? p1History[p1History.length - 1] : "";
+
+      if (newsPromptEl) {
+        newsPromptEl.value = latestP1;
+        newsPromptEl.placeholder = savedP0
+          ? "Type your next refinement here and click Generate / Update…"
+          : "Example: I am a Class 11 student preparing for CBSE boards. Show me daily, bias-aware news about Indian economy and science.";
+      }
+
+      if (savedP0) {
+        const count = p1History.length;
+        setStatus("news-status", `Refinement mode — ${count} refinement(s) stacked on your original prompt. Add another or Hard Reset to start over.`, false);
+      }
+
+      const savedArticles = getJSONFromLocalStorage(LSKEYS.newsArticles);
+      renderNewsArticles(
+        Array.isArray(savedArticles) && savedArticles.length > 0 ? savedArticles : []
+      );
+    }
+
+    async function handleNewsGenerate() {
+      const promptEl = document.getElementById("news-prompt");
+      if (!promptEl) return;
+
+      const userPrompt = (promptEl.value || "").trim();
+      if (!userPrompt) {
+        setStatus("news-status", "Please enter a prompt for your news brief.", true);
+        return;
+      }
+
+      let P0 = localStorage.getItem(LSKEYS.newsP0) || "";
+      const isFirstSubmit = !P0;
+
+      if (isFirstSubmit) {
+        const words = userPrompt.split(/\s+/).filter(Boolean);
+        if (words.length > 50) {
+          setStatus("news-status", "Your first prompt must be 50 words or fewer. Please shorten it.", true);
+          return;
+        }
+        P0 = userPrompt;
+        localStorage.setItem(LSKEYS.newsP0, P0);
+        setJSONToLocalStorage(LSKEYS.newsP1, []);
+      } else {
+        const p1History = getJSONFromLocalStorage(LSKEYS.newsP1) || [];
+        p1History.push(userPrompt);
+        const totalWords = p1History.join(" ").split(/\s+/).filter(Boolean).length;
+        if (totalWords > 1000) {
+          setStatus("news-status", "Your total refinements exceed 1000 words. Please use Hard Reset to start a new brief.", true);
+          return;
+        }
+        setJSONToLocalStorage(LSKEYS.newsP1, p1History);
+      }
+
+      const p1History = getJSONFromLocalStorage(LSKEYS.newsP1) || [];
+
+      const sliderEl = document.getElementById("article-length-slider");
+      const targetWords = sliderEl ? parseInt(sliderEl.value, 10) : 500;
+
+      const ARTICLE_FORMAT = `Write exactly 3 complete, high-quality news articles. Separate each article with a line containing only ---
+
+QUALITY RULES:
+1. Be specific: name real events, policies, organisations, data points.
+2. Be journalistic: lead with the most important fact, then context, then perspectives.
+3. Each article must include: Assumptions & Scope, the Article body (~${targetWords} words), and Critical Analysis. The range of Assumptions and Scope, and critical analysis will be 2-4 sentences only. Prioritize the Article part.
+4. Do not use vague phrases like "experts suggest" without naming the expert.
+5. No markdown headers inside the article body; use plain paragraphs.
+6. Use a mix of Epistemological and Judicial frameworks to build the content so people can trust the article.
+7. The core aim is that people get trusted content.`;
+
+      let fullPrompt;
+      if (isFirstSubmit) {
+        fullPrompt = `${ARTICLE_FORMAT}
+
+USER CONTEXT (P0 — original brief, max 50 words):
+${P0}`;
+      } else {
+        const p1Text = p1History.map((r, i) => `Refinement ${i + 1}: ${r}`).join("\n");
+        fullPrompt = `${ARTICLE_FORMAT}
+
+USER CONTEXT:
+Original brief (P0): ${P0}
+
+Refinements (P1 — in order, later ones take priority):
+${p1Text}`;
+      }
+
+      const generateBtn = document.getElementById("btn-news-generate");
+      if (generateBtn) generateBtn.disabled = true;
+      setStatus("news-status", "Generating your news brief… this may take 10–20 seconds.");
+
+      try {
+        const aiResponse = await callMargoBackend({
+          model: "gpt-4o-mini",
+          prompt: fullPrompt,
+          maxtokens: Math.ceil(targetWords * 3 * 1.4),
+          stream: false
+        });
+
+        const articles = parseArticles(aiResponse);
+        setJSONToLocalStorage(LSKEYS.newsArticles, articles);
+        renderNewsArticles(articles);
+
+        const count = p1History.length;
+        setStatus(
+          "news-status",
+          isFirstSubmit
+            ? "Brief generated! Tap a card to read the full article."
+            : `Brief updated (${count} refinement${count !== 1 ? "s" : ""} applied). Tap a card to read.`,
+          false
+        );
+      } catch (err) {
+        setStatus("news-status", `Error: ${err.message}`, true);
+        console.error(err);
+      } finally {
+        if (generateBtn) generateBtn.disabled = false;
+      }
+    }
+
+    function handleNewsReset() {
+      if (!confirm("Hard reset will clear your original prompt, all refinements, and cached articles. Continue?")) return;
+      localStorage.removeItem(LSKEYS.newsP0);
+      localStorage.removeItem(LSKEYS.newsP1);
+      localStorage.removeItem(LSKEYS.newsArticles);
+      const promptEl = document.getElementById("news-prompt");
+      if (promptEl) {
+        promptEl.value = "";
+        promptEl.placeholder = "Example: I am a Class 11 student preparing for CBSE boards. Show me daily, bias-aware news about Indian economy and science.";
+      }
+      renderNewsArticles([]);
+      setStatus("news-status", "Brief cleared. Enter a new prompt to start fresh.", false);
+    }
+
+    // BOOT
+    document.getElementById("btn-news-generate").addEventListener("click", handleNewsGenerate);
+    document.getElementById("btn-news-reset").addEventListener("click", handleNewsReset);
+    initNewsFromStorage();
+
+  </script>
+</body>
+</html>
