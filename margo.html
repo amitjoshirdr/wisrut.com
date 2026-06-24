@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Margo – Current Affairs</title>
+  <title>Margo – Student News Brief</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
@@ -247,11 +247,20 @@
        style="display:inline-block;padding:0.5rem 0.9rem;background:#222;color:#fff;text-decoration:none;border-radius:6px;font-size:0.9rem;">
       ← Back to Wisrut
     </a>
-    <div style="font-size:0.9rem;color:#666;">Margo NEWS Brief by Wisrut</div>
+    <div style="font-size:0.9rem;color:#666;">Margo Current Affairs by Wisrut</div>
   </div>
 	
 
-  <h1>Margo – Current Affairs</h1>
+	<h1>Margo Current Affairs</h1>
+	<p style="margin:0 0 0.75rem 0;color:#555;font-size:0.95rem;">
+	  Daily exam-focused current affairs for competitive exams, in one quick scroll.
+	</p>
+
+	<button id="how-to-toggle"
+			style="border:none;background:#222;color:#fff;border-radius:999px;
+				   padding:0.35rem 0.85rem;font-size:0.8rem;cursor:pointer;">
+	  How Margo works
+	</button>
 
   <!-- AD SLOT 0: Top of page banner (existing) -->
   <!-- Replace inner content with your AdSense <ins> tag -->
@@ -259,13 +268,69 @@
     Advertisement
   </div> -->
 
-	
+	<section id="how-to-margo"
+			 style="display:none;margin-top:1rem;padding:0.9rem 1rem;
+					border-radius:10px;border:1px solid #ddd;background:#f5fdf9;">
+	  <h2 style="margin-top:0;margin-bottom:0.4rem;font-size:1.05rem;">
+		How Margo Current Affairs works
+	  </h2>
+
+	  <!-- Part A: First-time setup -->
+	  <h3 style="margin:0.4rem 0 0.2rem;font-size:0.95rem;">Step A: First time you use it</h3>
+	  <ol style="padding-left:1.1rem;margin:0;font-size:0.9rem;color:#333;">
+		<li style="margin-bottom:0.35rem;">
+		  In the prompt box, tell Margo <strong>who you are and what exam you’re preparing for</strong>.
+		  For example: “I am a 2nd year BA student preparing for bank PO and SSC CGL.”
+		</li>
+		<li style="margin-bottom:0.35rem;">
+		  Click <strong>Generate / Update Brief</strong>. Margo creates a set of current affairs cards
+		  tailored to your exams.
+		</li>
+		<li style="margin-bottom:0.35rem;">
+		  If the cards don’t feel right, refine your prompt (e.g. “focus more on economy and polity”)
+		  and click <strong>Generate / Update Brief</strong> again.
+		</li>
+		<li>
+		  Repeat this refinement a few times until the mix of topics feels right. After that,
+		  you rarely need to change the prompt.
+		</li>
+	  </ol>
+
+	  <!-- Part B: Daily use -->
+	  <h3 style="margin:0.8rem 0 0.2rem;font-size:0.95rem;">Step B: Daily current affairs habit</h3>
+	  <ol style="padding-left:1.1rem;margin:0;font-size:0.9rem;color:#333;">
+		<li style="margin-bottom:0.35rem;">
+		  Open Margo once a day. <strong>Do not</strong> touch the prompt most days.
+		</li>
+		<li style="margin-bottom:0.35rem;">
+		  Scan the cards to see the important exam-relevant updates for your context.
+		</li>
+		<li style="margin-bottom:0.35rem;">
+		  Tap a card to read the full article in reader view. Make notes in your notebook or app
+		  if needed.
+		</li>
+		<li style="margin-bottom:0.35rem;">
+		  Close the article, move on to the next card, and you’re done — no endless scrolling,
+		  no getting lost in general news.
+		</li>
+		<li>
+		  Only when your situation changes (new exam, new focus) come back to the prompt,
+		  adjust it, and click <strong>Generate / Update Brief</strong> again.
+		</li>
+	  </ol>
+
+	  <p style="margin-top:0.6rem;font-size:0.85rem;color:#555;">
+		Margo is designed for competitive exams where current affairs matters:
+		UPSC, SSC, banking, railways, defence, state PSCs, and similar tests. Use it
+		as your daily current affairs checkpoint, not as another time‑eating news app.
+	  </p>
+	</section>	
 	
   <!-- ── News Brief Section ── -->
   <section class="section" id="news-section">
     <h2>Current Affairs</h2>
 
-    <label for="news-prompt">Please type your news brief prompt.</label>
+    <label for="news-prompt">Please type your Current Affairs prompt.</label>
     <textarea id="news-prompt" rows="3"
       placeholder="Example: I am a Class 11 student preparing for CBSE boards. Show me daily, bias-aware news about Indian economy and science."></textarea>
 
@@ -283,7 +348,7 @@
 
     <div>
       <button id="btn-news-generate">Generate / Update Brief</button>
-      <button id="btn-news-reset" class="secondary">Hard reset Current Affairs</button>
+      <button id="btn-news-reset" class="secondary">Hard reset news brief</button>
     </div>
 
     <div id="news-status" class="status"></div>
@@ -293,6 +358,8 @@
     <div id="adsense-above-cards" class="ad-slot ad-slot-banner" style="margin-top:1rem;">
       Advertisement
     </div>
+
+
 
     <!-- Cards heading + helper -->
     <div style="margin-top:0.75rem;">
@@ -404,6 +471,19 @@
       }
     });
 
+	// 	HOW MARGO WORKS
+		document.addEventListener("DOMContentLoaded", () => {
+		  const btn = document.getElementById("how-to-toggle");
+		  const panel = document.getElementById("how-to-margo");
+		  if (btn && panel) {
+			btn.addEventListener("click", () => {
+			  const isHidden = panel.style.display === "none" || panel.style.display === "";
+			  panel.style.display = isHidden ? "block" : "none";
+			  btn.textContent = isHidden ? "Hide how Margo works" : "How Margo works";
+			});
+		  }
+		});
+		
     // HELPERS (UNCHANGED)
     function setStatus(id, message, isError = false) {
       const el = document.getElementById(id);
@@ -431,14 +511,22 @@
     }
 
     // BACKEND CALL (UNCHANGED)
-		async function callMargoBackend(payload) {
-		  const response = await fetch(`${MARGOBACKENDURL}/api/generate`, {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(payload)
-		  });
-		  // rest (error handling / JSON parsing) stays same
-		}
+    async function callMargoBackend(payload) {
+      const response = await fetch(`${MARGOBACKENDURL}/api/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Backend error ${response.status}: ${text}`);
+      }
+      const data = await response.json();
+      if (!data || typeof data.response !== "string") {
+        throw new Error("Unexpected backend response format (missing \'response\').");
+      }
+      return data.response;
+    }
 
     // ARTICLE PARSER (UNCHANGED)
     function parseArticles(backendResponse) {
@@ -632,13 +720,12 @@ ${p1Text}`;
       setStatus("news-status", "Generating your news brief… this may take 10–20 seconds.");
 
       try {
-		const aiResponse = await callMargoBackend({
-		  model: "gpt-4o-mini",
-		  p0: P0,
-		  refinements: p1History,
-		  targetWords: targetWords,
-		  stream: false
-		});
+        const aiResponse = await callMargoBackend({
+          model: "gpt-4o-mini",
+          prompt: fullPrompt,
+          maxtokens: Math.ceil(targetWords * 3 * 1.4),
+          stream: false
+        });
 
         const articles = parseArticles(aiResponse);
         setJSONToLocalStorage(LSKEYS.newsArticles, articles);
