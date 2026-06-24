@@ -702,10 +702,13 @@
       // TODO: once live search is restored, revert to the search-first
       // version of this prompt (see project notes / previous version).
       function buildArticleFormat(userContext) {
-        return `TASK: Write exactly 3 complete, high-quality news articles for students, using the most recent developments you are aware of. Separate each article with a line containing only ---
+        const todayStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        return `IMPORTANT: Today's actual date is ${todayStr}. Your own training data may stop earlier than this — do not assume the current date is your training cutoff. Reason about "recent" relative to ${todayStr}, not relative to whenever your knowledge ends.
 
-IMPORTANT — BE HONEST ABOUT RECENCY:
-You do not have live internet access for this task. Your knowledge has a training cutoff, so "recent" means the most recent things you know about, not necessarily what happened in the real world this week. Do not imply or claim these events are breaking news from today or this week unless you are certain of the date and it is genuinely close to your knowledge cutoff.
+TASK: Write exactly 3 complete, high-quality news articles for students, using the most recent developments you are aware of. Separate each article with a line containing only ---
+
+IMPORTANT — USE SEARCH RESULTS IF PROVIDED, BE HONEST IF NOT:
+If a "LIVE SEARCH RESULTS" section appears below (after the user context), those are real, current results — base your articles primarily on them, citing the source named in each result. If no such section appears, you do not have live internet access for this task: your knowledge has a training cutoff, so "recent" means the most recent things you know about, not necessarily what happened in the real world this week. In that case, do not imply or claim these events are breaking news from today or this week.
 
 STEP 1 — WRITE each article with this structure:
 - A factual, specific headline (no clickbait)
@@ -714,13 +717,15 @@ STEP 1 — WRITE each article with this structure:
 - A short "What this means for students" closer (2-3 sentences) connecting the news to what someone in this field/exam context should understand or watch next.
 
 STEP 2 — SELF-CHECK before finalizing each article:
-- Have I avoided stating or implying this is breaking/live news?
-- Is every fact something I actually know, not something invented to sound plausible?
+- If LIVE SEARCH RESULTS were provided: did I actually use them, with named sources, rather than ignoring them?
+- If no search results were provided: have I avoided stating or implying this is breaking/live news?
+- Is every fact something I actually know or was given, not something invented to sound plausible?
 - Have I named sources rather than using vague phrases?
 
-STEP 3 — ADD A FOOTER to the very end of your full response (after all 3 articles), exactly in this form:
+STEP 3 — ADD A FOOTER to the very end of your full response (after all 3 articles):
 ---
-Note: These articles are based on the AI's training knowledge, not live search. For verified, up-to-the-minute news, please cross-check with a current news source.
+If you used LIVE SEARCH RESULTS: "Note: These articles are based on live search results retrieved today."
+If you did NOT receive any LIVE SEARCH RESULTS: "Note: These articles are based on the AI's training knowledge, not live search. For verified, up-to-the-minute news, please cross-check with a current news source."
 
 USER CONTEXT (who this is for, and what they want):
 ${userContext}`;
