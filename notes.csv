@@ -1,0 +1,5 @@
+university,course,semester,subject,topic,title,author,updated,summary,link,syllabus_url,body_file
+Sample University,BA,Semester 3,Economics,Demand and Supply,Demand and Supply (sample),Sample Teacher,2026-11-24,Sample row. Basic demand and supply notes for quick exam revision.,,,sample.html
+Sample University,BA,Semester 3,Economics,Elasticity,Elasticity of Demand (sample),Sample Teacher,,Sample row. A short introduction to elasticity.,https://drive.google.com/file/d/YOUR_FILE_ID/view,,
+Sample University,BA,Semester 3,Political Science,Constitution,Constitution of India (sample),Sample Teacher,2026-11-23,Sample row. Key features of the Constitution for revision.,https://drive.google.com/file/d/YOUR_FILE_ID/view,,
+Sample University,BA,Semester 5,Economics,Public Finance,Public Finance (sample),Sample Teacher,2026-11-22,Sample row. An overview of public finance topics.,https://drive.google.com/file/d/YOUR_FILE_ID/view,,
