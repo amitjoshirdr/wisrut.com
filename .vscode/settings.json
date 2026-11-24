@@ -1,0 +1,11 @@
+{
+  "liveServer.settings.root": "/site",
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+  "files.exclude": {
+    "**/__pycache__": true
+  },
+  "[csv]": {
+    "editor.wordWrap": "off"
+  }
+}

@@ -1,33 +1,77 @@
+#!/usr/bin/env python3
 """Build the Wisrut static site.
-Run py build.py or python3 build.py.
-Reads notes.csv, content/, and legacy/; writes and rebuilds site/.
+
+Run:  py build.py        (Windows)
+      python3 build.py   (macOS, Linux)
+
+Reads:  notes.csv, content/, legacy/, assets/site.css
+Writes: site/   (wiped and rebuilt on every run; never edit it by hand)
+
+Standard library only. Works on Python 3.8 or newer.
 """
 
 import csv
+import hashlib
 import html
 import json
+import os
 import re
 import shutil
-from pathlib import Path
+import sys
 from urllib.parse import quote
 
-ROOT = Path(__file__).resolve().parent
-OUT = ROOT / "site"
-LEGACY = ROOT / "legacy"
+# ---------------------------------------------------------------------------
+# Settings
+# ---------------------------------------------------------------------------
+ROOT = os.path.dirname(os.path.abspath(__file__))
+OUT = os.path.join(ROOT, "site")
+LEGACY = os.path.join(ROOT, "legacy")
 SITE = "https://wisrut.com"
 CONTACT = "amitjoshi.work@outlook.com"
 ADSENSE = "ca-pub-8690358052933130"
 POLICY_DATE = "24 November 2026"
 RAZORPAY_ID = "pl_T1cW8snj5ecBYS"
 
-NAV = [("Notes", "/notes/"), ("Current affairs", "/current-affairs/"), ("Search", "/search/"), ("Support", "/support/")]
-FOOT = [("About", "/about/"), ("Contact", "/contact/"), ("Privacy", "/privacy/"), ("Terms", "/terms/"), ("For businesses", "/for-business/")]
-REDIRECTS = [("/margo.html", "/current-affairs/"), ("/search.html", "/search/"), ("/privacy.html", "/privacy/"), ("/terms.html", "/terms/")]
-ADS_SCRIPT = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + ADSENSE + '" crossorigin="anonymous"></script>'
+NAV = [
+    ("Notes", "/notes/"),
+    ("Current affairs", "/current-affairs/"),
+    ("Search", "/search/"),
+    ("Support", "/support/"),
+]
+FOOT = [
+    ("About", "/about/"),
+    ("Contact", "/contact/"),
+    ("Privacy", "/privacy/"),
+    ("Terms", "/terms/"),
+    ("For businesses", "/for-business/"),
+]
+REDIRECTS = [
+    ("/margo.html", "/current-affairs/"),
+    ("/search.html", "/search/"),
+    ("/privacy.html", "/privacy/"),
+    ("/terms.html", "/terms/"),
+]
+ADS_SCRIPT = (
+    '<script async src="https://pagead2.googlesyndication.com/pagead/js/'
+    'adsbygoogle.js?client=%s" crossorigin="anonymous"></script>' % ADSENSE
+)
+
+MIDDOT = u"·"
+RSQUO = u"’"
+
+PAGE_COUNT = 0
 
 
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
 def slug(s):
-    return re.sub(r"-+", "-", re.sub(r"[^a-z0-9]+", "-", str(s).strip().lower())).strip("-")
+    """Lowercase, runs of non-alphanumerics become one hyphen, strip hyphens."""
+    t = re.sub(r"[^a-z0-9]+", "-", str(s).lower()).strip("-")
+    if not t:
+        # Names with no Latin letters or digits (for example Hindi only).
+        t = "item-" + hashlib.md5(str(s).encode("utf-8")).hexdigest()[:6]
+    return t
 
 
 def e(s):
@@ -37,273 +81,567 @@ def e(s):
 def crumbs(items):
     parts = []
     for label, url in items:
-        text = e(label)
-        parts.append('<a href="' + e(url) + '">' + text + '</a>' if url else text)
-    return '<nav class="crumbs" aria-label="Breadcrumb">' + " &rsaquo; ".join(parts) + '</nav>'
+        if url:
+            parts.append('<a href="%s">%s</a>' % (e(url), e(label)))
+        else:
+            parts.append(e(label))
+    return '<p class="crumbs">' + " &rsaquo; ".join(parts) + "</p>"
 
 
 def write(path, content):
-    target = str(path)
-    if target.endswith(".html") or target.endswith(".txt") or target.endswith(".xml") or target.endswith("_redirects"):
-        dest = OUT / target.lstrip("/")
+    """Write a page or file under site/.
+
+    Paths ending in .html, .txt, .xml or _redirects are written as given.
+    Any other path such as /notes/ is written as <path>/index.html.
+    """
+    global PAGE_COUNT
+    rel = path.strip("/")
+    parts = [p for p in rel.split("/") if p]
+    if path.endswith((".html", ".txt", ".xml", "_redirects")):
+        target = os.path.join(OUT, *parts)
     else:
-        dest = OUT / target.strip("/") / "index.html"
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text(content, encoding="utf-8")
+        target = os.path.join(OUT, *(parts + ["index.html"]))
+    folder = os.path.dirname(target)
+    if not os.path.isdir(folder):
+        os.makedirs(folder)
+    with open(target, "w", encoding="utf-8", newline="\n") as f:
+        f.write(content)
+    if target.endswith(".html"):
+        PAGE_COUNT += 1
 
 
-def shell(title, desc, body, path, active="", wide=False, app=False, head_extra="", ads_script=False, index=True):
-    nav_links = []
+def shell(title, desc, body, path, active="", wide=False, app=False,
+          head_extra="", ads_script=False, index=True):
+    """Return a full page wrapped in the shared header and footer."""
+    nav = ""
     for label, url in NAV:
-        attrs = ' aria-current="page"' if url == active else ""
-        nav_links.append('<a href="' + url + '"' + attrs + ">" + e(label) + "</a>")
-    foot_links = []
+        cur = ' aria-current="page"' if url == active else ""
+        nav += '<a href="%s"%s>%s</a>' % (url, cur, e(label))
+    foot = ""
     for label, url in FOOT:
-        foot_links.append('<a href="' + url + '">' + e(label) + "</a>")
-    classes = "app" if app else ""
-    wide_class = " wide" if wide else ""
-    robots = "" if index else '  <meta name="robots" content="noindex, nofollow">\n'
-    ads = ADS_SCRIPT if ads_script else ""
-    html_text = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n" \
-        "  <meta charset=\"UTF-8\">\n" \
-        '  <meta name="viewport" content="width=device-width, initial-scale=1">\n' \
-        '  <meta name="google-adsense-account" content="' + ADSENSE + '">\n' \
-        "  <title>" + e(title) + "</title>\n" \
-        '  <meta name="description" content="' + e(desc) + '\">\n' + robots \
-        '  <link rel="canonical" href="' + SITE + path + '\">\n' \
-        '  <link rel="stylesheet" href="/site.css">\n' + ads + "\n" + head_extra + "\n</head>\n" \
-        '<body class="' + classes + '">\n' \
-        '<header class="top"><a class="brand" href="/">Wisrut</a><nav aria-label="Primary">' + "".join(nav_links) + '</nav></header>\n' \
-        '<main class="' + wide_class.strip() + '">' + body + '</main>\n' \
-        '<footer class="site"><nav aria-label="Footer">' + "".join(foot_links) + '</nav></footer>\n</body>\n</html>\n'
-    return html_text
+        foot += '<a href="%s">%s</a>' % (url, e(label))
 
+    head = "<!doctype html>\n"
+    head += '<html lang="en">\n<head>\n'
+    head += '<meta charset="utf-8">\n'
+    head += '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+    head += "<title>%s</title>\n" % e(title)
+    head += '<meta name="description" content="%s">\n' % e(desc)
+    if not index:
+        head += '<meta name="robots" content="noindex">\n'
+    head += '<meta name="google-adsense-account" content="%s">\n' % ADSENSE
+    head += '<link rel="canonical" href="%s">\n' % e(SITE + path)
+    head += '<link rel="stylesheet" href="/site.css">\n'
+    if ads_script:
+        head += ADS_SCRIPT + "\n"
+    if head_extra:
+        head += head_extra + "\n"
+    head += "</head>\n"
 
-def convert_app(name, title, desc, path, active, ads):
-    source = (LEGACY / name).read_text(encoding="utf-8")
-    style_match = re.search(r"(?is)<style[^>]*>(.*?)</style>", source)
-    css = style_match.group(1) if style_match else ""
-    css = re.sub(r"(?m)^\s*body\s*\{[^}]*\}", "", css, count=1)
-    head_extra = "<style>\n" + css + "\n</style>"
-
-    body_match = re.search(r"(?is)<body[^>]*>(.*)</body>", source)
-    body = body_match.group(1) if body_match else ""
-    first_h1 = re.search(r"(?is)<h1\b", body)
-    if first_h1:
-        body = body[first_h1.start():]
-
-    body = re.sub(r'<[^>]*class="[^"]*ad-slot[^"]*"[^>]*>.*?</(?:div|section)>', "", body, flags=re.S)
-    body = re.sub(r"(?is)<footer\b.*?</footer>", "", body)
-    body = re.sub(r"(?m)^\s*-->\s*$", "", body)
-    body = re.sub(r"(?is)<[^>]*>Advertisement\s*(?:<[^>]*>)*", "", body)
-    body = re.sub(r"(?i)Advertisement", "", body)
-
-    page = shell(title, desc, body, path, active=active, wide=True, app=True, head_extra=head_extra, ads_script=ads)
-    write(path, page)
-
-
-def convert_policy(name, path, title):
-    source = (LEGACY / name).read_text(encoding="utf-8")
-    match = re.search(r'(?is)<div\s+class="page">(.*)</div>\s*</body>', source)
-    inner = match.group(1) if match else ""
-    inner = re.sub(r"\[your(?:\-|‑|‑)?email@example\.com\]", '<a href="mailto:' + CONTACT + '">' + e(CONTACT) + '</a>', inner)
-    inner = re.sub(r"Last updated:\s*[^<]+", "Last updated: " + POLICY_DATE, inner)
-    inner = '<article class="doc">' + inner + '</article>'
-    page = shell(title, "Wisrut policy information", inner, path, active="/support/")
-    write(path, page)
-
-
-def read_notes():
-    notes = []
-    with (ROOT / "notes.csv").open("r", encoding="utf-8-sig", newline="") as handle:
-        for raw in csv.DictReader(handle):
-            row = {key: value.strip() for key, value in raw.items()}
-            if not row.get("title"):
-                continue
-            if not row.get("link") and not row.get("body_file"):
-                print("WARNING: note has neither link nor body_file: " + row["title"])
-            row["path"] = "/notes/college/" + "/".join(slug(row[key]) for key in ("university", "course", "semester", "subject", "topic")) + "/"
-            notes.append(row)
-    return notes
-
-
-def make_drive_preview(link):
-    match = re.search(r"drive\.google\.com/file/d/([^/]+)", link or "")
-    if not match:
-        return "", ""
-    file_id = match.group(1)
-    if file_id == "YOUR_FILE_ID":
-        return "", ""
-    preview = '<iframe class="preview" src="https://drive.google.com/file/d/' + e(file_id) + '/preview" loading="lazy" title="Note preview"></iframe>'
-    return preview, file_id
+    body_class = ' class="app"' if app else ""
+    main_class = ' class="wide"' if wide else ""
+    out = head
+    out += "<body%s>\n" % body_class
+    out += '<header class="top">\n'
+    out += '<a class="brand" href="/">Wisrut</a>\n'
+    out += "<nav>%s</nav>\n" % nav
+    out += "</header>\n"
+    out += "<main%s>\n%s\n</main>\n" % (main_class, body)
+    out += '<footer class="site">%s</footer>\n' % foot
+    out += "</body>\n</html>\n"
+    return out
 
 
 def doc(path, title, desc, inner, active=""):
-    body = '<article class="doc"><h1>' + e(title) + '</h1>' + inner + '</article>'
-    write(path, shell(title, desc, body, path, active=active))
+    """Write a plain text page: <article class="doc"><h1>...</h1>...</article>."""
+    body = '<article class="doc"><h1>%s</h1>%s</article>' % (e(title), inner)
+    page_title = "%s %s Wisrut" % (title, MIDDOT)
+    write(path, shell(page_title, desc, body, path, active=active))
+
+
+def mailto(subject=None):
+    if subject:
+        return "mailto:%s?subject=%s" % (CONTACT, quote(subject))
+    return "mailto:" + CONTACT
+
+
+def contact_link(subject=None):
+    return '<a href="%s">%s</a>' % (e(mailto(subject)), e(CONTACT))
+
+
+def read_legacy(name):
+    p = os.path.join(LEGACY, name)
+    if not os.path.isfile(p):
+        sys.exit("ERROR: missing legacy file: legacy/%s" % name)
+    with open(p, encoding="utf-8") as f:
+        return f.read()
+
+
+SCRIPT_RE = re.compile(r"<script\b.*?</script>", re.S | re.I)
+
+
+def protect_scripts(text):
+    """Swap every <script> block for a token so no cleanup regex can touch it."""
+    store = []
+
+    def grab(m):
+        store.append(m.group(0))
+        return "@@SCRIPT%d@@" % (len(store) - 1)
+
+    return SCRIPT_RE.sub(grab, text), store
+
+
+def restore_scripts(text, store):
+    for i, block in enumerate(store):
+        text = text.replace("@@SCRIPT%d@@" % i, block)
+    return text
+
+
+# ---------------------------------------------------------------------------
+# Moving Margo and Search into the shared layout
+# ---------------------------------------------------------------------------
+def convert_app(name, title, desc, path, active, ads):
+    src = read_legacy(name)
+
+    # 1. First <style> block, minus its first body { ... } rule.
+    m = re.search(r"<style[^>]*>(.*?)</style>", src, re.S | re.I)
+    css = m.group(1) if m else ""
+    css = re.sub(r"(?m)^\s*body\s*\{[^}]*\}", "", css, count=1)
+    head_extra = "<style>" + css + "</style>"
+
+    # 2. Body content, then drop everything before the first <h1>.
+    m = re.search(r"<body[^>]*>(.*)</body>", src, re.S | re.I)
+    if not m:
+        sys.exit("ERROR: no <body> found in legacy/%s" % name)
+    inner, store = protect_scripts(m.group(1))
+    cut = inner.lower().find("<h1")
+    if cut < 0:
+        sys.exit("ERROR: no <h1> found in legacy/%s" % name)
+    inner = inner[cut:]
+
+    # 3. Empty ad boxes.
+    inner = re.sub(r'<div[^>]*class="[^"]*ad-slot[^"]*"[^>]*>.*?</div>', "",
+                   inner, flags=re.S)
+    # 4. Wrappers left empty.
+    inner = re.sub(r'<div id="ads-sidebar">\s*</div>', "", inner)
+    inner = re.sub(r'<div class="col" style="flex: 0 0 320px; min-width: 0;">\s*</div>',
+                   "", inner)
+    # 5. Old footer.
+    inner = re.sub(r'<footer class="site-footer">.*?</footer>', "", inner,
+                   flags=re.S)
+    # 6. Stray --> lines.
+    inner = re.sub(r"(?m)^\s*-->\s*$", "", inner)
+
+    inner = restore_scripts(inner, store).strip()
+
+    # 7. Write the page.
+    write(path, shell(title, desc, inner, path, active=active, wide=True,
+                      app=True, head_extra=head_extra, ads_script=ads))
+
+
+def convert_policy(name, title, desc, path):
+    src = read_legacy(name)
+    m = re.search(r'<div class="page">(.*)</div>\s*</body>', src, re.S)
+    if not m:
+        sys.exit("ERROR: no <div class=\"page\"> found in legacy/%s" % name)
+    inner = m.group(1)
+
+    mail = '<a href="mailto:%s">%s</a>' % (CONTACT, CONTACT)
+    inner, n_mail = re.subn(r"\[your.email@example\.com\]", lambda mm: mail, inner)
+    inner, n_date = re.subn(r"Last updated:[^<]*",
+                            lambda mm: "Last updated: " + POLICY_DATE,
+                            inner, count=1)
+    if n_mail != 1 or n_date != 1:
+        print("WARNING: legacy/%s: email replaced %d time(s), date replaced %d time(s)"
+              % (name, n_mail, n_date))
+
+    body = '<article class="doc">' + inner.strip() + "</article>"
+    write(path, shell(title, desc, body, path))
+
+
+# ---------------------------------------------------------------------------
+# Notes data
+# ---------------------------------------------------------------------------
+def clean_url(value, label, title):
+    if value and not re.match(r"^https?://", value, re.I):
+        print("WARNING: %s for %r is not an http(s) link and was ignored" % (label, title))
+        return ""
+    return value
+
+
+def load_notes():
+    notes = []
+    csv_path = os.path.join(ROOT, "notes.csv")
+    if not os.path.isfile(csv_path):
+        sys.exit("ERROR: notes.csv not found")
+    used = set()
+    with open(csv_path, encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            r = {}
+            for k, v in row.items():
+                if k is None:
+                    continue
+                r[k.strip()] = (v or "").strip()
+            if not r.get("title"):
+                continue
+            r["link"] = clean_url(r.get("link", ""), "link", r["title"])
+            r["syllabus_url"] = clean_url(r.get("syllabus_url", ""), "syllabus_url", r["title"])
+            if not r.get("link") and not r.get("body_file"):
+                print("WARNING: note %r has neither link nor body_file" % r["title"])
+            for key in ("university", "course", "semester", "subject", "topic"):
+                if not r.get(key):
+                    r[key] = "Other" if key != "topic" else r["title"]
+            base = "/notes/college/" + "/".join(
+                slug(r[k]) for k in ("university", "course", "semester", "subject", "topic")
+            ) + "/"
+            path = base
+            n = 2
+            while path in used:
+                path = base[:-1] + "-%d/" % n
+                n += 1
+            if path != base:
+                print("WARNING: note %r shares an address with another note; using %s" % (r["title"], path))
+            used.add(path)
+            r["path"] = path
+            notes.append(r)
+    return notes
+
+
+def tree_child(parent, label):
+    key = slug(label)
+    kids = parent["kids"]
+    if key not in kids:
+        kids[key] = {"name": label, "slug": key, "kids": {}, "notes": []}
+    elif kids[key]["name"] != label:
+        print("WARNING: %r and %r are treated as the same name; check the spelling"
+              % (kids[key]["name"], label))
+    return kids[key]
+
+
+def build_tree(notes):
+    root = {"kids": {}}
+    for n in notes:
+        node = root
+        for key in ("university", "course", "semester", "subject"):
+            node = tree_child(node, n[key])
+        node["notes"].append(n)
+    return root
+
+
+def count_label(n):
+    return "%d note%s" % (n, "" if n == 1 else "s")
+
+
+def updated_label(n):
+    return ("Updated " + n["updated"]) if n.get("updated") else ""
+
+
+# ---------------------------------------------------------------------------
+# Notes pages
+# ---------------------------------------------------------------------------
+def drive_preview(link):
+    m = re.search(r"drive\.google\.com/file/d/([A-Za-z0-9_-]+)", link or "")
+    if not m or m.group(1) == "YOUR_FILE_ID":
+        return ""
+    return ('<iframe class="preview" loading="lazy" title="Note preview" '
+            'src="https://drive.google.com/file/d/%s/preview"></iframe>' % e(m.group(1)))
+
+
+def note_page(n, sem_path, subj_path, siblings, idx, urls):
+    uni, course, sem, subj = n["university"], n["course"], n["semester"], n["subject"]
+    parts = [crumbs([
+        ("Notes", "/notes/"), (uni, None), (course, None),
+        (sem, sem_path), (subj, subj_path), (n["title"], None),
+    ])]
+    parts.append("<h1>%s</h1>" % e(n["title"]))
+
+    meta = "By %s" % e(n.get("author") or "Wisrut")
+    if n.get("updated"):
+        meta += " %s Updated %s" % (MIDDOT, e(n["updated"]))
+    parts.append('<p class="meta">%s</p>' % meta)
+
+    if n.get("summary"):
+        lines = [e(x.strip()) for x in n["summary"].splitlines() if x.strip()]
+        parts.append('<div class="sum"><h2>In 3 lines</h2><p>%s</p></div>' % "<br>".join(lines))
+
+    if n.get("link"):
+        parts.append(drive_preview(n["link"]))
+        parts.append('<p><a class="btn" href="%s" target="_blank" rel="noopener">Open the full note</a></p>'
+                     % e(n["link"]))
+        parts.append('<p class="small">This file opens on the teacher%ss own storage. Wisrut does not host it.</p>'
+                     % RSQUO)
+
+    if n.get("body_file"):
+        bpath = os.path.join(ROOT, "content", os.path.basename(n["body_file"]))
+        if os.path.isfile(bpath):
+            with open(bpath, encoding="utf-8") as f:
+                parts.append('<div class="body">%s</div>' % f.read())
+        else:
+            print("WARNING: body_file %r for note %r was not found in content/"
+                  % (n["body_file"], n["title"]))
+
+    if n.get("syllabus_url"):
+        parts.append('<p><a href="%s" target="_blank" rel="noopener">Official syllabus</a></p>'
+                     % e(n["syllabus_url"]))
+
+    parts.append('<p><a href="%s">Report a problem with this note</a></p>'
+                 % e(mailto("Report: " + n["title"])))
+
+    prev_html = "<span></span>"
+    next_html = "<span></span>"
+    if idx > 0:
+        p = siblings[idx - 1]
+        prev_html = '<a href="%s">&larr; Previous: %s</a>' % (e(p["path"]), e(p["title"]))
+    if idx < len(siblings) - 1:
+        nx = siblings[idx + 1]
+        next_html = '<a href="%s">Next: %s &rarr;</a>' % (e(nx["path"]), e(nx["title"]))
+    parts.append('<nav class="pn" aria-label="Previous and next notes">%s%s</nav>' % (prev_html, next_html))
+
+    title = "%s %s %s %s %s" % (n["title"], MIDDOT, subj, MIDDOT, uni)
+    desc = (n.get("summary") or ("%s notes for %s, %s." % (subj, course, sem)))
+    desc = " ".join(desc.split())[:155]
+    write(n["path"], shell(title, desc, "\n".join(x for x in parts if x), n["path"], active="/notes/"))
+    urls.append(n["path"])
+
+
+HUB_JS = """(function () {
+  var tree = __TREE__;
+  var u = document.getElementById('sel-u');
+  var c = document.getElementById('sel-c');
+  var s = document.getElementById('sel-s');
+  var form = document.getElementById('pick');
+  function keys(o) { return Object.keys(o || {}); }
+  function fill(sel, list) {
+    while (sel.firstChild) { sel.removeChild(sel.firstChild); }
+    list.forEach(function (k) {
+      var o = document.createElement('option');
+      o.value = k;
+      o.textContent = k;
+      sel.appendChild(o);
+    });
+  }
+  function onCourse() { fill(s, keys((tree[u.value] || {})[c.value])); }
+  function onUni() { fill(c, keys(tree[u.value])); onCourse(); }
+  fill(u, keys(tree));
+  onUni();
+  u.addEventListener('change', onUni);
+  c.addEventListener('change', onCourse);
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var t = ((tree[u.value] || {})[c.value] || {})[s.value];
+    if (t) { window.location.href = t; }
+  });
+  form.hidden = false;
+})();"""
+
+
+def build_notes(notes, tree, urls):
+    base = "/notes/college/"
+    js_tree = {}
+    sem_rows = ""
+
+    for u in tree["kids"].values():
+        js_tree[u["name"]] = {}
+        for c in u["kids"].values():
+            js_tree[u["name"]][c["name"]] = {}
+            for s in c["kids"].values():
+                sem_path = "%s%s/%s/%s/" % (base, u["slug"], c["slug"], s["slug"])
+                js_tree[u["name"]][c["name"]][s["name"]] = sem_path
+                sem_rows += ('<li><a href="%s"><span>%s %s %s</span><span class="small">%s</span></a></li>'
+                             % (e(sem_path), e(c["name"]), MIDDOT, e(s["name"]), e(u["name"])))
+
+                # Semester page
+                body = crumbs([("Notes", "/notes/"), (u["name"], None), (c["name"], None), (s["name"], None)])
+                body += "<h1>%s %s %s</h1>" % (e(c["name"]), MIDDOT, e(s["name"]))
+                body += '<p class="lead">%s</p>' % e(u["name"])
+                rows = ""
+                for sub in s["kids"].values():
+                    sub_path = sem_path + sub["slug"] + "/"
+                    rows += ('<li><a href="%s"><span>%s</span><span class="small">%s</span></a></li>'
+                             % (e(sub_path), e(sub["name"]), count_label(len(sub["notes"]))))
+                body += '<ul class="list">%s</ul>' % rows
+                title = "%s %s %s %s %s" % (c["name"], MIDDOT, s["name"], MIDDOT, u["name"])
+                desc = "Subjects and notes for %s, %s at %s." % (c["name"], s["name"], u["name"])
+                write(sem_path, shell(title, desc, body, sem_path, active="/notes/"))
+                urls.append(sem_path)
+
+                for sub in s["kids"].values():
+                    sub_path = sem_path + sub["slug"] + "/"
+                    # Subject page
+                    body = crumbs([("Notes", "/notes/"), (u["name"], None), (c["name"], None),
+                                   (s["name"], sem_path), (sub["name"], None)])
+                    body += "<h1>%s</h1>" % e(sub["name"])
+                    body += '<p class="lead">%s %s %s %s %s</p>' % (
+                        e(c["name"]), MIDDOT, e(s["name"]), MIDDOT, e(u["name"]))
+                    rows = ""
+                    for n in sub["notes"]:
+                        rows += ('<li><a href="%s"><span>%s</span><span class="small">%s</span></a></li>'
+                                 % (e(n["path"]), e(n["title"]), e(updated_label(n))))
+                    body += '<ul class="list">%s</ul>' % rows
+                    title = "%s %s %s %s %s" % (sub["name"], MIDDOT, c["name"], MIDDOT, s["name"])
+                    desc = "Notes for %s, %s, %s." % (sub["name"], c["name"], s["name"])
+                    write(sub_path, shell(title, desc, body, sub_path, active="/notes/"))
+                    urls.append(sub_path)
+
+                    # Note pages
+                    for idx, n in enumerate(sub["notes"]):
+                        note_page(n, sem_path, sub_path, sub["notes"], idx, urls)
+
+    # Hub
+    body = "<h1>Find your notes</h1>"
+    body += '<p class="lead">Pick your university, course and semester.</p>'
+    if notes:
+        body += ('<form class="pick" id="pick" hidden>'
+                 '<div><label for="sel-u">University</label><select id="sel-u"></select></div>'
+                 '<div><label for="sel-c">Course</label><select id="sel-c"></select></div>'
+                 '<div><label for="sel-s">Semester</label><select id="sel-s"></select></div>'
+                 '<button class="btn" type="submit">Show subjects</button></form>')
+        body += "<h2>All semesters</h2>"
+        body += '<ul class="list">%s</ul>' % sem_rows
+        tree_json = json.dumps(js_tree, ensure_ascii=True).replace("<", "\\u003c")
+        body += "<script>\n%s\n</script>" % HUB_JS.replace("__TREE__", tree_json)
+    else:
+        body += "<p>No notes have been added yet.</p>"
+    write("/notes/", shell("Find your notes %s Wisrut" % MIDDOT,
+                           "Pick your university, course and semester to find free college notes.",
+                           body, "/notes/", active="/notes/"))
+
+
+# ---------------------------------------------------------------------------
+# Home and info pages
+# ---------------------------------------------------------------------------
+def build_home(notes):
+    body = "<h1>Free notes and current affairs for students</h1>"
+    body += '<p class="lead">Notes that follow your syllabus, shared by teachers. Today%ss news in one place.</p>' % RSQUO
+    body += '<div class="cards">'
+    body += '<a class="card" href="/notes/"><strong>College notes</strong><span>Find your syllabus</span></a>'
+    body += '<a class="card" href="/current-affairs/"><strong>Current affairs</strong><span>Daily brief for exam preparation</span></a>'
+    body += '<a class="card" href="/search/"><strong>Search</strong><span>Ask a question, get an AI answer</span></a>'
+    body += "</div>"
+    recent = sorted(notes, key=lambda n: n.get("updated", ""), reverse=True)[:6]
+    if recent:
+        body += "<h2>Recently updated notes</h2>"
+        rows = ""
+        for n in recent:
+            rows += ('<li><a href="%s"><span>%s</span><span class="small">%s</span></a></li>'
+                     % (e(n["path"]), e(n["title"]), e(updated_label(n))))
+        body += '<ul class="list">%s</ul>' % rows
+    write("/", shell("Wisrut %s Free notes and current affairs for students" % MIDDOT,
+                     "Free notes and current affairs for college students in India.",
+                     body, "/"))
+
+
+def build_info():
+    # About
+    inner = "<p>Wisrut is a free study site for college students in India. It is run by Amit Joshi.</p>"
+    inner += "<h2>How the notes are made</h2><ul>"
+    for line in (
+        "Notes are written or chosen by teachers, in their own words.",
+        "Every note shows its author and the date it was last updated.",
+        "Each note links to the official syllabus where one is available.",
+        "Files stay on the teacher%ss own storage. Wisrut does not host them." % RSQUO,
+        "AI-written text is labelled and can be wrong.",
+    ):
+        inner += "<li>%s</li>" % line
+    inner += "</ul>"
+    inner += ('<h2>Margo</h2><p>Margo is the set of AI tools on Wisrut: '
+              '<a href="/current-affairs/">current affairs</a> and <a href="/search/">search</a>.</p>')
+    inner += ('<h2>Are you a teacher?</h2><p>Email your name, institution and phone number to %s '
+              'and we will talk about sharing your notes.</p>' % contact_link("Teacher enquiry"))
+    doc("/about/", "About Wisrut", "Wisrut is a free study site for college students in India.", inner)
+
+    # Contact
+    inner = "<p>Email: %s</p><ul>" % contact_link()
+    inner += '<li>To report a problem with a note or page, use the <a href="/report/">report page</a>.</li>'
+    inner += "<li>Teachers who want to share notes can write to the same address.</li>"
+    inner += '<li>Business owners can read about <a href="/for-business/">RupForm</a>.</li>'
+    inner += "</ul>"
+    doc("/contact/", "Contact", "How to contact Wisrut.", inner)
+
+    # Report
+    inner = ("<p>When you report a note or page, we hide it first and investigate afterwards.</p>"
+             "<p>Please include the page address and a short description of the problem.</p>")
+    inner += '<p><a class="btn" href="%s">Email a report</a></p>' % e(mailto("Report a problem on Wisrut"))
+    doc("/report/", "Report a problem", "Report a problem with a note or page on Wisrut.", inner, active="/support/")
+
+    # Support
+    inner = ("<p>Wisrut stays free for students. We use light ads to cover costs, and you can also "
+             "support the project if you find it useful. There is no pressure.</p>")
+    inner += ('<form><script src="https://checkout.razorpay.com/v1/payment-button.js" '
+              'data-payment_button_id="%s" async></script></form>' % RAZORPAY_ID)
+    inner += '<h2>Need help?</h2><p>Email %s or <a href="/report/">report a problem</a>.</p>' % contact_link()
+    doc("/support/", "Support Wisrut", "Support Wisrut, a free study site for students.", inner, active="/support/")
+
+    # For business
+    inner = ("<p class=\"lead\">RupForm helps owner-run businesses in the Rudrapur%sPantnagar belt "
+             "replace repetitive office work with systems that run on their own.</p>" % u"–")
+    inner += "<p><strong>One broken process fixed in 30 days, or you do not pay the monthly fee.</strong></p>"
+    inner += "<h2>How it works</h2><ul>"
+    inner += "<li>A free 30-minute visit, with a one-page list of your top three manual processes.</li>"
+    inner += "<li>A fixed-scope 30-day pilot on one process, using Tally, Excel and WhatsApp.</li>"
+    inner += "<li>An optional monthly care plan if the pilot works.</li>"
+    inner += "</ul>"
+    inner += ("<p>This page is for business owners. It is separate from the student site, "
+              "and Wisrut does not sell anything to students.</p>")
+    inner += "<p>Email: %s</p>" % contact_link("RupForm enquiry")
+    doc("/for-business/", "RupForm for businesses",
+        "RupForm helps owner-run businesses in the Rudrapur-Pantnagar belt replace repetitive office work.",
+        inner)
+
+    # 404
+    body = '<article class="doc"><h1>Page not found</h1><p>This page does not exist. <a href="/">Go to the home page</a>.</p></article>'
+    write("/404.html", shell("Page not found %s Wisrut" % MIDDOT, "Page not found.", body, "/404.html", index=False))
+
+
+# ---------------------------------------------------------------------------
+# Output files and main
+# ---------------------------------------------------------------------------
+def write_support_files(urls):
+    shutil.copyfile(os.path.join(ROOT, "assets", "site.css"), os.path.join(OUT, "site.css"))
+
+    lines = ["%s %s 301" % (old, new) for old, new in REDIRECTS]
+    write("/_redirects", "\n".join(lines) + "\n")
+
+    write("/robots.txt", "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % SITE)
+
+    fixed = ["/", "/notes/", "/current-affairs/", "/search/", "/support/", "/about/",
+             "/contact/", "/report/", "/privacy/", "/terms/", "/for-business/"]
+    seen = set()
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    for p in fixed + urls:
+        if p in seen:
+            continue
+        seen.add(p)
+        xml += "  <url><loc>%s</loc></url>\n" % e(SITE + p)
+    xml += "</urlset>\n"
+    write("/sitemap.xml", xml)
 
 
 def main():
     shutil.rmtree(OUT, ignore_errors=True)
-    OUT.mkdir(parents=True, exist_ok=True)
+    os.makedirs(OUT)
 
-    convert_app("margo.html", "Current affairs for exams · Margo on Wisrut", "Daily exam-focused current affairs", "/current-affairs/", "/current-affairs/", True)
-    convert_app("search.html", "AI search · Margo on Wisrut", "Ask an exam question and get an AI answer", "/search/", "/search/", False)
-    convert_policy("privacy.html", "/privacy/", "Privacy · Wisrut")
-    convert_policy("terms.html", "/terms/", "Terms · Wisrut")
-
-    notes = read_notes()
-    tree = {}
-    for row in notes:
-        university = row["university"]
-        course = row["course"]
-        semester = row["semester"]
-        subject = row["subject"]
-        tree.setdefault(university, {}).setdefault(course, {}).setdefault(semester, {}).setdefault(subject, []).append(row)
-
+    notes = load_notes()
+    tree = build_tree(notes)
     urls = []
 
-    home_cards = '<div class="cards"><a class="card" href="/notes/"><strong>College notes</strong><span>Find your syllabus</span></a><a class="card" href="/current-affairs/"><strong>Current affairs</strong><span>Daily brief for exam preparation</span></a><a class="card" href="/search/"><strong>Search</strong><span>Ask a question, get an AI answer</span></a></div>'
-    recent = sorted([n for n in notes if n.get("updated")], key=lambda n: n["updated"], reverse=True)[:6]
-    recent_html = ""
-    if recent:
-        items = []
-        for n in recent:
-            items.append('<li><a href="' + e(n["path"]) + '"><span>' + e(n["title"]) + '</span><span class="small">Updated ' + e(n["updated"]) + '</span></a></li>')
-        recent_html = '<h2>Recently updated notes</h2><ul class="list">' + "".join(items) + '</ul>'
-    home_body = '<h1>Free notes and current affairs for students</h1><p class="lead">Notes that follow your syllabus, shared by teachers. Today’s news in one place.</p>' + home_cards + recent_html
-    write("/", shell("Wisrut", "Free notes and current affairs for students", home_body, "/", active="/notes/"))
+    build_home(notes)
+    convert_app("margo.html", "Current affairs for exams %s Margo on Wisrut" % MIDDOT,
+                "Daily exam-focused current affairs for competitive exams, in one quick scroll.",
+                "/current-affairs/", "/current-affairs/", True)
+    convert_app("search.html", "AI search %s Margo on Wisrut" % MIDDOT,
+                "Ask a question and get an article-style AI answer.",
+                "/search/", "/search/", False)
+    convert_policy("privacy.html", "Privacy policy %s Wisrut" % MIDDOT,
+                   "How Wisrut collects, uses and protects information.", "/privacy/")
+    convert_policy("terms.html", "Terms of use %s Wisrut" % MIDDOT,
+                   "The terms for using Wisrut and Margo.", "/terms/")
+    build_notes(notes, tree, urls)
+    build_info()
+    write_support_files(urls)
 
-    subject_count = {}
-    semester_urls = []
-    for university, courses in tree.items():
-        for course, semesters in courses.items():
-            for semester, subjects in semesters.items():
-                sem_path = "/notes/college/" + slug(university) + "/" + slug(course) + "/" + slug(semester) + "/"
-                semester_urls.append((university, course, semester, sem_path))
-                urls.append(sem_path)
-                items = []
-                subject_paths = []
-                for subject, subject_notes in subjects.items():
-                    subject_path = sem_path + slug(subject) + "/"
-                    subject_paths.append(subject_path)
-                    urls.append(subject_path)
-                    count = len(subject_notes)
-                    label = str(count) + (" note" if count == 1 else " notes")
-                    items.append('<li><a href="' + subject_path + '"><span>' + e(subject) + '</span><span class="small">' + label + '</span></a></li>')
-                    sem_crumb = crumbs([("Notes", "/notes/"), (university, None), (course, None), (semester, None)])
-                    sem_body = sem_crumb + '<h1>' + e(university) + " · " + e(semester) + '</h1><p class="lead">' + e(university) + " · " + e(course) + '</p><ul class="list">' + "".join(items) + '</ul>'
-                write(sem_path, shell(university + " · " + semester + " · Wisrut", "Notes for " + university + " " + course + " " + semester, sem_body, sem_path, active="/notes/"))
-
-                for subject, subject_notes in subjects.items():
-                    subject_path = sem_path + slug(subject) + "/"
-                    subject_items = []
-                    for n in subject_notes:
-                        right = "Updated " + n["updated"] if n.get("updated") else ""
-                        subject_items.append('<li><a href="' + e(n["path"]) + '"><span>' + e(n["title"]) + '</span><span class="small">' + e(right) + '</span></a></li>')
-                    subject_crumb = crumbs([("Notes", "/notes/"), (university, None), (course, None), (semester, None), (subject, None)])
-                    subject_body = subject_crumb + '<h1>' + e(subject) + '</h1><p class="lead">' + e(university) + " · " + e(course) + " · " + e(semester) + '</p><ul class="list">' + "".join(subject_items) + '</ul>'
-                    write(subject_path, shell(subject + " · " + university + " · Wisrut", "Study notes for " + subject, subject_body, subject_path, active="/notes/"))
-
-                    for index, n in enumerate(subject_notes):
-                        urls.append(n["path"])
-                        preview, file_id = make_drive_preview(n.get("link", ""))
-                        note_crumb = crumbs([("Notes", "/notes/"), (university, None), (course, None), (semester, None), (subject, subject_path), (n["title"], None)])
-                        meta = '<p class="meta">By ' + e(n.get("author", "")) + (" · Updated " + e(n["updated"]) if n.get("updated") else "") + '</p>'
-                        parts = [note_crumb, '<h1>' + e(n["title"]) + '</h1>', meta]
-                        if n.get("summary"):
-                            parts.append('<section class="sum"><h2>In 3 lines</h2><p>' + e(n["summary"]) + '</p></section>')
-                        if preview:
-                            parts.append(preview)
-                        if n.get("link"):
-                            parts.append('<p><a class="btn" href="' + e(n["link"]) + '" target="_blank" rel="noopener">Open the full note</a></p><p class="small">This file opens on the teacher’s own storage. Wisrut does not host it.</p>')
-                        if n.get("body_file"):
-                            body_path = ROOT / "content" / n["body_file"]
-                            if body_path.is_file():
-                                parts.append('<div class="body">' + body_path.read_text(encoding="utf-8") + '</div>')
-                            else:
-                                print("WARNING: missing body file " + n["body_file"])
-                        if n.get("syllabus_url"):
-                            parts.append('<p><a href="' + e(n["syllabus_url"]) + '" target="_blank" rel="noopener">Official syllabus</a></p>')
-                        report_subject = "Report: " + n["title"]
-                        parts.append('<p><a href="mailto:' + CONTACT + '?subject=' + e(report_subject) + '">Report a problem with this note</a></p>')
-                        pn = []
-                        if index > 0:
-                            pn.append('<a href="' + e(subject_notes[index - 1]["path"]) + '">← Previous</a>')
-                        if index + 1 < len(subject_notes):
-                            pn.append('<a href="' + e(subject_notes[index + 1]["path"]) + '">Next →</a>')
-                        parts.append('<nav class="pn">' + "".join(pn) + '</nav>')
-                        note_body = "".join(parts)
-                        title = n["title"] + " · " + subject + " · Wisrut"
-                        write(n["path"], shell(title, n.get("summary", n["title"]), note_body, n["path"], active="/notes/"))
-
-    tree_json = {u: {c: {s: "/notes/college/" + slug(u) + "/" + slug(c) + "/" + slug(s) + "/" for s in cs} for c, cs in courses.items()} for u, courses in tree.items()}
-    tree_text = json.dumps(tree_json, ensure_ascii=False).replace("</", "<\\/")
-    semester_items = []
-    for university, course, semester, url in semester_urls:
-        semester_items.append('<li><a href="' + url + '"><span>' + e(university + " · " + course + " · " + semester) + '</span><span class="small">View subjects</span></a></li>')
-    script = '''<script>
-const notesTree = ''' + tree_text + ''';
-const universitySelect = document.getElementById("university-select");
-const courseSelect = document.getElementById("course-select");
-const semesterSelect = document.getElementById("semester-select");
-function fillSelect(select, values) {
-  select.textContent = "";
-  values.forEach(function(value) { const option = document.createElement("option"); option.textContent = value; option.value = value; select.appendChild(option); });
-}
-function updateCourses() {
-  const courses = Object.keys(notesTree[universitySelect.value] || {});
-  fillSelect(courseSelect, courses);
-  updateSemesters();
-}
-function updateSemesters() {
-  const courses = notesTree[universitySelect.value] || {};
-  const semesters = Object.keys(courses[courseSelect.value] || {});
-  fillSelect(semesterSelect, semesters);
-}
-universitySelect.addEventListener("change", updateCourses);
-courseSelect.addEventListener("change", updateSemesters);
-document.getElementById("notes-pick").addEventListener("submit", function(event) {
-  event.preventEvent;
-  event.preventDefault();
-  const courses = notesTree[universitySelect.value] || {};
-  const url = (courses[courseSelect.value] || {})[semesterSelect.value];
-  if (url) window.location.href = url;
-});
-updateCourses();
-</script>'''
-    script = script.replace("{{", "{").replace("}}", "}")
-    notes_body = '<h1>Find your notes</h1><p class="lead">Pick your university, course and semester.</p>' \
-        '<form class="pick" id="notes-pick"><label>University<select id="university-select"></select></label><label>Course<select id="course-select"></select></label><label>Semester<select id="semester-select"></select></label><button class="btn" type="submit">Show subjects</button></form>' \
-        '<h2>All semesters</h2><ul class="list">' + "".join(semester_items) + '</ul>' + script
-    write("/notes/", shell("College notes · Wisrut", "Find college notes by university, course and semester", notes_body, "/notes/", active="/notes/"))
-
-    doc("/about/", "About Wisrut", "About Wisrut and its study tools", '<p>Wisrut is a free study site for college students in India. It is run by Amit Joshi.</p><h2>How the notes are made</h2><ul><li>Notes are written or chosen by teachers in their own words.</li><li>Every note shows author and last updated date.</li><li>Each note links to the official syllabus where available.</li><li>Files stay on the teacher’s own storage and Wisrut does not host them.</li><li>AI-written text is labelled and can be wrong.</li></ul><h2>Margo</h2><p><a href="/current-affairs/">Current affairs</a> and <a href="/search/">search</a> are both Margo tools.</p><h2>Are you a teacher?</h2><p><a href="mailto:' + CONTACT + '?subject=Teacher note enquiry">Email</a> your name, institution and phone number to ' + e(CONTACT) + '.</p>', "/")
-    doc("/contact/", "Contact", "Contact Wisrut", '<p>Email: <a href="mailto:' + CONTACT + '">' + e(CONTACT) + '</a></p><ul><li><a href="/report/">Report a problem with an item or page</a>.</li><li>Teachers who want to share notes can email us.</li><li><a href="/for-business/">For businesses</a> enquiries should use that page.</li></ul>', "/support/")
-    doc("/report/", "Report a problem", "Report a problem on Wisrut", '<p>A reported item is hidden first and investigated afterwards.</p><p><a class="btn" href="mailto:' + CONTACT + '?subject=Report%20a%20problem%20on%20Wisrut">Email a report</a></p><p>Include the page address and a short description.</p>', "/support/")
-    razorpay = '<form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="' + RAZORPAY_ID + '" async></script></form>'
-    doc("/support/", "Support Wisrut", "Support Wisrut", '<p>Wisrut stays free for students. We use light ads to cover costs, and you can also support the project if you find it useful. There is no pressure.</p>' + razorpay + '<h2>Need help?</h2><p>Email <a href="mailto:' + CONTACT + '">' + e(CONTACT) + '</a> or <a href="/report/">report a problem</a>.</p>', "/support/")
-    doc("/for-business/", "RupForm", "RupForm helps owner-run businesses", '<p class="lead">RupForm helps owner-run businesses in the Rudrapur–Pantnagar belt replace repetitive office work with systems that run on their own.</p><p><strong>One broken process fixed in 30 days, or you do not pay the monthly fee.</strong></p><h2>How it works</h2><ul><li>A free 30-minute visit with a one-page list of top three manual processes.</li><li>A fixed-scope 30-day pilot on one process using Tally, Excel and WhatsApp.</li><li>An optional monthly care plan if the pilot works.</li></ul><p><a href="mailto:' + CONTACT + '?subject=RupForm%20enquiry">Email a RupForm enquiry</a></p>', "/")
-    write("/404.html", shell("Page not found", "Page not found", '<h1>Page not found</h1><p><a href="/">Return to the home page</a></p>', "/404.html", active="", index=False))
-
-    (OUT / "site.css").write_bytes((ROOT / "assets" / "site.css").read_bytes())
-    redirect_lines = [source + " " + target + " 301" for source, target in REDIRECTS]
-    (OUT / "_redirects").write_text("\n".join(redirect_lines) + "\n", encoding="utf-8")
-    (OUT / "robots.txt").write_text("User-agent: *\nAllow: /\nSitemap: " + SITE + "/sitemap.xml\n", encoding="utf-8")
-
-    fixed = ["/", "/notes/", "/current-affairs/", "/search/", "/support/", "/about/", "/contact/", "/report/", "/privacy/", "/terms/", "/for-business/"]
-    sitemap_urls = fixed + urls
-    seen = set()
-    url_xml = []
-    for url in sitemap_urls:
-        if url not in seen:
-            seen.add(url)
-            url_xml.append("  <url><loc>" + e(SITE + url) + "</loc></url>")
-    sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(url_xml) + "\n</urlset>\n"
-    (OUT / "sitemap.xml").write_text(sitemap, encoding="utf-8")
-
-    page_count = sum(1 for p in OUT.rglob("*.html") if p.is_file())
-    print("Built " + str(len(notes)) + " notes and " + str(page_count) + " pages into site.")
+    print("Built %d notes and %d pages into site." % (len(notes), PAGE_COUNT))
 
 
 if __name__ == "__main__":

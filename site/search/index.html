@@ -1,17 +1,14 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Margo – SEARCH</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      margin: 0;
-      padding: 1rem;
-      background: #f7f7f7;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI search · Margo on Wisrut</title>
+<meta name="description" content="Ask a question and get an article-style AI answer.">
+<meta name="google-adsense-account" content="ca-pub-8690358052933130">
+<link rel="canonical" href="https://wisrut.com/search/">
+<link rel="stylesheet" href="/site.css">
+<style>
 
     .support-actions {
       display: flex;
@@ -199,20 +196,13 @@
     }
   </style>
 </head>
-
-<body>
-
-  <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
-    <a
-      href="https://wisrut.com"
-      style="display: inline-block; padding: 0.5rem 0.9rem; background: #222; color: #fff; text-decoration: none; border-radius: 6px; font-size: 0.9rem;"
-    >
-      ← Back to Wisrut
-    </a>
-    <div style="font-size: 0.9rem; color: #666;">Margo SEARCH</div>
-  </div>
-
-  <h1>Margo – Search</h1>
+<body class="app">
+<header class="top">
+<a class="brand" href="/">Wisrut</a>
+<nav><a href="/notes/">Notes</a><a href="/current-affairs/">Current affairs</a><a href="/search/" aria-current="page">Search</a><a href="/support/">Support</a></nav>
+</header>
+<main class="wide">
+<h1>Margo – Search</h1>
 
   <!-- SEARCH SECTION -->
   <section class="section" id="search-section">
@@ -258,41 +248,19 @@
         <h3>AI answer (with citations)</h3>
 
         <!-- AD SLOT: TOP OF ARTICLE -->
-        <div id="ad-top" class="ad-slot" style="min-height: 60px; padding: 0.6rem; margin-bottom: 0.75rem;">
-          <!-- Replace this comment with your ad network script (e.g. Google AdSense) -->
-          Advertisement
-        </div>
+        
 
         <div id="search-answer" class="ai-answer">
           Ask a question to see an answer here.
         </div>
 
         <!-- AD SLOT: BOTTOM OF ARTICLE -->
-        <div id="ad-bottom" class="ad-slot" style="min-height: 60px; padding: 0.6rem; margin-top: 0.75rem;">
-          <!-- Replace this comment with your ad network script (e.g. Google AdSense) -->
-          Advertisement
-        </div>
+        
 
       </div>
 
       <!-- Right: High-value ad sidebar (300×600 Half Page — highest CPM display unit) -->
-      <div class="col" style="flex: 0 0 320px; min-width: 0;">
-        <div id="ad-sidebar" class="ad-slot" style="
-          width: 300px;
-          min-height: 600px;
-          padding: 0;
-          position: sticky;
-          top: 1rem;
-        ">
-          <!-- ═══════════════════════════════════════════
-               AD SLOT: 300×600 Half Page (sidebar)
-               Recommended: Google AdSense, Media.net,
-               or direct deal at ~$5–15 CPM
-               Replace this comment with your ad tag.
-          ════════════════════════════════════════════ -->
-          <span style="font-size:0.75rem; color:#bbb;">Advertisement<br>300 × 600</span>
-        </div>
-      </div>
+      
     </div>
   </section>
 
@@ -324,23 +292,12 @@
       </div>
 
       <!-- Right: Ad slot -->
-      <div class="ad-slot support-ad" id="ad-support-side">
-        <!-- Replace this comment with your ad network script (e.g. Google AdSense) -->
-        Advertisement
-      </div>
+      
 
     </div>
   </section>
 
-  <footer class="site-footer">
-    <p>© 2026 Margo by Wisrut. Free for students.</p>
-    <nav>
-      <a href="#search-section">Search</a>
-      <a href="#support-section">Support Margo</a>
-	  <a href="/privacy.html">Privacy Policy</a>
-      <a href="/terms.html">Terms of Use</a>
-    </nav>
-  </footer>
+  
 
 <script>
   // =============================
@@ -685,5 +642,7 @@ Do not use raw URLs unless necessary. Keep the tone analytical, clear, and suita
 
   document.addEventListener("DOMContentLoaded", initApp);
   </script>
+</main>
+<footer class="site"><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/for-business/">For businesses</a></footer>
 </body>
 </html>

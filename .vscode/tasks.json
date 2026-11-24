@@ -1,0 +1,26 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "1. Build site",
+      "type": "shell",
+      "command": "python3 build.py",
+      "windows": { "command": "py build.py" },
+      "problemMatcher": []
+    },
+    {
+      "label": "2. Check links",
+      "type": "shell",
+      "command": "python3 tools/check_links.py",
+      "windows": { "command": "py tools/check_links.py" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build and check",
+      "dependsOn": ["1. Build site", "2. Check links"],
+      "dependsOrder": "sequence",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    }
+  ]
+}
