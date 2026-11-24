@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check the built site/ folder for dead links and leftover problems.
+"""Check the built docs/ folder for dead links and leftover problems.
 
 Run:  py tools/check_links.py        (Windows)
       python3 tools/check_links.py   (macOS, Linux)
@@ -14,7 +14,7 @@ import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SITE = os.path.join(ROOT, "site")
+SITE = os.path.join(ROOT, "docs")
 
 SKIP_PREFIXES = ("http://", "https://", "//", "mailto:", "tel:", "data:", "#", "javascript:")
 
@@ -65,7 +65,7 @@ def visible_text(text):
 
 def main():
     if not os.path.isdir(SITE):
-        print("site/ not found. Run the build first.")
+        print("docs/ not found. Run the build first.")
         return 1
 
     redirects = load_redirect_sources()
@@ -104,9 +104,10 @@ def main():
             problems.append("%s: example.com appears in visible text" % rel)
         if 'name="google-adsense-account"' not in raw:
             problems.append("%s: missing google-adsense-account meta tag" % rel)
-        if '<header class="top">' not in raw:
+        is_redirect = 'http-equiv="refresh"' in raw  # small redirect pages
+        if not is_redirect and '<header class="top">' not in raw:
             problems.append('%s: missing <header class="top">' % rel)
-        if '<footer class="site">' not in raw:
+        if not is_redirect and '<footer class="site">' not in raw:
             problems.append('%s: missing <footer class="site">' % rel)
 
     print("Checked %d pages." % len(pages))

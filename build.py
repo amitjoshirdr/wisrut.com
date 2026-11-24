@@ -5,7 +5,8 @@ Run:  py build.py        (Windows)
       python3 build.py   (macOS, Linux)
 
 Reads:  notes.csv, content/, legacy/, assets/site.css
-Writes: site/   (wiped and rebuilt on every run; never edit it by hand)
+Writes: docs/   (wiped and rebuilt on every run; never edit it by hand)
+        GitHub Pages serves this folder, so the folder name must stay "docs".
 
 Standard library only. Works on Python 3.8 or newer.
 """
@@ -24,7 +25,7 @@ from urllib.parse import quote
 # Settings
 # ---------------------------------------------------------------------------
 ROOT = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(ROOT, "site")
+OUT = os.path.join(ROOT, "docs")
 LEGACY = os.path.join(ROOT, "legacy")
 SITE = "https://wisrut.com"
 CONTACT = "amitjoshi.work@outlook.com"
@@ -91,13 +92,14 @@ def crumbs(items):
 def write(path, content):
     """Write a page or file under site/.
 
-    Paths ending in .html, .txt, .xml or _redirects are written as given.
-    Any other path such as /notes/ is written as <path>/index.html.
+    Paths ending in .html, .txt, .xml, _redirects, CNAME or .nojekyll are
+    written as given. Any other path such as /notes/ is written as
+    <path>/index.html.
     """
     global PAGE_COUNT
     rel = path.strip("/")
     parts = [p for p in rel.split("/") if p]
-    if path.endswith((".html", ".txt", ".xml", "_redirects")):
+    if path.endswith((".html", ".txt", ".xml", "_redirects", "CNAME", ".nojekyll")):
         target = os.path.join(OUT, *parts)
     else:
         target = os.path.join(OUT, *(parts + ["index.html"]))
@@ -596,11 +598,35 @@ def build_info():
 # ---------------------------------------------------------------------------
 # Output files and main
 # ---------------------------------------------------------------------------
+def redirect_page(new):
+    return (
+        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+        "<title>Redirecting</title>\n"
+        '<meta name="google-adsense-account" content="%s">\n'
+        '<link rel="canonical" href="%s">\n'
+        '<meta http-equiv="refresh" content="0; url=%s">\n'
+        "</head>\n<body>\n"
+        '<p>This page has moved to <a href="%s">%s</a>.</p>\n'
+        "</body>\n</html>\n"
+        % (ADSENSE, e(SITE + new), e(new), e(new), e(new))
+    )
+
+
 def write_support_files(urls):
     shutil.copyfile(os.path.join(ROOT, "assets", "site.css"), os.path.join(OUT, "site.css"))
 
+    # GitHub Pages ignores _redirects, so each old address also gets a small
+    # redirect page. The _redirects file is kept in case the site moves to
+    # Cloudflare Pages or Netlify later.
     lines = ["%s %s 301" % (old, new) for old, new in REDIRECTS]
     write("/_redirects", "\n".join(lines) + "\n")
+    for old, new in REDIRECTS:
+        write(old, redirect_page(new))
+
+    # Keeps wisrut.com attached to GitHub Pages and stops Jekyll processing.
+    write("/CNAME", "wisrut.com\n")
+    write("/.nojekyll", "")
 
     write("/robots.txt", "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % SITE)
 
@@ -641,7 +667,7 @@ def main():
     build_info()
     write_support_files(urls)
 
-    print("Built %d notes and %d pages into site." % (len(notes), PAGE_COUNT))
+    print("Built %d notes and %d pages into docs." % (len(notes), PAGE_COUNT))
 
 
 if __name__ == "__main__":

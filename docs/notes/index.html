@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Find your notes · Wisrut</title>
+<meta name="description" content="Pick your university, course and semester to find free college notes.">
+<meta name="google-adsense-account" content="ca-pub-8690358052933130">
+<link rel="canonical" href="https://wisrut.com/notes/">
+<link rel="stylesheet" href="/site.css">
+</head>
+<body>
+<header class="top">
+<a class="brand" href="/">Wisrut</a>
+<nav><a href="/notes/" aria-current="page">Notes</a><a href="/current-affairs/">Current affairs</a><a href="/search/">Search</a><a href="/support/">Support</a></nav>
+</header>
+<main>
+<h1>Find your notes</h1><p class="lead">Pick your university, course and semester.</p><form class="pick" id="pick" hidden><div><label for="sel-u">University</label><select id="sel-u"></select></div><div><label for="sel-c">Course</label><select id="sel-c"></select></div><div><label for="sel-s">Semester</label><select id="sel-s"></select></div><button class="btn" type="submit">Show subjects</button></form><h2>All semesters</h2><ul class="list"><li><a href="/notes/college/sample-university/ba/semester-3/"><span>BA · Semester 3</span><span class="small">Sample University</span></a></li><li><a href="/notes/college/sample-university/ba/semester-5/"><span>BA · Semester 5</span><span class="small">Sample University</span></a></li></ul><script>
+(function () {
+  var tree = {"Sample University": {"BA": {"Semester 3": "/notes/college/sample-university/ba/semester-3/", "Semester 5": "/notes/college/sample-university/ba/semester-5/"}}};
+  var u = document.getElementById('sel-u');
+  var c = document.getElementById('sel-c');
+  var s = document.getElementById('sel-s');
+  var form = document.getElementById('pick');
+  function keys(o) { return Object.keys(o || {}); }
+  function fill(sel, list) {
+    while (sel.firstChild) { sel.removeChild(sel.firstChild); }
+    list.forEach(function (k) {
+      var o = document.createElement('option');
+      o.value = k;
+      o.textContent = k;
+      sel.appendChild(o);
+    });
+  }
+  function onCourse() { fill(s, keys((tree[u.value] || {})[c.value])); }
+  function onUni() { fill(c, keys(tree[u.value])); onCourse(); }
+  fill(u, keys(tree));
+  onUni();
+  u.addEventListener('change', onUni);
+  c.addEventListener('change', onCourse);
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var t = ((tree[u.value] || {})[c.value] || {})[s.value];
+    if (t) { window.location.href = t; }
+  });
+  form.hidden = false;
+})();
+</script>
+</main>
+<footer class="site"><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/for-business/">For businesses</a></footer>
+</body>
+</html>

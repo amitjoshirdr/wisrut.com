@@ -1,6 +1,6 @@
 # Wisrut site
 
-This folder builds wisrut.com. You edit one spreadsheet (`notes.csv`), run one command, and the whole site is rebuilt into `site/`.
+This folder builds wisrut.com. You edit one spreadsheet (`notes.csv`), run one command, and the whole site is rebuilt into `docs/`. The site is hosted on GitHub Pages, which serves the `docs/` folder.
 
 ## What each folder is
 
@@ -12,7 +12,9 @@ This folder builds wisrut.com. You edit one spreadsheet (`notes.csv`), run one c
 | `build.py` | The script that builds the site. | Rarely |
 | `tools/check_links.py` | Finds dead links and leftover problems. | No |
 | `legacy/` | The six original files. Kept as the source for Margo, Search, Privacy and Terms. | **Never** |
-| `site/` | The finished website. Generated. Cloudflare serves this folder. | **Never** |
+| `docs/` | The finished website. Generated. GitHub Pages serves this folder. | **Never** |
+
+The folder must be called `docs`. GitHub Pages can only serve the repo root or a folder with that name.
 
 ## One-time setup
 
@@ -24,13 +26,11 @@ This folder builds wisrut.com. You edit one spreadsheet (`notes.csv`), run one c
 
 1. Open `notes.csv` and add or change rows.
 2. Press **Ctrl+Shift+B**. This builds the site and then checks the links.
-3. Right-click `site/index.html` and choose **Open with Live Server** to preview. Check a note on a narrow window.
+3. Right-click `docs/index.html` and choose **Open with Live Server** to preview. Check a note on a narrow window.
 4. If the checker reports a problem, fix it and press Ctrl+Shift+B again. Warnings about `YOUR_FILE_ID` are normal while sample rows exist.
-5. Commit and push.
+5. Commit and push. Commit the `docs/` folder too, because GitHub Pages serves it.
 
 You can also run the steps by hand: `py build.py` then `py tools/check_links.py` on Windows, or `python3 build.py` then `python3 tools/check_links.py` elsewhere.
-
-Live Server does not read `_redirects`, so old addresses such as `/margo.html` only redirect on the real site. Test those on the Cloudflare preview address.
 
 ## notes.csv columns
 
@@ -51,29 +51,28 @@ If a cell contains a comma, put the whole cell in double quotes. A spreadsheet p
 
 When your real notes are in, **delete the four sample rows** (the ones whose title ends in "(sample)").
 
-## Git commands for the restructure branch
+## Going live on GitHub Pages
 
-```
-git checkout -b restructure
-git add .
-git commit -m "Restructure site"
-git push -u origin restructure
-```
+GitHub Pages has no private preview for a branch, so test locally with Live Server first.
 
-Pushing the branch gives Cloudflare Pages a private preview address. The live site is not touched until you merge.
+1. Make a copy of the repo before you start.
+2. Make sure the repo has no old `site/` folder. Delete it if it is there. The new build writes to `docs/`.
+3. Commit and push the `docs/` folder to `main`.
+4. On github.com open the repo, then **Settings > Pages**. Under **Build and deployment** set **Source** to **Deploy from a branch**, **Branch** to `main` and the folder to `/docs`. Click **Save**.
+5. Under **Custom domain** the value should be `wisrut.com`. The `CNAME` file in `docs/` keeps it there. Tick **Enforce HTTPS** when GitHub allows it.
+6. Wait a minute or two, then open `https://wisrut.com/`. Test Home, a note, Current affairs, Search, Support, and an old address such as `/margo.html`.
 
-Make a copy of the repo before you merge.
+**Rollback:** on github.com open the commit history, find the commit before the restructure, and use **Revert** on it. GitHub Pages redeploys within a minute or two.
 
-## Cloudflare Pages steps
+DNS stays as it is in Cloudflare: four `A` records to GitHub's addresses and a `www` CNAME to `amitjoshirdr.github.io`.
 
-1. Push the `restructure` branch and open the preview address that Cloudflare shows. Test it on your phone: Home, a note, Current affairs, Search, Support, and an old address such as `/margo.html`.
-2. When it looks right, go to **Settings > Builds**. Set the build command to **none** and the build output directory to **site**. Change this only when you are ready to merge, because it changes what the live site serves.
-3. Merge `restructure` into `main`. Cloudflare Pages deploys it.
-4. **Rollback:** open **Deployments** in the Pages dashboard and promote the previous deployment. The old site returns in seconds.
+## Old addresses
+
+GitHub Pages does not read `_redirects`. For each old address (`/margo.html`, `/search.html`, `/privacy.html`, `/terms.html`) the build writes a small page that sends visitors to the new address. The `REDIRECTS` list in `build.py` controls this.
 
 ## Rules
 
-- Never edit anything in `site/`. It is wiped on every build.
+- Never edit anything in `docs/`. It is wiped on every build.
 - Never edit anything in `legacy/`.
 - Never rename or remove a published address without adding a redirect for the old one (add it to `REDIRECTS` in `build.py`).
 - Do not change Margo or Search logic in this pass. Frame and styling only.
