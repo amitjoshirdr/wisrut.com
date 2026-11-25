@@ -15,7 +15,37 @@
 <nav><a href="/notes/" aria-current="page">Notes</a><a href="/current-affairs/">Current affairs</a><a href="/search/">Search</a><a href="/support/">Support</a></nav>
 </header>
 <main>
-<h1>Find your notes</h1><p class="lead">Pick your university, course and semester.</p><p>No notes have been added yet.</p>
+<h1>Find your notes</h1><p class="lead">Pick your university, course and semester.</p><form class="pick" id="pick" hidden><div><label for="sel-u">University</label><select id="sel-u"></select></div><div><label for="sel-c">Course</label><select id="sel-c"></select></div><div><label for="sel-s">Semester</label><select id="sel-s"></select></div><button class="btn" type="submit">Show subjects</button></form><h2>All semesters</h2><ul class="list"><li><a href="/notes/college/kumaon-university/b-com/semester-1/"><span>B.Com. · Semester 1</span><span class="small">Kumaon University</span></a></li></ul><script>
+(function () {
+  var tree = {"Kumaon University": {"B.Com.": {"Semester 1": "/notes/college/kumaon-university/b-com/semester-1/"}}};
+  var u = document.getElementById('sel-u');
+  var c = document.getElementById('sel-c');
+  var s = document.getElementById('sel-s');
+  var form = document.getElementById('pick');
+  function keys(o) { return Object.keys(o || {}); }
+  function fill(sel, list) {
+    while (sel.firstChild) { sel.removeChild(sel.firstChild); }
+    list.forEach(function (k) {
+      var o = document.createElement('option');
+      o.value = k;
+      o.textContent = k;
+      sel.appendChild(o);
+    });
+  }
+  function onCourse() { fill(s, keys((tree[u.value] || {})[c.value])); }
+  function onUni() { fill(c, keys(tree[u.value])); onCourse(); }
+  fill(u, keys(tree));
+  onUni();
+  u.addEventListener('change', onUni);
+  c.addEventListener('change', onCourse);
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var t = ((tree[u.value] || {})[c.value] || {})[s.value];
+    if (t) { window.location.href = t; }
+  });
+  form.hidden = false;
+})();
+</script>
 </main>
 <footer class="site"><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/for-business/">For businesses</a></footer>
 </body>
