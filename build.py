@@ -560,7 +560,7 @@ def build_home(notes):
 
 def build_info():
     # About
-    inner = "<p>Wisrut is a free study site for college students in India. It is run by %s, %s, who writes the notes.</p>" % (e(TEACHER), e(TEACHER_ROLE.lower()))
+    inner = "<p>Wisrut is a free study site for college students in India. </p>"
     inner += "<h2>How the notes are made</h2><ul>"
     for line in (
         "Notes are written or chosen by teachers, in their own words.",
