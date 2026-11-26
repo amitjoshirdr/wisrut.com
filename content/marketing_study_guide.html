@@ -1,430 +1,1162 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Marketing for Beginners – Quick Study Guide</title>
 <style>
-  * { box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: #1b2430;
-    background: #ffffff;
-    line-height: 1.6;
-    margin: 0;
-    padding: 16px;
-    font-size: 16px;
-  }
-  h1 { color: #0f5c63; font-size: 1.5rem; margin-top: 0; }
-  h2 { color: #0f5c63; font-size: 1.25rem; border-bottom: 2px solid #0f5c63; padding-bottom: 4px; margin-top: 28px; }
-  h3 { color: #1b2430; font-size: 1.05rem; margin-top: 20px; }
-  p { margin: 8px 0; }
-  ul, ol { padding-left: 20px; }
-  li { margin: 4px 0; }
-  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.95rem; }
-  th, td { border: 1px solid #0f5c63; padding: 8px; text-align: left; vertical-align: top; }
-  th { background: #e8f3f4; color: #0f5c63; }
-  .box {
-    background: #f7f9fa;
-    border-left: 4px solid #0f5c63;
-    padding: 10px 12px;
-    margin: 12px 0;
-    border-radius: 4px;
-  }
-  .box b { color: #0f5c63; }
-  .story {
-    background: #fff8e7;
-    border-left: 4px solid #c8962e;
-    padding: 10px 12px;
-    margin: 12px 0;
-    border-radius: 4px;
-  }
-  .story b { color: #8a6410; }
-  details {
-    background: #f7f9fa;
-    border: 1px solid #d0d8dc;
-    border-radius: 6px;
-    padding: 10px 12px;
-    margin: 10px 0;
-  }
-  summary {
-    cursor: pointer;
-    font-weight: bold;
-    color: #0f5c63;
-    padding: 4px 0;
-  }
-  details[open] summary { margin-bottom: 8px; border-bottom: 1px dashed #d0d8dc; padding-bottom: 8px; }
-  .quiz-q { font-weight: bold; margin-bottom: 6px; }
-  .answer { color: #0f5c63; }
-  .toc a { color: #0f5c63; text-decoration: none; }
-  .toc ul { list-style: none; padding-left: 0; }
-  .toc li { margin: 6px 0; padding-left: 16px; position: relative; }
-  .toc li::before { content: "▸"; position: absolute; left: 0; color: #0f5c63; }
-  hr { border: none; border-top: 1px solid #d0d8dc; margin: 24px 0; }
+/* ============ PAHADI PITARA MARKETING LAB · scoped to .mkg2 ============ */
+.mkg2{
+  --pine:#0b3d33; --teal:#0f5c63; --teal2:#147078; --buransh:#c2264a; --petal:#e85d8a;
+  --amber:#e8a020; --amberdeep:#8a6410; --leaf:#2e7d43; --danger:#b3261e; --info:#1f6fb2;
+  --paper:#fbf7ef; --card:#ffffff; --ink:#1d2b30; --muted:#5b6b70; --line:#e6ddcc;
+  --disp:"Palatino Linotype","Iowan Old Style","Book Antiqua",Georgia,serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-family:var(--body); color:var(--ink); background:var(--paper);
+  max-width:1100px; margin:0 auto; padding:0 14px 60px; line-height:1.6; font-size:16px;
+}
+.mkg2 *{box-sizing:border-box}
+.mkg2 ::selection{background:var(--petal);color:#fff}
+.mkg2 h2,.mkg2 h3,.mkg2 h4{font-family:var(--disp);line-height:1.2;margin:0}
+.mkg2 p{margin:8px 0}
+.mkg2 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+.mkg2 :focus-visible{outline:3px solid var(--amber);outline-offset:2px;border-radius:6px}
+.mkg2 .mk-scroll{scrollbar-width:thin;scrollbar-color:var(--teal) #efe7d8}
+.mkg2 .mk-scroll::-webkit-scrollbar{height:8px;width:8px}
+.mkg2 .mk-scroll::-webkit-scrollbar-track{background:#efe7d8;border-radius:8px}
+.mkg2 .mk-scroll::-webkit-scrollbar-thumb{background:linear-gradient(var(--teal),var(--buransh));border-radius:8px}
+.mkg2 .mk-scroll::-webkit-scrollbar-thumb:hover{background:var(--petal)}
+
+/* ---------- hero ---------- */
+.mk-hero{position:relative;overflow:hidden;border-radius:0 0 26px 26px;margin:0 -14px 18px;
+  background:linear-gradient(160deg,#07271f 0%,var(--pine) 30%,var(--teal) 58%,var(--teal2) 82%,#1b8a8c 100%);
+  color:#fdf6ec;padding:52px 22px 150px;min-height:430px}
+.mk-hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.16;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")}
+.mk-glow{position:absolute;border-radius:50%;filter:blur(46px);pointer-events:none;opacity:.5}
+.mk-glow.a{width:340px;height:340px;right:-70px;top:-90px;background:radial-gradient(circle,#e8a020,transparent 65%);animation:mkdrift 16s ease-in-out infinite alternate}
+.mk-glow.b{width:300px;height:300px;left:-80px;bottom:20px;background:radial-gradient(circle,#e85d8a,transparent 65%);animation:mkdrift 20s ease-in-out infinite alternate-reverse}
+@keyframes mkdrift{from{transform:translate(0,0) scale(1)}to{transform:translate(-46px,34px) scale(1.15)}}
+#mk-petals{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.mk-hills{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:190px;pointer-events:none}
+.mk-hills svg{position:absolute;bottom:0;left:0;width:100%;height:100%}
+.mk-hero-in{position:relative;z-index:3;max-width:640px}
+.mk-kicker{display:inline-flex;align-items:center;gap:8px;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:#ffd98a;font-weight:700}
+.mk-kicker::before{content:"";width:26px;height:2px;background:linear-gradient(90deg,var(--amber),var(--petal))}
+.mk-hero h2{font-size:clamp(1.9rem,5.4vw,3.1rem);font-weight:700;margin:10px 0 8px;text-shadow:0 2px 18px rgba(0,0,0,.35)}
+.mk-hero h2 em{font-style:normal;color:#ffb1c8}
+.mk-hero p{color:#d8ece7;max-width:52ch}
+.mk-badges{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 18px}
+.mk-badges span{font-size:.78rem;font-weight:700;padding:5px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);backdrop-filter:blur(3px)}
+.mk-cta{display:flex;gap:10px;flex-wrap:wrap}
+.mk-btn{display:inline-flex;align-items:center;gap:8px;font-weight:700;padding:11px 20px;border-radius:12px;transition:transform .18s,box-shadow .18s,filter .18s}
+.mk-btn:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.mk-btn:active{transform:translateY(0) scale(.98)}
+.mk-btn.hot{background:linear-gradient(120deg,var(--buransh),var(--petal));color:#fff;box-shadow:0 8px 22px rgba(194,38,74,.45)}
+.mk-btn.cool{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.4)}
+.mk-bottle{position:absolute;right:4%;bottom:96px;width:150px;z-index:2;filter:drop-shadow(0 14px 22px rgba(0,0,0,.4));animation:mkbob 6s ease-in-out infinite}
+@keyframes mkbob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(2deg)}}
+@media(max-width:760px){.mk-bottle{display:none}.mk-hero{padding-bottom:130px}}
+
+/* ---------- sticky unit nav ---------- */
+.mk-nav{position:sticky;top:0;z-index:60;margin:0 -14px 20px;padding:8px 14px;
+  background:rgba(251,247,239,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+  display:flex;gap:6px;overflow-x:auto}
+.mk-nav button{flex:0 0 auto;font-size:.82rem;font-weight:700;padding:8px 13px;border-radius:999px;color:var(--muted);border:1px solid transparent;transition:.18s}
+.mk-nav button:hover{color:var(--buransh);background:#fff}
+.mk-nav button.on{color:#fff;background:linear-gradient(120deg,var(--teal),var(--pine));box-shadow:0 4px 12px rgba(15,92,99,.35)}
+.mkg2 section{scroll-margin-top:74px}
+
+/* ---------- sections & cards ---------- */
+.mk-sec{margin:34px 0;padding:26px 20px;border-radius:20px;background:var(--card);border:1px solid var(--line);box-shadow:0 6px 24px rgba(29,43,48,.06);position:relative;overflow:hidden}
+.mk-sec::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:linear-gradient(90deg,var(--u,var(--teal)),var(--amber),var(--petal))}
+.mk-sec[data-u="1"]{--u:var(--teal)}.mk-sec[data-u="2"]{--u:var(--info)}.mk-sec[data-u="3"]{--u:var(--amber)}.mk-sec[data-u="4"]{--u:var(--petal)}.mk-sec[data-u="5"]{--u:var(--buransh)}
+.mk-sec.tint{background:linear-gradient(180deg,#fff, color-mix(in srgb, var(--u) 5%, #fff))}
+.mk-uhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.mk-uchip{font-size:.72rem;font-weight:800;letter-spacing:.1em;color:#fff;background:var(--u,var(--teal));padding:4px 10px;border-radius:8px}
+.mk-sec h2{font-size:clamp(1.35rem,3.4vw,1.8rem);color:var(--pine)}
+.mk-lede{color:var(--muted);max-width:70ch}
+.mk-lab{margin:20px 0;padding:18px;border-radius:16px;border:1px solid var(--line);background:linear-gradient(180deg,#fffdf8,#fff);position:relative}
+.mk-labtag{position:absolute;top:-11px;left:14px;font-size:.68rem;font-weight:800;letter-spacing:.12em;color:#fff;background:linear-gradient(120deg,var(--u,var(--teal)),color-mix(in srgb,var(--u,var(--teal)) 60%, var(--amber)));padding:3px 10px;border-radius:999px;box-shadow:0 3px 8px rgba(0,0,0,.15)}
+.mk-lab h3{font-size:1.12rem;color:var(--pine);margin:4px 0 8px}
+.mk-grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:880px){.mk-grid2{grid-template-columns:1fr}}
+.mk-note{font-size:.85rem;color:var(--muted)}
+.mk-storybox{background:linear-gradient(120deg,#fff8e7,#fdf1d6);border-left:4px solid var(--amber);padding:10px 14px;border-radius:10px;margin:10px 0}
+.mk-storybox b{color:var(--amberdeep)}
+.mk-rem{background:linear-gradient(120deg,#e8f3f4,#f2f8f4);border-left:4px solid var(--teal);padding:10px 14px;border-radius:10px;margin:10px 0}
+.mk-rem b{color:var(--teal)}
+.mk-chiprow{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.mk-chip{font-size:.8rem;font-weight:700;padding:7px 13px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--muted);transition:.15s}
+.mk-chip:hover{border-color:var(--u,var(--teal));color:var(--u,var(--teal));transform:translateY(-1px)}
+.mk-chip.on{background:var(--u,var(--teal));border-color:var(--u,var(--teal));color:#fff;box-shadow:0 4px 10px color-mix(in srgb,var(--u,var(--teal)) 40%, transparent)}
+.mk-panel{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;min-height:120px}
+.mk-panel h4{color:var(--u,var(--teal));font-size:1rem;margin-bottom:4px}
+.mk-kv{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:.9rem;margin-top:6px}
+.mk-kv b{color:var(--pine)}
+.mk-navbtns{display:flex;gap:8px;margin-top:10px}
+.mk-mini{font-size:.8rem;font-weight:700;padding:7px 14px;border-radius:9px;border:1.5px solid var(--u,var(--teal));color:var(--u,var(--teal));transition:.15s}
+.mk-mini:hover{background:var(--u,var(--teal));color:#fff}
+.mk-mini.solid{background:linear-gradient(120deg,var(--buransh),var(--petal));border:0;color:#fff}
+
+/* ---------- story filmstrip ---------- */
+.mk-strip{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 14px;scroll-snap-type:x mandatory}
+.mk-strip article{flex:0 0 270px;scroll-snap-align:start;background:linear-gradient(160deg,#fff8e7,#fbeecb);border:1px solid #ecd9a8;border-radius:14px;padding:14px;position:relative;transition:transform .2s,box-shadow .2s}
+.mk-strip article:hover{transform:translateY(-4px);box-shadow:0 10px 22px rgba(138,100,16,.2)}
+.mk-strip article::after{content:attr(data-r);position:absolute;right:10px;top:2px;font-family:var(--disp);font-size:2.6rem;color:rgba(138,100,16,.14);font-weight:700}
+.mk-strip h4{color:var(--amberdeep);font-size:.95rem;margin-bottom:6px}
+.mk-strip p{font-size:.85rem;margin:0}
+
+/* ---------- sliders ---------- */
+.mk-ctl{margin:10px 0}
+.mk-ctl label{display:flex;justify-content:space-between;font-size:.82rem;font-weight:700;color:var(--pine);margin-bottom:4px}
+.mk-ctl label output{color:var(--buransh);font-variant-numeric:tabular-nums}
+.mk-ctl input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:8px;background:linear-gradient(90deg,var(--buransh) 50%,var(--line) 50%);outline-offset:4px}
+.mk-ctl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid var(--buransh);box-shadow:0 2px 8px rgba(194,38,74,.4);cursor:grab;transition:transform .12s}
+.mk-ctl input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+.mk-ctl input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:4px solid var(--buransh);cursor:grab}
+.mk-ctl.off{opacity:.4;pointer-events:none}
+.mk-ctl.off label::after{content:"services only";font-size:.68rem;color:var(--muted);font-weight:600}
+
+/* ---------- meters & corridor ---------- */
+.mk-meter{margin:8px 0}
+.mk-meter .lab{display:flex;justify-content:space-between;font-size:.78rem;font-weight:700;color:var(--muted)}
+.mk-meter .track{height:12px;border-radius:8px;background:#efe7d8;overflow:hidden;margin-top:3px}
+.mk-meter .fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--teal),var(--leaf));transition:width .35s ease,background .3s}
+.mk-meter .fill.bad{background:linear-gradient(90deg,var(--danger),var(--petal))}
+.mk-corridor{position:relative;height:34px;border-radius:9px;margin:12px 0 4px;background:linear-gradient(90deg,#f6d7d3 0 25%,#dff0e2 25% 55%,#fdeecb 55% 100%);border:1px solid var(--line)}
+.mk-corridor i{position:absolute;top:-4px;bottom:-4px;width:3px;border-radius:3px;transition:left .3s}
+.mk-corridor .floor{background:var(--danger)}
+.mk-corridor .ceil{background:var(--amberdeep)}
+.mk-corridor .needle{background:var(--buransh);width:5px;box-shadow:0 0 0 3px rgba(194,38,74,.25)}
+.mk-corridor .needle::after{content:"price";position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:.62rem;font-weight:800;color:var(--buransh)}
+.mk-big{font-family:var(--disp);font-size:1.9rem;font-weight:700;color:var(--leaf);font-variant-numeric:tabular-nums}
+.mk-big.bad{color:var(--danger)}
+.mk-verdict{font-size:.9rem;font-weight:600;padding:9px 12px;border-radius:10px;background:#eef6ee;border:1px solid #cfe4cf;color:var(--leaf);margin-top:8px;transition:.3s}
+.mk-verdict.warn{background:#fdf3e0;border-color:#ecd9a8;color:var(--amberdeep)}
+.mk-verdict.bad{background:#fbe9e7;border-color:#f0c4c0;color:var(--danger)}
+
+/* ---------- philosophies steps ---------- */
+.mk-steps{display:flex;align-items:flex-end;gap:8px;height:150px;margin:14px 0 6px;position:relative}
+.mk-steps button{flex:1;border-radius:10px 10px 4px 4px;background:linear-gradient(180deg,#e8f3f4,#d3e6e8);border:1px solid #bcd6d9;font-size:.72rem;font-weight:800;color:var(--teal);padding:6px 4px;display:flex;align-items:flex-start;justify-content:center;transition:.2s;position:relative}
+.mk-steps button:hover{filter:brightness(1.05)}
+.mk-steps button.on{background:linear-gradient(180deg,var(--petal),var(--buransh));color:#fff;border-color:var(--buransh);box-shadow:0 8px 18px rgba(194,38,74,.35)}
+.mk-flower{position:absolute;top:-24px;font-size:1.2rem;transition:left .4s ease;pointer-events:none;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25))}
+
+/* ---------- flow diagrams ---------- */
+.mk-flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:12px 0}
+.mk-node{padding:9px 13px;border-radius:11px;font-size:.8rem;font-weight:800;color:#fff;background:linear-gradient(140deg,var(--teal),var(--pine));box-shadow:0 4px 10px rgba(15,92,99,.3);animation:mkpop .35s ease both}
+.mk-node.hot{background:linear-gradient(140deg,var(--buransh),var(--petal));box-shadow:0 4px 10px rgba(194,38,74,.3)}
+.mk-node.gold{background:linear-gradient(140deg,var(--amber),#c07f10);box-shadow:0 4px 10px rgba(232,160,32,.3)}
+.mk-node.blue{background:linear-gradient(140deg,var(--info),#154f86)}
+.mk-node:nth-child(2){animation-delay:.05s}.mk-node:nth-child(4){animation-delay:.1s}.mk-node:nth-child(6){animation-delay:.15s}.mk-node:nth-child(8){animation-delay:.2s}
+@keyframes mkpop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+.mk-arrow{flex:0 0 26px;height:3px;border-radius:3px;background:repeating-linear-gradient(90deg,var(--buransh) 0 7px,transparent 7px 12px);background-size:24px 3px;animation:mkflow 1s linear infinite;position:relative}
+.mk-arrow::after{content:"";position:absolute;right:-3px;top:-4px;border:5px solid transparent;border-left:7px solid var(--buransh)}
+.mk-arrow.blue{background:repeating-linear-gradient(90deg,var(--info) 0 7px,transparent 7px 12px);background-size:24px 3px}
+.mk-arrow.blue::after{border-left-color:var(--info)}
+.mk-arrow.back{transform:scaleX(-1)}
+@keyframes mkflow{to{background-position:24px 0}}
+
+/* ---------- journey ---------- */
+.mk-jnodes{display:flex;justify-content:space-between;position:relative;margin:18px 4px 8px}
+.mk-jnodes::before{content:"";position:absolute;left:8px;right:8px;top:15px;height:4px;background:var(--line);border-radius:4px}
+.mk-jbar{position:absolute;left:8px;top:15px;height:4px;background:linear-gradient(90deg,var(--info),var(--petal));border-radius:4px;transition:width .4s;max-width:calc(100% - 16px)}
+.mk-jnodes button{position:relative;z-index:2;width:34px;height:34px;border-radius:50%;background:#fff;border:3px solid var(--line);font-weight:800;font-size:.78rem;color:var(--muted);transition:.25s}
+.mk-jnodes button.done{border-color:var(--info);color:var(--info)}
+.mk-jnodes button.on{background:linear-gradient(140deg,var(--info),var(--petal));border-color:#fff;color:#fff;transform:scale(1.2);box-shadow:0 6px 14px rgba(31,111,178,.4)}
+.mk-jlabels{display:flex;justify-content:space-between;font-size:.62rem;font-weight:700;color:var(--muted);margin:0 0 10px;text-align:center}
+.mk-jlabels span{width:20%}
+
+/* ---------- maslow & onion & map svg ---------- */
+.mk-svgwrap svg{width:100%;height:auto;display:block}
+.mk-svgwrap text{font-family:var(--body)}
+.mk-layer{cursor:pointer;transition:filter .2s,opacity .2s}
+.mk-layer:hover{filter:brightness(1.12)}
+.mk-layer.dim{opacity:.45}
+.mk-ring{cursor:pointer;transition:.2s}
+.mk-ring:hover{filter:brightness(1.08)}
+#mk-map{touch-action:none;cursor:crosshair}
+.mk-mapdot{cursor:grab}
+.mk-mapdot:active{cursor:grabbing}
+
+/* ---------- flip cards ---------- */
+.mk-flips{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:12px 0}
+.mk-flip{perspective:800px;height:170px;cursor:pointer}
+.mk-flip .in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,1.4,.6,1)}
+.mk-flip.flip .in{transform:rotateY(180deg)}
+.mk-flip .f,.mk-flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:13px;padding:12px;display:flex;flex-direction:column;justify-content:center}
+.mk-flip .f{color:#fff;align-items:center;text-align:center;font-family:var(--disp);font-weight:700;font-size:1.05rem;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.mk-flip .f small{font-family:var(--body);font-weight:600;font-size:.68rem;opacity:.85;margin-top:6px}
+.mk-flip .b{background:#fff;border:1.5px solid var(--line);transform:rotateY(180deg);font-size:.76rem;line-height:1.45;overflow:auto}
+.mk-flip .b b{color:var(--pine)}
+
+/* ---------- segments ---------- */
+.mk-segs{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:12px 0}
+.mk-seg{border:2px solid var(--line);border-radius:13px;padding:12px;background:#fff;text-align:left;transition:.2s;position:relative}
+.mk-seg:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(0,0,0,.1)}
+.mk-seg.on{border-color:var(--amber);background:linear-gradient(160deg,#fff8e7,#fff);box-shadow:0 8px 18px rgba(232,160,32,.25)}
+.mk-seg.on::after{content:"✓ target";position:absolute;top:8px;right:10px;font-size:.66rem;font-weight:800;color:#fff;background:var(--amber);padding:2px 8px;border-radius:999px}
+.mk-seg h4{font-size:.92rem;color:var(--pine);margin-bottom:6px}
+.mk-seg .bar{display:flex;align-items:center;gap:6px;font-size:.66rem;font-weight:700;color:var(--muted);margin:3px 0}
+.mk-seg .bar i{flex:1;height:6px;border-radius:6px;background:#efe7d8;overflow:hidden}
+.mk-seg .bar i b{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--amber),var(--buransh))}
+
+/* ---------- quiz ---------- */
+.mk-qz{background:linear-gradient(160deg,#0b3d33,#0f5c63 60%,#147078);border-radius:20px;padding:22px;color:#fdf6ec;position:relative;overflow:hidden}
+.mk-qz::before{content:"";position:absolute;width:280px;height:280px;border-radius:50%;right:-90px;top:-90px;background:radial-gradient(circle,rgba(232,93,138,.4),transparent 70%);filter:blur(20px)}
+.mk-qz .mk-uchip{background:var(--petal)}
+.mk-qz h2{color:#fff}
+.mk-qzmeta{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;font-weight:700;margin:10px 0;color:#cfe6e0}
+.mk-qzmeta b{color:#ffd98a}
+.mk-qzbar{height:8px;border-radius:8px;background:rgba(255,255,255,.15);overflow:hidden;margin:8px 0 16px}
+.mk-qzbar i{display:block;height:100%;background:linear-gradient(90deg,var(--amber),var(--petal));border-radius:8px;transition:width .4s}
+.mk-qcard{position:relative;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:15px;padding:18px;backdrop-filter:blur(4px)}
+.mk-qcard .q{font-family:var(--disp);font-size:1.12rem;font-weight:700;margin-bottom:14px}
+.mk-opts{display:grid;gap:9px}
+.mk-opt{text-align:left;padding:12px 14px;border-radius:11px;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.06);color:#fdf6ec;font-weight:600;font-size:.92rem;display:flex;gap:10px;align-items:center;transition:.15s}
+.mk-opt:hover:not(:disabled){border-color:var(--amber);background:rgba(232,160,32,.15);transform:translateX(4px)}
+.mk-opt .key{flex:0 0 26px;height:26px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800}
+.mk-opt.right{border-color:#7ee2a0;background:rgba(46,125,67,.45);box-shadow:0 0 18px rgba(126,226,160,.35)}
+.mk-opt.right .key{background:#7ee2a0;color:#0b3d33}
+.mk-opt.wrong{border-color:#ff9d94;background:rgba(179,38,30,.45);animation:mkshake .35s}
+.mk-opt.wrong .key{background:#ff9d94;color:#5c0f0a}
+.mk-opt:disabled{cursor:default;opacity:.85}
+@keyframes mkshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.mk-why{margin-top:12px;padding:11px 13px;border-radius:10px;font-size:.88rem;background:rgba(255,217,138,.14);border:1px solid rgba(255,217,138,.4);color:#ffe9bd;animation:mkpop .3s ease}
+.mk-qfoot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px;flex-wrap:wrap}
+.mk-qz .mk-chip{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.3);color:#cfe6e0}
+.mk-qz .mk-chip.on{background:var(--petal);border-color:var(--petal);color:#fff}
+.mk-ring{transform:rotate(-90deg)}
+.mk-endwrap{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.mk-review{max-height:240px;overflow:auto;margin-top:14px;padding-right:6px}
+.mk-review li{font-size:.82rem;margin:8px 0;padding:9px 11px;border-radius:9px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);list-style:none}
+.mk-review b{color:#ffb1c8}.mk-review em{color:#7ee2a0;font-style:normal}
+
+/* ---------- steppers, tables, details ---------- */
+.mk-step{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.85rem;font-weight:700;color:var(--pine)}
+.mk-step button{width:30px;height:30px;border-radius:9px;border:1.5px solid var(--u,var(--teal));color:var(--u,var(--teal));font-weight:800;font-size:1rem;transition:.15s}
+.mk-step button:hover{background:var(--u,var(--teal));color:#fff}
+.mk-step output{min-width:26px;text-align:center;font-variant-numeric:tabular-nums;color:var(--buransh)}
+.mk-stat{display:inline-flex;flex-direction:column;align-items:center;padding:10px 16px;border-radius:12px;background:linear-gradient(160deg,#fff8e7,#fff);border:1px solid #ecd9a8;margin:4px}
+.mk-stat b{font-family:var(--disp);font-size:1.5rem;color:var(--buransh)}
+.mk-stat span{font-size:.68rem;font-weight:700;color:var(--muted);letter-spacing:.06em}
+.mkg2 details{border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin:9px 0;background:#fff}
+.mkg2 summary{cursor:pointer;font-weight:700;color:var(--teal);list-style:none;display:flex;gap:8px;align-items:center}
+.mkg2 summary::before{content:"▸";color:var(--buransh);transition:transform .2s}
+.mkg2 details[open] summary::before{transform:rotate(90deg)}
+.mkg2 details[open] summary{margin-bottom:8px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.mkg2 ol,.mkg2 ul{padding-left:22px;margin:8px 0}
+.mkg2 li{margin:4px 0}
+.mk-warn{display:none;padding:9px 12px;border-radius:10px;background:#fbe9e7;border:1px solid #f0c4c0;color:var(--danger);font-weight:700;font-size:.85rem;margin:8px 0}
+.mk-warn.show{display:block;animation:mkpop .3s}
+.mk-foot{margin-top:30px;text-align:center;color:var(--muted);font-size:.82rem}
+.mk-tricks{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.mk-tricks span{font-size:.74rem;font-weight:800;padding:6px 11px;border-radius:999px;background:linear-gradient(120deg,#e8f3f4,#fff8e7);border:1px solid var(--line);color:var(--pine)}
+
+/* ---------- reveal & motion ---------- */
+.mkg2.js .mk-rev{opacity:0;transform:translateY(26px)}
+.mkg2.js .mk-rev.in{opacity:1;transform:none;transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.3,1)}
+@media (prefers-reduced-motion:reduce){
+  .mkg2 *,.mkg2 *::before,.mkg2 *::after{animation:none!important;transition:none!important}
+  .mkg2.js .mk-rev{opacity:1;transform:none}
+}
+@media(max-width:640px){
+  .mk-sec{padding:20px 14px}
+  .mk-lab{padding:14px}
+  .mk-steps{height:120px}
+  .mk-jlabels{font-size:.55rem}
+}
 </style>
-</head>
-<body>
 
-<h1>Marketing for Beginners – Quick Study Guide</h1>
-<p><i>Based on the book by Amit Joshi · GE 1.1, Kumaon University</i></p>
-<p>This guide gives you simple explanations, the Pahadi Pitara story examples, important exam questions, and a quiz. Tap any question to see the answer.</p>
+<div class="mkg2" id="mkg2">
 
-<div class="toc">
-<h2>Contents</h2>
-<ul>
-  <li><a href="#ch1">Chapter 1: Introduction to Marketing</a></li>
-  <li><a href="#ch2">Chapter 2: Consumer Behaviour</a></li>
-  <li><a href="#ch3">Chapter 3: Segmentation, Targeting, Positioning</a></li>
-  <li><a href="#ch4">Chapter 4: Product Decisions</a></li>
-  <li><a href="#ch5">Chapter 5: Pricing and Distribution</a></li>
-  <li><a href="#questions">Important Questions</a></li>
-  <li><a href="#quiz">Quick Quiz</a></li>
-</ul>
+<!-- ================= HERO ================= -->
+<header class="mk-hero" id="mk-hero">
+  <div class="mk-glow a"></div><div class="mk-glow b"></div>
+  <canvas id="mk-petals" aria-hidden="true"></canvas>
+  <div class="mk-hills" aria-hidden="true">
+    <svg viewBox="0 0 1200 190" preserveAspectRatio="none" data-f="0.12"><path d="M0 120 L180 55 L340 115 L520 40 L700 110 L880 60 L1050 120 L1200 70 V190 H0 Z" fill="#0a2e26" opacity=".85"/></svg>
+    <svg viewBox="0 0 1200 190" preserveAspectRatio="none" data-f="0.26"><path d="M0 150 L150 95 L330 145 L500 85 L680 150 L860 100 L1040 155 L1200 110 V190 H0 Z" fill="#08332b"/></svg>
+    <svg viewBox="0 0 1200 190" preserveAspectRatio="none" data-f="0.42"><path d="M0 175 L200 130 L400 172 L620 125 L820 175 L1020 135 L1200 170 V190 H0 Z" fill="#fbf7ef"/></svg>
+  </div>
+  <svg class="mk-bottle" viewBox="0 0 120 220" aria-hidden="true">
+    <defs><linearGradient id="mk-sq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e85d8a"/><stop offset="1" stop-color="#8e1330"/></linearGradient></defs>
+    <rect x="48" y="6" width="24" height="18" rx="4" fill="#e8a020"/>
+    <path d="M50 24 h20 v18 c14 8 22 20 22 38 v118 a14 14 0 0 1 -14 14 h-36 a14 14 0 0 1 -14 -14 v-118 c0-18 8-30 22-38 z" fill="url(#mk-sq)" stroke="#5c0f22" stroke-width="2"/>
+    <rect x="30" y="108" width="60" height="58" rx="6" fill="#fdf6ec"/>
+    <text x="60" y="128" text-anchor="middle" font-size="9" font-weight="bold" fill="#8e1330" font-family="Georgia">PAHADI</text>
+    <text x="60" y="140" text-anchor="middle" font-size="9" font-weight="bold" fill="#8e1330" font-family="Georgia">PITARA</text>
+    <circle cx="60" cy="154" r="7" fill="#c2264a"/><circle cx="54" cy="150" r="3" fill="#e85d8a"/><circle cx="66" cy="150" r="3" fill="#e85d8a"/><circle cx="60" cy="146" r="3" fill="#e85d8a"/><circle cx="60" cy="154" r="2.4" fill="#e8a020"/>
+    <path d="M38 60 q-8 20 -6 40" stroke="#ffb1c8" stroke-width="4" fill="none" opacity=".6" stroke-linecap="round"/>
+  </svg>
+  <div class="mk-hero-in">
+    <span class="mk-kicker">Marketing for Beginners · GE 1.1 · Kumaon University</span>
+    <h2>The <em>Pahadi Pitara</em> Marketing Lab</h2>
+    <p>Nisha's Buransh-squash story, now hands-on. Steer her marketing mix, walk Mrs. Sharma's buying journey, drag her brand across the perceptual map, and bend the break-even chart — every lab is built from your book.</p>
+    <div class="mk-badges"><span>5 units</span><span>12 live labs</span><span>30-question quiz</span><span>Works offline</span></div>
+    <div class="mk-cta">
+      <button class="mk-btn hot" data-go="mk-u1">Start Unit 1 →</button>
+      <button class="mk-btn cool" data-go="mk-quiz">Jump to the quiz</button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= NAV ================= -->
+<nav class="mk-nav mk-scroll" id="mk-nav" aria-label="Units">
+  <button data-t="mk-story" class="on">Story</button>
+  <button data-t="mk-u1">1 · Mix</button>
+  <button data-t="mk-u2">2 · Buyer</button>
+  <button data-t="mk-u3">3 · STP</button>
+  <button data-t="mk-u4">4 · Product</button>
+  <button data-t="mk-u5">5 · Price</button>
+  <button data-t="mk-quiz">Quiz</button>
+  <button data-t="mk-q">Questions</button>
+</nav>
+
+<!-- ================= STORY ================= -->
+<section class="mk-sec tint mk-rev" data-u="3" id="mk-story">
+  <div class="mk-uhead"><span class="mk-uchip">THE RUNNING STORY</span><h2>One season with Nisha Bisht</h2></div>
+  <p class="mk-lede">Swipe through the five story beats. Every lab below re-creates one of Nisha's decisions. All names and rupee figures are imaginary, made for teaching.</p>
+  <div class="mk-strip mk-scroll">
+    <article data-r="I"><h4>The first season</h4><p>200 bottles made, only 40 sold. Hari Chacha: "You made what you like. Did you ask what the tourists want?" Nisha starts asking first.</p></article>
+    <article data-r="II"><h4>Mrs. Sharma at the bus stop</h4><p>Thirsty children, a question about safety, a free sip, three gift bottles — and a photo sent home. Nisha watches all five stages happen.</p></article>
+    <article data-r="III"><h4>Too many buyers, too little money</h4><p>Orders from everywhere. Nisha segments, picks tourists and city gift-buyers, and fixes one idea in their minds: the taste of Kumaon you can carry home.</p></article>
+    <article data-r="IV"><h4>Bottle, box and a growing shelf</h4><p>A gift box, a clear label, a trademark, Mandua cookies — and a plan for each product's life stage. A product is more than a thing.</p></article>
+    <article data-r="V"><h4>₹100 and the road to the shop</h4><p>Cost ₹80, tourists' value ≈₹130, rivals ≈₹100. She sets ₹100, must sell 750 bottles to break even, and chooses her routes to the shelf.</p></article>
+  </div>
+</section>
+
+<!-- ================= UNIT 1 ================= -->
+<section class="mk-sec tint mk-rev" data-u="1" id="mk-u1">
+  <div class="mk-uhead"><span class="mk-uchip">UNIT I</span><h2>Introduction to marketing</h2></div>
+  <p class="mk-lede"><b>Marketing</b> = understanding what customers need, then satisfying those needs better than competitors, at a profit. Three key words: <b>Customer · Value · Profit</b>. It begins before production and continues after the sale.</p>
+
+  <div class="mk-lab"><span class="mk-labtag">LAB 01 · NEED → WANT → DEMAND</span>
+    <h3>Tap the thirsty tourist</h3>
+    <div class="mk-chiprow" id="mk-nwd">
+      <button class="mk-chip" data-i="0">1 · Need</button>
+      <button class="mk-chip" data-i="1">2 · Want</button>
+      <button class="mk-chip" data-i="2">3 · Demand</button>
+    </div>
+    <div class="mk-panel" id="mk-nwd-p"><h4>Need</h4><p>A basic human requirement. The tourist at the bus stop feels thirsty — that need exists in everyone. Marketers do not create needs.</p></div>
+  </div>
+
+  <div class="mk-lab"><span class="mk-labtag">LAB 02 · PHILOSOPHIES</span>
+    <h3>Climb the five philosophies with Nisha</h3>
+    <div class="mk-steps" id="mk-phil-steps"><span class="mk-flower" id="mk-flower">🌺</span></div>
+    <div class="mk-panel" id="mk-phil-panel"></div>
+    <div class="mk-navbtns"><button class="mk-mini" id="mk-phil-prev">← Lower step</button><button class="mk-mini" id="mk-phil-next">Higher step →</button></div>
+    <div class="mk-rem"><b>Memory trick:</b> Production "make more" · Product "make better" · Selling "sell harder" · Marketing "serve the customer" · Societal "serve the customer <i>and</i> society".</div>
+  </div>
+
+  <div class="mk-lab"><span class="mk-labtag">LAB 03 · MARKETING vs SELLING</span>
+    <h3>Flip the starting point</h3>
+    <button class="mk-mini solid" id="mk-vs-btn">Show: Selling (inside-out)</button>
+    <div class="mk-flow" id="mk-vs-flow"></div>
+    <p class="mk-note" id="mk-vs-note"></p>
+  </div>
+
+  <div class="mk-lab"><span class="mk-labtag">LAB 04 · THE MIX LAB — flagship</span>
+    <h3>Steer Pahadi Pitara's marketing mix</h3>
+    <p class="mk-note">Seven sliders = the 7Ps. Switch to <b>services</b> to unlock People, Process and Physical evidence. Defaults re-create Nisha's ₹100 plan from Chapter 5. Watch the cost floor and the value ceiling.</p>
+    <div class="mk-grid2">
+      <div>
+        <div class="mk-chiprow"><button class="mk-chip on" id="mk-mode-goods" data-mode="goods">Goods · 4Ps</button><button class="mk-chip" id="mk-mode-svc" data-mode="svc">Services · 7Ps</button></div>
+        <div class="mk-ctl"><label>Product quality <output id="mk-o-q">5</output></label><input type="range" id="mk-s-q" min="1" max="10" value="5"></div>
+        <div class="mk-ctl"><label>Price per bottle (₹) <output id="mk-o-p">₹100</output></label><input type="range" id="mk-s-p" min="60" max="200" step="5" value="100"></div>
+        <div class="mk-ctl"><label>Place · outlets <output id="mk-o-l">4</output></label><input type="range" id="mk-s-l" min="1" max="10" value="4"></div>
+        <div class="mk-ctl"><label>Promotion budget <output id="mk-o-m">3</output></label><input type="range" id="mk-s-m" min="0" max="10" value="3"></div>
+        <div class="mk-ctl off" id="mk-c-pe"><label>People <output id="mk-o-pe">5</output></label><input type="range" id="mk-s-pe" min="1" max="10" value="5"></div>
+        <div class="mk-ctl off" id="mk-c-pr"><label>Process <output id="mk-o-pr">5</output></label><input type="range" id="mk-s-pr" min="1" max="10" value="5"></div>
+        <div class="mk-ctl off" id="mk-c-ph"><label>Physical evidence <output id="mk-o-ph">5</output></label><input type="range" id="mk-s-ph" min="1" max="10" value="5"></div>
+        <div class="mk-chiprow">
+          <button class="mk-chip" data-preset="nisha">Nisha ₹100</button>
+          <button class="mk-chip" data-preset="jio">Jio-style penetration</button>
+          <button class="mk-chip" data-preset="skim">Premium skimming</button>
+          <button class="mk-chip" id="mk-mix-rand">🎲 Randomize</button>
+          <button class="mk-chip" id="mk-mix-reset">Reset</button>
+        </div>
+      </div>
+      <div>
+        <div class="mk-svgwrap"><svg id="mk-radar" viewBox="0 0 240 240" role="img" aria-label="Marketing mix radar"></svg></div>
+        <div class="mk-corridor" aria-hidden="true"><i class="floor" id="mk-c-floor"></i><i class="ceil" id="mk-c-ceil"></i><i class="needle" id="mk-c-needle"></i></div>
+        <p class="mk-note" id="mk-mix-sub"></p>
+        <div class="mk-meter"><div class="lab"><span>Estimated demand</span><span id="mk-m-demand-val"></span></div><div class="track"><div class="fill" id="mk-m-demand-bar"></div></div></div>
+        <div class="mk-meter"><div class="lab"><span>Season profit</span><span id="mk-m-profit-val"></span></div><div class="track"><div class="fill" id="mk-m-profit-bar"></div></div></div>
+        <div class="mk-big" id="mk-mix-profit"></div>
+        <div class="mk-verdict" id="mk-mix-verdict" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+  <details><summary>Quick revision · Unit I</summary><ul>
+    <li>Need = basic requirement; Want = form shaped by culture; Demand = want + buying power.</li>
+    <li>4Ps (McCarthy, 1960): Product, Price, Place, Promotion. Services add People, Process, Physical evidence (Booms &amp; Bitner, 1981) = 7Ps.</li>
+    <li>Services: intangible, inseparable, variable, perishable — an empty hotel room tonight is lost income.</li>
+    <li>Marketing myopia (Levitt, 1960): loving the product more than the customer's need.</li>
+    <li>Micro environment: company, suppliers, intermediaries, customers, competitors, publics. Macro: demographic, economic, natural, technological, politico-legal, socio-cultural.</li>
+    <li>Environmental scanning feeds SWOT — Opportunities and Threats come from outside.</li>
+  </ul></details>
+</section>
+
+<!-- ================= UNIT 2 ================= -->
+<section class="mk-sec tint mk-rev" data-u="2" id="mk-u2">
+  <div class="mk-uhead"><span class="mk-uchip">UNIT II</span><h2>Consumer behaviour</h2></div>
+  <p class="mk-lede">The study of the <b>who, what, why, when, where and how</b> of buying — before, during and after the purchase. The <b>consumer</b> uses the product (the child eating biscuits); the <b>customer</b> buys it (the parent). Please both.</p>
+
+  <div class="mk-lab"><span class="mk-labtag">LAB 05 · BUYING JOURNEY</span>
+    <h3>Walk Mrs. Sharma's five stages (N-I-E-P-P)</h3>
+    <div class="mk-jnodes" id="mk-j-nodes"><div class="mk-jbar" id="mk-j-bar"></div></div>
+    <div class="mk-jlabels"><span>Need</span><span>Information</span><span>Evaluation</span><span>Purchase</span><span>Post-purchase</span></div>
+    <div class="mk-panel" id="mk-j-card"></div>
+    <div class="mk-navbtns"><button class="mk-mini" id="mk-j-prev">← Back</button><button class="mk-mini" id="mk-j-next">Next stage →</button><button class="mk-mini solid" id="mk-j-play">▶ Play her day</button></div>
+  </div>
+
+  <div class="mk-grid2">
+    <div class="mk-lab"><span class="mk-labtag">LAB 06 · MASLOW</span>
+      <h3>Tap a level of need</h3>
+      <div class="mk-svgwrap"><svg id="mk-mas" viewBox="0 0 300 230" role="img" aria-label="Maslow hierarchy"></svg></div>
+      <div class="mk-panel" id="mk-mas-panel"></div>
+      <div class="mk-rem"><b>Remember:</b> a satisfied need no longer motivates (Maslow, 1943).</div>
+    </div>
+    <div class="mk-lab"><span class="mk-labtag">LAB 07 · FOUR FACTORS — flip cards</span>
+      <h3>C-S-P-P · tap to flip</h3>
+      <div class="mk-flips" id="mk-flips"></div>
+      <p class="mk-note">Order from outer to inner: Cultural (widest) → Social → Personal → Psychological.</p>
+    </div>
+  </div>
+
+  <details><summary>Quick revision · Unit II</summary><ul>
+    <li>Five stages: Need recognition → Information search → Evaluation → Purchase decision → Post-purchase behaviour.</li>
+    <li>Information sources: personal, commercial, public, experiential. Most information from commercial; most trust from personal.</li>
+    <li>Satisfaction = performance compared with expectation. Below → dissatisfied; equal → satisfied; above → delighted.</li>
+    <li>Cognitive dissonance (Festinger): post-purchase doubt; reduce with follow-up, warranty, service.</li>
+    <li>Perception: selective attention, distortion, retention. Learning: drive → cue → response → reinforcement.</li>
+  </ul></details>
+</section>
+
+<!-- ================= UNIT 3 ================= -->
+<section class="mk-sec tint mk-rev" data-u="3" id="mk-u3">
+  <div class="mk-uhead"><span class="mk-uchip">UNIT III</span><h2>Segmentation · Targeting · Positioning</h2></div>
+  <p class="mk-lede">Divide the market, choose the customers, place yourself in their minds. Effective segments are <b>M-A-S-D-A</b>: Measurable, Accessible, Substantial, Differentiable, Actionable.</p>
+
+  <div class="mk-lab"><span class="mk-labtag">LAB 08 · STP STUDIO</span>
+    <h3>Choose Nisha's targets — she can't serve everyone</h3>
+    <div class="mk-segs" id="mk-segs"></div>
+    <div class="mk-chiprow" id="mk-stp-chips">
+      <button class="mk-chip" data-strat="u">Undifferentiated</button>
+      <button class="mk-chip" data-strat="d">Differentiated</button>
+      <button class="mk-chip on" data-strat="c">Concentrated</button>
+      <button class="mk-chip" data-strat="m">Micromarketing</button>
+    </div>
+    <div class="mk-verdict" id="mk-stp-strat" aria-live="polite"></div>
+    <p class="mk-note" id="mk-stp-hint"></p>
+    <h3 style="margin-top:16px">Build the positioning statement</h3>
+    <div class="mk-grid2">
+      <div>
+        <div class="mk-ctl"><label>To (target)</label><select id="mk-pos-t" class="mk-chip" style="width:100%;text-align:left"><option>tourists and city families</option><option>college students on a budget</option><option>hotels and tour operators</option><option>trekkers and mountain guides</option></select></div>
+        <div class="mk-ctl"><label>who (need)</label><select id="mk-pos-n" class="mk-chip" style="width:100%;text-align:left"><option>want a local gift to carry home</option><option>want a cheap, safe cold drink</option><option>need reliable local supply</option><option>need gear that survives hill conditions</option></select></div>
+        <div class="mk-ctl"><label>our brand is a (category)</label><select id="mk-pos-c" class="mk-chip" style="width:100%;text-align:left"><option>hill-flower squash</option><option>gift hamper of Kumaon</option><option>hill-products brand</option></select></div>
+        <div class="mk-ctl"><label>that (key benefit)</label><select id="mk-pos-b" class="mk-chip" style="width:100%;text-align:left"><option>gives a real taste of Kumaon at a fair price</option><option>is hand-made from village-picked flowers</option><option>refreshes at the price of a cup of tea</option></select></div>
+      </div>
+      <div>
+        <div class="mk-storybox" id="mk-pos-out" style="font-family:var(--disp);font-size:1.05rem"></div>
+        <button class="mk-mini" id="mk-pos-copy">Copy statement</button>
+        <div class="mk-rem" style="margin-top:12px"><b>Positioning</b> (Ries &amp; Trout) happens in the buyer's <i>mind</i>, relative to competitors — not on the shelf.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mk-lab"><span class="mk-labtag">LAB 09 · PERCEPTUAL MAP</span>
+    <h3>Drag Pahadi Pitara into the empty space</h3>
+    <p class="mk-note">Drag the crimson dot (or tap anywhere). Find the gap buyers value: fair price, strong local feel.</p>
+    <div class="mk-grid2">
+      <div class="mk-svgwrap"><svg id="mk-map" viewBox="0 0 320 240" role="img" aria-label="Perceptual map"></svg></div>
+      <div>
+        <div class="mk-verdict" id="mk-map-verdict" aria-live="polite"></div>
+        <div class="mk-navbtns"><button class="mk-mini" id="mk-map-reset">Reset position</button></div>
+        <p class="mk-note" style="margin-top:10px">A = premium · B = value star · C = economy · D = overpriced trap. The empty quarter is Nisha's opportunity.</p>
+      </div>
+    </div>
+  </div>
+
+  <details><summary>Quick revision · Unit III</summary><ul>
+    <li>Bases (G-D-P-B): Geographic, Demographic, Psychographic, Behavioural.</li>
+    <li>Targeting (U-D-C-M): Undifferentiated, Differentiated, Concentrated (niche), Micromarketing.</li>
+    <li>Evaluate segments on size &amp; growth, structural attractiveness, company objectives &amp; resources.</li>
+    <li>Statement format: To (target) who (need), our (brand) is a (category) that (benefit).</li>
+    <li>Positioning bases: attributes, benefits, occasion, user, price-quality, against/away from competitors, product class.</li>
+  </ul></details>
+</section>
+
+<!-- ================= UNIT 4 ================= -->
+<section class="mk-sec tint mk-rev" data-u="4" id="mk-u4">
+  <div class="mk-uhead"><span class="mk-uchip">UNIT IV</span><h2>Product decisions</h2></div>
+  <p class="mk-lede">A product is a <b>bundle of benefits</b>. Nobody buys a drill; they buy a hole in the wall. Competition today is mostly at the <b>augmented</b> level.</p>
+
+  <div class="mk-grid2">
+    <div class="mk-lab"><span class="mk-labtag">LAB 10 · PRODUCT ONION</span>
+      <h3>Peel the three levels — tap a ring</h3>
+      <div class="mk-svgwrap"><svg id="mk-onion" viewBox="0 0 260 260" role="img" aria-label="Product levels"></svg></div>
+      <div class="mk-panel" id="mk-on-panel"></div>
+    </div>
+    <div class="mk-lab"><span class="mk-labtag">LAB 11 · MIX DIMENSIONS</span>
+      <h3>W-L-D-C with real numbers</h3>
+      <p class="mk-note">Kumaon Bites' shelf. Set an item count to 0 to <b>prune</b> a line and watch the width fall.</p>
+      <div class="mk-step"><button data-d="-1" data-k="b">−</button><output id="mk-d-b">4</output><button data-d="1" data-k="b">+</button> Namkeen items</div>
+      <div class="mk-step"><button data-d="-1" data-k="s">−</button><output id="mk-d-s">3</output><button data-d="1" data-k="s">+</button> Biscuit items</div>
+      <div class="mk-step"><button data-d="-1" data-k="j">−</button><output id="mk-d-j">2</output><button data-d="1" data-k="j">+</button> Pickle items</div>
+      <div class="mk-step"><button data-d="-1" data-k="z">−</button><output id="mk-d-z">3</output><button data-d="1" data-k="z">+</button> Pack sizes</div>
+      <div class="mk-step"><button data-d="-1" data-k="f">−</button><output id="mk-d-f">2</output><button data-d="1" data-k="f">+</button> Flavours</div>
+      <div style="margin-top:10px">
+        <span class="mk-stat"><b id="mk-d-w">3</b><span>WIDTH · lines</span></span>
+        <span class="mk-stat"><b id="mk-d-l">9</b><span>LENGTH · items</span></span>
+        <span class="mk-stat"><b id="mk-d-d">6</b><span>DEPTH · versions</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mk-lab"><span class="mk-labtag">LAB 12 · PRODUCT LIFE CYCLE</span>
+    <h3>Scrub through the product's life (I-G-M-D)</h3>
+    <div class="mk-svgwrap"><svg id="mk-plc-svg" viewBox="0 0 640 260" role="img" aria-label="PLC curves"></svg></div>
+    <div class="mk-ctl"><label>Time → <output id="mk-plc-stage">Introduction</output></label><input type="range" id="mk-plc-t" min="0" max="100" value="12"></div>
+    <div class="mk-chiprow" id="mk-plc-chips">
+      <button class="mk-chip" data-stage="0">Introduction</button><button class="mk-chip" data-stage="1">Growth</button><button class="mk-chip" data-stage="2">Maturity</button><button class="mk-chip" data-stage="3">Decline</button>
+    </div>
+    <div class="mk-grid2">
+      <div><span class="mk-stat"><b id="mk-plc-sales-val">—</b><span>SALES · bottles/mo</span></span><span class="mk-stat"><b id="mk-plc-profit-val">—</b><span>PROFIT · ₹/mo</span></span></div>
+      <div class="mk-panel" id="mk-plc-strat"></div>
+    </div>
+    <p class="mk-note">Illustrative curves. Sales peak in maturity; profit peaks earlier and turns negative at launch — exactly as in Figure 4.7.</p>
+  </div>
+
+  <details><summary>Quick revision · Unit IV</summary><ul>
+    <li>Levels: Core (benefit) → Actual (features, brand, pack) → Augmented (warranty, delivery, helpline).</li>
+    <li>Consumer types: convenience (staple/impulse/emergency), shopping, speciality, unsought.</li>
+    <li>Brand name is spoken; brand mark is seen; a trademark is registered (Trade Marks Act, 1999).</li>
+    <li>Packaging: primary, secondary, shipping. Labels: brand, descriptive, grade (ISI, Agmark).</li>
+    <li>PLC strategies — Intro: awareness, skim or penetrate · Growth: share, preference · Maturity: modify market/product/mix · Decline: maintain, harvest, drop.</li>
+  </ul></details>
+</section>
+
+<!-- ================= UNIT 5 ================= -->
+<section class="mk-sec tint mk-rev" data-u="5" id="mk-u5">
+  <div class="mk-uhead"><span class="mk-uchip">UNIT V</span><h2>Pricing &amp; distribution</h2></div>
+  <p class="mk-lede"><b>Price</b> is the only P that brings in revenue. <b>Cost is the floor, the customer's perceived value is the ceiling.</b> A sale happens when value ≥ price; profit when price &gt; cost.</p>
+
+  <div class="mk-lab"><span class="mk-labtag">LAB 13 · BREAK-EVEN LAB — flagship</span>
+    <h3>Bend Nisha's break-even chart</h3>
+    <div class="mk-grid2">
+      <div>
+        <div class="mk-ctl"><label>Fixed costs (₹) <output id="mk-o-fc">₹30,000</output></label><input type="range" id="mk-b-fc" min="10000" max="100000" step="5000" value="30000"></div>
+        <div class="mk-ctl"><label>Variable cost / bottle (₹) <output id="mk-o-vc">₹60</output></label><input type="range" id="mk-b-vc" min="20" max="100" step="5" value="60"></div>
+        <div class="mk-ctl"><label>Price (₹) <output id="mk-o-bp">₹100</output></label><input type="range" id="mk-b-p" min="60" max="200" step="5" value="100"></div>
+        <div class="mk-ctl"><label>Planned sales (bottles) <output id="mk-o-vol">1,500</output></label><input type="range" id="mk-b-vol" min="0" max="3000" step="50" value="1500"></div>
+        <div class="mk-step"><button id="mk-b-tminus">−</button><output id="mk-o-tgt">₹30,000</output><button id="mk-b-tplus">+</button> Target profit</div>
+        <div class="mk-warn" id="mk-be-warn">Price must exceed variable cost, or every bottle loses money — there is no break-even point.</div>
+        <div style="margin-top:10px">
+          <span class="mk-stat"><b id="mk-be-c">₹40</b><span>CONTRIBUTION</span></span>
+          <span class="mk-stat"><b id="mk-be-bep">750</b><span>BREAK-EVEN · bottles</span></span>
+          <span class="mk-stat"><b id="mk-be-tgt">1,500</b><span>TARGET · bottles</span></span>
+        </div>
+        <div class="mk-big" id="mk-be-profit"></div>
+        <p class="mk-note">Profit at planned sales. Formulae: BEP = Fixed ÷ (Price − VC); Target = (Fixed + Profit) ÷ Contribution.</p>
+      </div>
+      <div class="mk-svgwrap"><svg id="mk-be-svg" viewBox="0 0 640 320" role="img" aria-label="Break-even chart"></svg></div>
+    </div>
+  </div>
+
+  <div class="mk-grid2">
+    <div class="mk-lab"><span class="mk-labtag">LAB 14 · LAUNCH PRICING</span>
+      <h3>Skim the cream or penetrate the market?</h3>
+      <div class="mk-chiprow" id="mk-sp-btns"><button class="mk-chip on" data-sp="skim">Skimming</button><button class="mk-chip" data-sp="pen">Penetration</button></div>
+      <div class="mk-panel" id="mk-sp-panel"></div>
+    </div>
+    <div class="mk-lab"><span class="mk-labtag">LAB 15 · CHANNEL BUILDER</span>
+      <h3>How many middlemen to the shelf?</h3>
+      <div class="mk-chiprow" id="mk-ch-chips"><button class="mk-chip" data-l="0">Zero-level</button><button class="mk-chip on" data-l="1">One-level</button><button class="mk-chip" data-l="2">Two-level</button><button class="mk-chip" data-l="3">Three-level</button></div>
+      <div class="mk-flow" id="mk-ch-flow"></div>
+      <div class="mk-panel" id="mk-ch-info"></div>
+      <p class="mk-note">Why middlemen? 4 producers × 4 buyers = 16 contacts. One middleman cuts it to 8. They create place, time and possession utility.</p>
+      <div class="mk-chiprow" id="mk-pp-btns" style="margin-top:12px"><button class="mk-chip on" data-pp="push">Push strategy</button><button class="mk-chip" data-pp="pull">Pull strategy</button></div>
+      <div class="mk-flow" id="mk-pp-flow"></div>
+      <p class="mk-note" id="mk-pp-note"></p>
+    </div>
+  </div>
+
+  <details><summary>Quick revision · Unit V</summary><ul>
+    <li>Objectives: survival, current profit, market share, skimming, quality leadership.</li>
+    <li>Methods: cost-plus, break-even/target-profit, perceived-value, going-rate, sealed-bid.</li>
+    <li>Mark-up on sales: Price = Unit cost ÷ (1 − mark-up). ₹80 ÷ 0.80 = ₹100, not ₹96!</li>
+    <li>Channels: zero (direct), one, two, three-level. Merchant middlemen take title; agents do not.</li>
+    <li>Channel choice (M-P-C-M-C-E + cost): Market, Product, Company, Middlemen, Competitors, Environment.</li>
+    <li>Logistics: orders, warehousing, inventory, transport, handling, information — right goods, place, time, lowest total cost.</li>
+    <li>Promotion mix: advertising, sales promotion, personal selling, public relations. Push → dealers; Pull → consumers.</li>
+  </ul></details>
+</section>
+
+<!-- ================= QUIZ ================= -->
+<section class="mk-qz mk-rev" id="mk-quiz">
+  <div class="mk-uhead"><span class="mk-uchip">QUIZ ARENA</span><h2>30 questions · straight from the book</h2></div>
+  <div class="mk-chiprow" id="mk-qz-chips">
+    <button class="mk-chip on" data-u="0">All units</button><button class="mk-chip" data-u="1">Unit 1</button><button class="mk-chip" data-u="2">Unit 2</button><button class="mk-chip" data-u="3">Unit 3</button><button class="mk-chip" data-u="4">Unit 4</button><button class="mk-chip" data-u="5">Unit 5</button>
+  </div>
+  <div class="mk-qzmeta"><span>Score <b id="mk-qz-score">0</b></span><span>Streak <b id="mk-qz-streak">0</b>🔥</span><span id="mk-qz-best">Best —</span><span style="margin-left:auto" id="mk-qz-count"></span></div>
+  <div class="mk-qzbar"><i id="mk-qz-bar"></i></div>
+  <div id="mk-qz-box"></div>
+  <noscript><p style="color:#ffd98a">The quiz engine needs JavaScript. Answer key: 1b 2c 3b 4c 5b 6c 7a 8b 9b 10b 11c 12c 13b 14d 15c 16d 17a 18b 19b 20c 21b 22b 23b 24c 25c 26a 27b 28c 29d 30c.</p></noscript>
+</section>
+
+<!-- ================= QUESTIONS ================= -->
+<section class="mk-sec mk-rev" data-u="1" id="mk-q">
+  <div class="mk-uhead"><span class="mk-uchip">EXAM PREP</span><h2>Important questions &amp; model answers</h2></div>
+  <div class="mk-tricks"><span>N-I-E-P-P · stages</span><span>M-A-S-D-A · segments</span><span>G-D-P-B · bases</span><span>U-D-C-M · targeting</span><span>W-L-D-C · mix</span><span>C-S-P-P · factors</span><span>I-G-M-D · PLC</span></div>
+  <details><summary>5-mark questions (14)</summary><ol>
+    <li>Define marketing. Distinguish between marketing and selling.</li>
+    <li>Distinguish between need, want and demand.</li>
+    <li>Explain the four characteristics of services.</li>
+    <li>Explain the need for studying the marketing environment.</li>
+    <li>Explain the five stages of the buying decision process.</li>
+    <li>What is cognitive dissonance? How can marketers reduce it?</li>
+    <li>Explain Maslow's hierarchy with a product example per level.</li>
+    <li>Explain the requirements of effective segmentation.</li>
+    <li>Distinguish between differentiated and concentrated marketing.</li>
+    <li>What is a positioning statement? Write one for an imaginary brand.</li>
+    <li>Explain the dimensions of the product mix with an example.</li>
+    <li>Distinguish between packaging and labelling.</li>
+    <li>Distinguish between skimming and penetration pricing.</li>
+    <li>Distinguish between a wholesaler and a retailer.</li>
+  </ol></details>
+  <details><summary>10-mark questions (10)</summary><ol>
+    <li>Explain the five marketing philosophies with examples.</li>
+    <li>Explain the marketing mix for goods (4Ps) and services (7Ps).</li>
+    <li>Explain the macro-environment factors with Indian examples.</li>
+    <li>Explain the factors influencing consumer buying decisions.</li>
+    <li>What is market segmentation? Explain its bases with Indian examples.</li>
+    <li>Explain product positioning, its bases and the steps in positioning.</li>
+    <li>What is the product life cycle? Explain the strategies at each stage.</li>
+    <li>Explain the factors affecting the price of a product.</li>
+    <li>What is a channel of distribution? Explain its functions and levels.</li>
+    <li>What is marketing logistics? How does physical distribution differ from the channel of distribution?</li>
+  </ol></details>
+  <details><summary>Model answer · Distinguish marketing and selling (5 marks)</summary>
+    <p>Use a table with five headed rows: starting point (customer needs vs the factory's product), focus (satisfaction vs volume), means (integrated 4Ps vs selling and promotion), goal (profit through satisfaction vs profit through volume), time (before, during and after the sale vs mainly at the sale). Close with: "Selling is one tool of marketing; marketing is outside-in, selling is inside-out." Add Nisha asking tourists first.</p>
+  </details>
+  <details><summary>Model answer · Break-even numerical (5 marks)</summary>
+    <p>Fixed ₹1,20,000, VC ₹40, expected sales 4,000, mark-up 30% on sales.<br>
+    (a) Unit cost = 40 + 1,20,000÷4,000 = ₹70. Price = 70÷0.70 = <b>₹100</b>.<br>
+    (b) Contribution = 100−40 = ₹60. BEP = 1,20,000÷60 = <b>2,000 units</b>.<br>
+    (c) For ₹60,000 profit: (1,20,000+60,000)÷60 = <b>3,000 units</b>. Check: 3,000×60−1,20,000 = ₹60,000. Always show formula → substitution → unit.</p>
+  </details>
+  <div class="mk-rem"><b>Exam habits:</b> open with a one-line definition (name Kotler, Armstrong, AMA); headings and numbered points; a table for "distinguish"; one Indian example per long answer; formula, substitution and unit in numericals; leave two minutes to check.</div>
+  <p class="mk-foot">Based on <i>Marketing for Beginners</i> © 2026 Amit Joshi · First Edition. Story names and figures are imaginary, made for teaching.</p>
+</section>
+
 </div>
 
-<hr>
-
-<!-- ============ CHAPTER 1 ============ -->
-<h2 id="ch1">Chapter 1: Introduction to Marketing</h2>
-
-<h3>What is Marketing?</h3>
-<p>Marketing is the business activity of <b>understanding what customers need</b>, and then satisfying those needs better than competitors, at a profit.</p>
-<p>Three key words: <b>Customer, Value, Profit</b>.</p>
-
-<div class="box">
-<b>Remember:</b> Marketing starts <i>before</i> the product is made (by studying customers) and continues <i>after</i> the sale (through service and feedback).
-</div>
-
-<div class="story">
-<b>Story:</b> Nisha first made 200 bottles of Buransh squash because she liked the taste — only 40 sold. Then she <i>asked</i> tourists what they wanted. That shift — from "my product" to "customer's need" — is the shift from <b>selling</b> to <b>marketing</b>.
-</div>
-
-<h3>Marketing vs Selling</h3>
-<table>
-<tr><th>Basis</th><th>Marketing</th><th>Selling</th></tr>
-<tr><td>Starts with</td><td>Customer needs</td><td>The factory / product</td></tr>
-<tr><td>Focus</td><td>Satisfaction</td><td>Sales volume</td></tr>
-<tr><td>Goal</td><td>Profit through customers</td><td>Profit through sales</td></tr>
-<tr><td>Time</td><td>Before, during, after sale</td><td>Mainly at sale</td></tr>
-</table>
-
-<h3>The Five Marketing Philosophies</h3>
-<ol>
-<li><b>Production:</b> "Make more, make cheap." (Ford's Model T)</li>
-<li><b>Product:</b> "Make the best." Danger: <i>marketing myopia</i>.</li>
-<li><b>Selling:</b> "Push hard." Used for insurance, unsought goods.</li>
-<li><b>Marketing:</b> "Serve the customer." (Jio's low data price)</li>
-<li><b>Societal:</b> "Serve customer + society + profit." (ITC e-Choupal, Lifebuoy)</li>
-</ol>
-
-<h3>The Marketing Mix</h3>
-<p><b>4Ps for goods:</b> Product, Price, Place, Promotion.</p>
-<p><b>7Ps for services:</b> add People, Process, Physical evidence.</p>
-
-<h3>Marketing Environment</h3>
-<p><b>Micro</b> (close to firm, can influence): company, suppliers, intermediaries, customers, competitors, publics.</p>
-<p><b>Macro</b> (large forces, cannot control): demographic, economic, natural, technological, politico-legal, socio-cultural.</p>
-
-<hr>
-
-<!-- ============ CHAPTER 2 ============ -->
-<h2 id="ch2">Chapter 2: Consumer Behaviour</h2>
-
-<h3>What is Consumer Behaviour?</h3>
-<p>The study of the <b>WHO, WHAT, WHY, WHEN, WHERE and HOW</b> of buying. It covers what happens before, during, and after the purchase.</p>
-
-<div class="box">
-<b>Consumer vs Customer:</b> The <i>consumer</i> uses the product (the child eating biscuits). The <i>customer</i> buys it (the parent). A good marketer must please both.
-</div>
-
-<h3>The Five Stages of Buying Decision</h3>
-<ol>
-<li><b>Need recognition</b> — "I am thirsty" or "My phone is slow"</li>
-<li><b>Information search</b> — asks friends, reads reviews, visits shops</li>
-<li><b>Evaluation of alternatives</b> — compares brands on price, features, etc.</li>
-<li><b>Purchase decision</b> — chooses brand, dealer, payment method</li>
-<li><b>Post-purchase behaviour</b> — satisfied, dissatisfied, or delighted</li>
-</ol>
-
-<div class="story">
-<b>Story:</b> Mrs. Sharma feels thirsty (need), asks Hari Chacha if the squash is safe (search), tastes a sip (evaluation), buys three bottles (purchase), sends a photo and gets a free replacement for a loose cap (post-purchase).
-</div>
-
-<h3>Four Factors That Influence Buyers</h3>
-<ol>
-<li><b>Cultural:</b> culture, subculture, social class (widest influence)</li>
-<li><b>Social:</b> reference groups, family, roles and status</li>
-<li><b>Personal:</b> age, occupation, income, lifestyle, personality</li>
-<li><b>Psychological:</b> motivation, perception, learning, beliefs and attitudes</li>
-</ol>
-
-<div class="box">
-<b>Maslow's Hierarchy</b> (from bottom): Physiological → Safety → Social → Esteem → Self-actualisation. A satisfied need no longer motivates.
-</div>
-
-<hr>
-
-<!-- ============ CHAPTER 3 ============ -->
-<h2 id="ch3">Chapter 3: Segmentation, Targeting, Positioning (STP)</h2>
-
-<h3>The Three Steps</h3>
-<ol>
-<li><b>Segmentation:</b> Divide the market into groups with similar needs.</li>
-<li><b>Targeting:</b> Pick the group(s) you can serve best.</li>
-<li><b>Positioning:</b> Place your brand clearly in the buyer's <i>mind</i> vs competitors.</li>
-</ol>
-
-<h3>Four Bases of Segmentation</h3>
-<table>
-<tr><th>Basis</th><th>Divides by</th><th>Example</th></tr>
-<tr><td>Geographic</td><td>Where they live</td><td>Woollens in hills, cotton in plains</td></tr>
-<tr><td>Demographic</td><td>Who they are</td><td>Age, income, gender, family size</td></tr>
-<tr><td>Psychographic</td><td>How they think/live</td><td>Lifestyle, personality, social class</td></tr>
-<tr><td>Behavioural</td><td>How they buy</td><td>Occasion, benefits, loyalty, usage rate</td></tr>
-</table>
-
-<h3>Targeting Strategies</h3>
-<ul>
-<li><b>Undifferentiated:</b> one offer for all (salt, sugar)</li>
-<li><b>Differentiated:</b> separate offers for several segments (Titan: Tanishq, Fastrack, Sonata)</li>
-<li><b>Concentrated (niche):</b> focus on one small segment (a boutique, one-exam coaching)</li>
-<li><b>Micromarketing:</b> tailor to individuals or local areas</li>
-</ul>
-
-<div class="story">
-<b>Story:</b> Nisha has limited money and a small kitchen. She chooses <b>tourists and city gift-buyers</b> (concentrated marketing) and positions Pahadi Pitara as <i>"the hand-made, village-picked taste of Kumaon that you can carry home."</i>
-</div>
-
-<h3>Positioning Statement Format</h3>
-<div class="box">
-<b>To</b> (target segment) <b>who</b> (need), <b>our</b> (brand) <b>is a</b> (category) <b>that</b> (key benefit).
-</div>
-
-<hr>
-
-<!-- ============ CHAPTER 4 ============ -->
-<h2 id="ch4">Chapter 4: Product Decisions</h2>
-
-<h3>Three Levels of a Product</h3>
-<ol>
-<li><b>Core product:</b> the basic benefit (refreshment, communication, rest)</li>
-<li><b>Actual product:</b> the physical item — features, brand, packaging</li>
-<li><b>Augmented product:</b> extra services — warranty, delivery, helpline</li>
-</ol>
-
-<h3>Product Mix Dimensions</h3>
-<ul>
-<li><b>Width:</b> number of product lines</li>
-<li><b>Length:</b> total items across all lines</li>
-<li><b>Depth:</b> versions of each item (sizes, flavours)</li>
-<li><b>Consistency:</b> how related the lines are</li>
-</ul>
-
-<h3>Branding, Packaging, Labelling</h3>
-<ul>
-<li><b>Brand:</b> name, logo, slogan, trademark (legally protected)</li>
-<li><b>Packaging:</b> protects, contains, identifies, promotes, gives convenience</li>
-<li><b>Labelling:</b> informs — MRP, ingredients, FSSAI, "best before"</li>
-</ul>
-
-<h3>Product Life Cycle (PLC)</h3>
-<table>
-<tr><th>Stage</th><th>Sales</th><th>Profit</th><th>Main Aim</th></tr>
-<tr><td>Introduction</td><td>Low</td><td>Negative / low</td><td>Awareness and trial</td></tr>
-<tr><td>Growth</td><td>Rising fast</td><td>Rising</td><td>Market share</td></tr>
-<tr><td>Maturity</td><td>Peak / flat</td><td>High then falling</td><td>Defend share, maximise profit</td></tr>
-<tr><td>Decline</td><td>Falling</td><td>Falling</td><td>Harvest or drop</td></tr>
-</table>
-
-<hr>
-
-<!-- ============ CHAPTER 5 ============ -->
-<h2 id="ch5">Chapter 5: Pricing and Distribution</h2>
-
-<h3>Price Basics</h3>
-<p>Price is the <b>only element of the marketing mix that brings in revenue</b>. The other three (product, place, promotion) all cost money.</p>
-<div class="box">
-<b>Rule:</b> Cost is the <i>floor</i>. Customer's perceived value is the <i>ceiling</i>. The best price lies between them.
-</div>
-
-<h3>Two Pricing Strategies for New Products</h3>
-<table>
-<tr><th></th><th>Skimming</th><th>Penetration</th></tr>
-<tr><td>Initial price</td><td>High</td><td>Low</td></tr>
-<tr><td>Aim</td><td>High profit per unit</td><td>High volume, large share</td></tr>
-<tr><td>Buyers</td><td>Quality-conscious, less price-sensitive</td><td>Mass market, price-sensitive</td></tr>
-<tr><td>Example</td><td>New smartphones, luxury goods</td><td>Reliance Jio, new FMCG product</td></tr>
-</table>
-
-<h3>Channels of Distribution</h3>
-<ul>
-<li><b>Zero-level (direct):</b> Producer → Consumer</li>
-<li><b>One-level:</b> Producer → Retailer → Consumer</li>
-<li><b>Two-level:</b> Producer → Wholesaler → Retailer → Consumer</li>
-<li><b>Three-level:</b> Producer → Agent → Wholesaler → Retailer → Consumer</li>
-</ul>
-
-<h3>Promotion Mix (Four Tools)</h3>
-<ol>
-<li><b>Advertising:</b> paid, non-personal (TV, hoardings, social media)</li>
-<li><b>Sales promotion:</b> short-term incentives (discounts, coupons, BOGO)</li>
-<li><b>Personal selling:</b> face-to-face (showroom staff, insurance agents)</li>
-<li><b>Public relations:</b> favourable publicity, goodwill (press releases, CSR)</li>
-</ol>
-
-<hr>
-
-<!-- ============ IMPORTANT QUESTIONS ============ -->
-<h2 id="questions">Important Questions for Exams</h2>
-
-<h3>5-Mark Questions</h3>
-<ol>
-<li>Define marketing. Distinguish between marketing and selling.</li>
-<li>Explain the five marketing philosophies with one example each.</li>
-<li>Explain the four characteristics of services (intangibility, inseparability, variability, perishability).</li>
-<li>What is consumer behaviour? Explain the five stages of the buying decision process.</li>
-<li>Explain Maslow's hierarchy of needs with a product example for each level.</li>
-<li>What is market segmentation? Explain any three bases with Indian examples.</li>
-<li>Distinguish between differentiated and concentrated marketing.</li>
-<li>What is a positioning statement? Write one for an imaginary brand.</li>
-<li>Explain the three levels of a product with an example.</li>
-<li>Explain the functions of packaging.</li>
-<li>Distinguish between skimming and penetration pricing.</li>
-<li>Explain the functions of channels of distribution.</li>
-<li>Explain the four elements of the promotion mix.</li>
-</ol>
-
-<h3>10-Mark Questions</h3>
-<ol>
-<li>Explain the marketing environment — micro and macro factors — with Indian examples.</li>
-<li>Explain the factors influencing consumer buying decisions (cultural, social, personal, psychological).</li>
-<li>What is STP? Explain segmentation bases, targeting strategies and positioning with examples.</li>
-<li>Explain the product life cycle and the marketing strategies at each stage.</li>
-<li>Explain the factors affecting the price of a product (internal and external).</li>
-<li>What is a channel of distribution? Explain its types and functions.</li>
-</ol>
-
-<hr>
-
-<!-- ============ QUIZ ============ -->
-<h2 id="quiz">Quick Quiz — Tap to Reveal Answers</h2>
-<p>Try each question first. Then tap <b>"Show answer"</b> to check.</p>
-
-<details>
-<summary>Q1. Marketing begins — (a) after sale, (b) before production and continues after sale, (c) only at advertising, (d) only in the shop.</summary>
-<p class="answer"><b>Answer: (b)</b>. Modern marketing starts with studying customer needs before production and continues with after-sales service.</p>
-</details>
-
-<details>
-<summary>Q2. A want backed by the ability to pay is called — (a) need, (b) utility, (c) demand, (d) satisfaction.</summary>
-<p class="answer"><b>Answer: (c) demand</b>. Need → Want → Demand (when buying power is added).</p>
-</details>
-
-<details>
-<summary>Q3. The belief that customers will not buy enough unless pushed belongs to — (a) production concept, (b) selling concept, (c) product concept, (d) societal concept.</summary>
-<p class="answer"><b>Answer: (b) selling concept</b>. It relies on heavy selling and promotion, common for unsought goods like insurance.</p>
-</details>
-
-<details>
-<summary>Q4. Which philosophy balances company profit, customer wants AND society's well-being?</summary>
-<p class="answer"><b>Answer: Societal marketing concept.</b> It serves the "three Ps" — People, Planet, Profit.</p>
-</details>
-
-<details>
-<summary>Q5. The 4Ps of the marketing mix are — ?</summary>
-<p class="answer"><b>Answer: Product, Price, Place, Promotion.</b> Given by E. Jerome McCarthy (1960).</p>
-</details>
-
-<details>
-<summary>Q6. An empty hotel room tonight cannot be sold tomorrow. This shows which characteristic of services?</summary>
-<p class="answer"><b>Answer: (c) Perishability.</b> Services cannot be stored.</p>
-</details>
-
-<details>
-<summary>Q7. The first stage of the consumer buying decision process is — ?</summary>
-<p class="answer"><b>Answer: (a) Need recognition.</b> Memory trick: <b>N-I-E-P-P</b> — Need, Information, Evaluation, Purchase, Post-purchase.</p>
-</details>
-
-<details>
-<summary>Q8. Doubt felt after a costly purchase ("Did I choose right?") is called — ?</summary>
-<p class="answer"><b>Answer: (b) Cognitive dissonance.</b> Marketers reduce it with thank-you messages, warranty, and good after-sales service.</p>
-</details>
-
-<details>
-<summary>Q9. Culture, subculture and social class are — (a) personal factors, (b) cultural factors, (c) psychological factors, (d) social factors.</summary>
-<p class="answer"><b>Answer: (b) cultural factors.</b> They have the widest and deepest influence on buying.</p>
-</details>
-
-<details>
-<summary>Q10. In Maslow's hierarchy, the highest-level need is — ?</summary>
-<p class="answer"><b>Answer: (b) Self-actualisation.</b> Order from bottom: Physiological → Safety → Social → Esteem → Self-actualisation.</p>
-</details>
-
-<details>
-<summary>Q11. STP stands for — ?</summary>
-<p class="answer"><b>Answer: Segmentation, Targeting, Positioning.</b> The customer-driven marketing strategy.</p>
-</details>
-
-<details>
-<summary>Q12. Selling woollens in hills and coolers in plains is which type of segmentation?</summary>
-<p class="answer"><b>Answer: (d) Geographic segmentation.</b> It divides by location and climate.</p>
-</details>
-
-<details>
-<summary>Q13. Positioning refers to the place a product occupies — (a) on the shelf, (b) in the buyer's mind vs competitors, (c) in the warehouse, (d) in the price list.</summary>
-<p class="answer"><b>Answer: (b) in the buyer's mind relative to competitors.</b> Positioning is about <i>perception</i>, not the physical product.</p>
-</details>
-
-<details>
-<summary>Q14. The basic benefit the buyer is really buying is the — (a) augmented product, (b) core product, (c) actual product.</summary>
-<p class="answer"><b>Answer: (b) core product.</b> Example: for a phone, the core benefit is "staying connected".</p>
-</details>
-
-<details>
-<summary>Q15. The number of different product lines a company carries is the _____ of its product mix.</summary>
-<p class="answer"><b>Answer: Width.</b> Memory trick: <b>W-L-D-C</b> — Width (lines), Length (items), Depth (versions), Consistency.</p>
-</details>
-
-<details>
-<summary>Q16. Sales are low, profits are negative, heavy promotion is needed. Which PLC stage?</summary>
-<p class="answer"><b>Answer: (b) Introduction.</b> The product is new and little known.</p>
-</details>
-
-<details>
-<summary>Q17. The only element of the marketing mix that brings in revenue is — ?</summary>
-<p class="answer"><b>Answer: (c) Price.</b> Product, place and promotion all involve costs.</p>
-</details>
-
-<details>
-<summary>Q18. Setting a high initial price for a new product to earn maximum revenue from early buyers is — ?</summary>
-<p class="answer"><b>Answer: (b) Market-skimming pricing.</b> "Skim the cream" — high price, fewer buyers, high margin.</p>
-</details>
-
-<details>
-<summary>Q19. A channel with no intermediary is called — ?</summary>
-<p class="answer"><b>Answer: (d) Zero-level (direct) channel.</b> Producer → Consumer directly.</p>
-</details>
-
-<details>
-<summary>Q20. A push strategy is mainly directed at — (a) consumers, (b) competitors, (c) channel members, (d) government.</summary>
-<p class="answer"><b>Answer: (c) channel members.</b> Push = promote to dealers. Pull = promote to final consumers.</p>
-</details>
-
-<hr>
-
-<h3>Final Tip for the Exam</h3>
-<div class="box">
-<b>Always:</b>
-<ul>
-<li>Start with a one-line definition (name the author if you remember — Kotler, Armstrong).</li>
-<li>Use headings and numbered points.</li>
-<li>Add one Indian example per long answer (Amul, Jio, Tata Salt, Pahadi Pitara).</li>
-<li>Draw a simple labelled diagram where it fits.</li>
-<li>Use a table for "distinguish between" questions.</li>
-</ul>
-</div>
-
-<p style="text-align:center; color:#0f5c63; margin-top:24px;">— End of Study Guide —</p>
-
-</body>
-</html>
+<script>
+(function(){
+"use strict";
+var W=document.getElementById('mkg2'); if(!W) return;
+W.classList.add('js');
+var $=function(id){return document.getElementById(id)};
+var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var inr=function(n){return '₹'+Math.round(n).toLocaleString('en-IN')};
+var clamp=function(v,a,b){return Math.min(b,Math.max(a,v))};
+
+/* ---------- smooth scroll buttons & nav ---------- */
+function goTo(id){var el=$(id); if(el) el.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});}
+W.querySelectorAll('[data-go]').forEach(function(b){b.addEventListener('click',function(){goTo(b.getAttribute('data-go'))})});
+var navBtns=Array.prototype.slice.call(W.querySelectorAll('#mk-nav button'));
+navBtns.forEach(function(b){b.addEventListener('click',function(){goTo(b.getAttribute('data-t')); setNav(b.getAttribute('data-t'));})});
+function setNav(id){navBtns.forEach(function(b){b.classList.toggle('on',b.getAttribute('data-t')===id)});
+  var on=W.querySelector('#mk-nav button.on'); if(on&&on.scrollIntoView) on.scrollIntoView({block:'nearest',inline:'nearest'});}
+var secIds=['mk-story','mk-u1','mk-u2','mk-u3','mk-u4','mk-u5','mk-quiz','mk-q'];
+if('IntersectionObserver' in window){
+  var navIO=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting) setNav(e.target.id)})},{rootMargin:'-40% 0px -55% 0px'});
+  secIds.forEach(function(id){var el=$(id); if(el) navIO.observe(el)});
+  var revIO=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');revIO.unobserve(e.target)}})},{threshold:.1});
+  W.querySelectorAll('.mk-rev').forEach(function(el){revIO.observe(el)});
+}else{W.querySelectorAll('.mk-rev').forEach(function(el){el.classList.add('in')})}
+
+/* ---------- hero petals + parallax ---------- */
+var hero=$('mk-hero'),cv=$('mk-petals'),ctx=cv.getContext('2d'),petals=[],heroVis=true,dpr=Math.min(2,window.devicePixelRatio||1);
+function sizeCanvas(){var r=hero.getBoundingClientRect();cv.width=r.width*dpr;cv.height=r.height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+sizeCanvas();
+var hues=['#e85d8a','#c2264a','#ffb1c8','#e8a020'];
+for(var i=0;i<34;i++){petals.push({x:Math.random()*1200,y:Math.random()*460,r:3+Math.random()*4.5,vy:.35+Math.random()*.8,ph:Math.random()*6.28,sw:.4+Math.random()*.9,rot:Math.random()*6.28,vr:(Math.random()-.5)*.04,c:hues[i%4]});}
+var hillLayers=hero.querySelectorAll('.mk-hills svg'), ticking=false;
+function onScroll(){if(ticking||reduced) return; ticking=true; requestAnimationFrame(function(){ticking=false; if(!heroVis) return; var y=window.scrollY||0; hillLayers.forEach(function(s){var f=parseFloat(s.getAttribute('data-f'))||0; s.style.transform='translateY('+Math.min(90,y*f)+'px)';});});}
+window.addEventListener('scroll',onScroll,{passive:true});
+if('IntersectionObserver' in window){new IntersectionObserver(function(es){heroVis=es[0].isIntersecting},{threshold:0}).observe(hero);}
+var rsz; window.addEventListener('resize',function(){clearTimeout(rsz);rsz=setTimeout(sizeCanvas,150)});
+function tick(){requestAnimationFrame(tick); if(reduced||!heroVis||document.hidden) return;
+  var w=cv.width/dpr,h=cv.height/dpr; ctx.clearRect(0,0,w,h);
+  for(var i=0;i<petals.length;i++){var p=petals[i]; p.ph+=.02; p.y+=p.vy; p.x+=Math.sin(p.ph)*p.sw*.6; p.rot+=p.vr;
+    if(p.y>h+12){p.y=-12;p.x=Math.random()*w;} if(p.x>w+14)p.x=-10; if(p.x<-14)p.x=w+10;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.globalAlpha=.85;ctx.fillStyle=p.c;
+    ctx.beginPath();ctx.ellipse(0,0,p.r,p.r*.55,0,0,6.283);ctx.fill();ctx.restore();}
+}
+if(!reduced) tick(); else ctx.clearRect(0,0,cv.width,cv.height);
+
+/* ---------- LAB 01 need/want/demand ---------- */
+var NWD=[
+ {h:'Need',p:'A basic human requirement. The tourist at the bus stop feels thirsty — that need exists in everyone. Marketers do not create needs.'},
+ {h:'Want',p:'The form a need takes, shaped by culture and personality. She wants something local and cold — a Buransh squash, not just any water.'},
+ {h:'Demand',p:'A want backed by buying power. She has ₹100 and is willing to pay — now, and only now, it is demand. Need → Want → Demand.'}];
+$('mk-nwd').addEventListener('click',function(e){var b=e.target.closest('button'); if(!b)return;
+  var i=+b.getAttribute('data-i');
+  W.querySelectorAll('#mk-nwd .mk-chip').forEach(function(c,j){c.classList.toggle('on',j===i)});
+  $('mk-nwd-p').innerHTML='<h4>'+NWD[i].h+'</h4><p>'+NWD[i].p+'</p>';});
+W.querySelector('#mk-nwd .mk-chip').classList.add('on');
+
+/* ---------- LAB 02 philosophies ---------- */
+var PHIL=[
+ {n:'Production',b:'Customers prefer cheap, widely available goods.',f:'Mass production, wide distribution.',e:"Ford's Model T; scarce goods in India before 1991.",w:'Ignores what the customer actually wants.',ht:52},
+ {n:'Product',b:'Customers prefer the best quality and features.',f:'Keep improving the product.',e:'A restaurant owner who never asks customers.',w:'Marketing myopia (Levitt, 1960).',ht:74},
+ {n:'Selling',b:'Customers will not buy enough unless pushed.',f:'Aggressive selling and promotion.',e:'Repeated calls to sell insurance (unsought goods).',w:'Unhappy customers, little repeat business.',ht:96},
+ {n:'Marketing',b:'Success = satisfying target customers better than rivals.',f:'Customer needs, outside-in.',e:'Jio\u2019s low data prices at launch (2016).',w:'May ignore long-term harm to society.',ht:118},
+ {n:'Societal',b:'Serve customer + society + profit (People, Planet, Profit).',f:'Long-run well-being of society.',e:'ITC e-Choupal; Lifebuoy handwashing.',w:'Can raise costs in the short run.',ht:140}];
+var philI=3, stepsBox=$('mk-phil-steps');
+PHIL.forEach(function(p,i){var b=document.createElement('button');b.textContent=p.n;b.style.height=p.ht+'px';b.setAttribute('data-i',i);
+  b.addEventListener('click',function(){philI=i;renderPhil()});stepsBox.appendChild(b);});
+function renderPhil(){var p=PHIL[philI];
+  stepsBox.querySelectorAll('button').forEach(function(b,i){b.classList.toggle('on',i===philI)});
+  var btn=stepsBox.querySelectorAll('button')[philI], fl=$('mk-flower');
+  fl.style.left=(btn.offsetLeft+btn.offsetWidth/2-10)+'px'; fl.style.top=(stepsBox.offsetHeight-p.ht-26)+'px';
+  $('mk-phil-panel').innerHTML='<h4>'+(philI+1)+'. '+p.n+' concept</h4><div class="mk-kv"><b>Belief</b><span>'+p.b+'</span><b>Focus</b><span>'+p.f+'</span><b>Example</b><span>'+p.e+'</span><b>Weakness</b><span>'+p.w+'</span></div>';}
+$('mk-phil-prev').addEventListener('click',function(){philI=(philI+4)%5;renderPhil()});
+$('mk-phil-next').addEventListener('click',function(){philI=(philI+1)%5;renderPhil()});
+renderPhil(); window.addEventListener('resize',function(){renderPhil()});
+
+/* ---------- LAB 03 marketing vs selling ---------- */
+var vsMode='mkt';
+function renderVS(){var f=$('mk-vs-flow'),n=$('mk-vs-note'),b=$('mk-vs-btn');
+  if(vsMode==='mkt'){b.textContent='Show: Selling (inside-out)';
+    f.innerHTML='<span class="mk-node hot">Customer needs</span><span class="mk-arrow"></span><span class="mk-node">Integrated 4Ps</span><span class="mk-arrow"></span><span class="mk-node">Satisfaction</span><span class="mk-arrow"></span><span class="mk-node gold">Profit via loyalty</span>';
+    n.textContent='Outside-in: Nisha asks tourists first, then fills the bottle. Works before, during and after the sale.';
+  }else{b.textContent='Show: Marketing (outside-in)';
+    f.innerHTML='<span class="mk-node blue">Factory / product</span><span class="mk-arrow blue"></span><span class="mk-node blue">Selling &amp; promotion</span><span class="mk-arrow blue"></span><span class="mk-node blue">Sale</span><span class="mk-arrow blue"></span><span class="mk-node gold">Profit via volume</span>';
+    n.textContent='Inside-out: sell what the firm makes. June\u2019s 200 bottles, only 40 sold. Mainly at the time of sale.';}}
+$('mk-vs-btn').addEventListener('click',function(){vsMode=vsMode==='mkt'?'sell':'mkt';renderVS()});
+renderVS();
+
+/* ---------- LAB 04 mix lab ---------- */
+var mix={mode:'goods'};
+var MS={q:$('mk-s-q'),p:$('mk-s-p'),l:$('mk-s-l'),m:$('mk-s-m'),pe:$('mk-s-pe'),pr:$('mk-s-pr'),ph:$('mk-s-ph')};
+function paintSlider(s){var pc=(s.value-s.min)/(s.max-s.min)*100;s.style.background='linear-gradient(90deg,var(--buransh) '+pc+'%,var(--line) '+pc+'%)';}
+function mixVals(){var q=+MS.q.value,p=+MS.p.value,l=+MS.l.value,m=+MS.m.value,pe=+MS.pe.value,pr=+MS.pr.value,ph=+MS.ph.value;
+  var svc=mix.mode==='svc';
+  var vc=40+q*4, fc=12000+l*3000+m*2000;
+  var value=80+q*8+m*2+(svc?(pe+pr+ph)*2:0);
+  var aware=Math.min(.95,.35+m*.05+l*.03);
+  var factor=Math.max(0,(value-p)/value+.15);
+  var demand=Math.round(6800*aware*factor);
+  var profit=demand*(p-vc)-fc;
+  return {q:q,p:p,l:l,m:m,pe:pe,pr:pr,ph:ph,svc:svc,vc:vc,fc:fc,value:value,demand:demand,profit:profit};}
+function radarSVG(v){var axes=v.svc?[['Product',v.q/10],['Price',(v.p-60)/140],['Place',v.l/10],['Promo',v.m/10],['People',v.pe/10],['Process',v.pr/10],['Evidence',v.ph/10]]
+  :[['Product',v.q/10],['Price',(v.p-60)/140],['Place',v.l/10],['Promo',v.m/10]];
+  var n=axes.length,cx=120,cy=120,R=86,s='';
+  for(var ring=1;ring<=3;ring++){var pts=[];for(var i=0;i<n;i++){var a=-Math.PI/2+i*2*Math.PI/n;pts.push((cx+Math.cos(a)*R*ring/3).toFixed(1)+','+(cy+Math.sin(a)*R*ring/3).toFixed(1));}
+    s+='<polygon points="'+pts.join(' ')+'" fill="none" stroke="#e6ddcc" stroke-width="1"/>';}
+  var vp=[];
+  for(var i=0;i<n;i++){var a=-Math.PI/2+i*2*Math.PI/n,ax=axes[i];
+    s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+Math.cos(a)*R)+'" y2="'+(cy+Math.sin(a)*R)+'" stroke="#e6ddcc"/>';
+    var lx=cx+Math.cos(a)*(R+18),ly=cy+Math.sin(a)*(R+16)+3;
+    s+='<text x="'+lx+'" y="'+ly+'" text-anchor="middle" font-size="10" font-weight="700" fill="#0f5c63">'+ax[0]+'</text>';
+    var r=clamp(ax[1],0,1)*R; vp.push((cx+Math.cos(a)*r).toFixed(1)+','+(cy+Math.sin(a)*r).toFixed(1));}
+  s+='<polygon points="'+vp.join(' ')+'" fill="rgba(194,38,74,.22)" stroke="#c2264a" stroke-width="2.5" stroke-linejoin="round"/>';
+  vp.forEach(function(pt){var xy=pt.split(',');s+='<circle cx="'+xy[0]+'" cy="'+xy[1]+'" r="3.5" fill="#c2264a"/>';});
+  return s;}
+function renderMix(){var v=mixVals();
+  Object.keys(MS).forEach(function(k){paintSlider(MS[k])});
+  $('mk-o-q').textContent=v.q; $('mk-o-p').textContent=inr(v.p); $('mk-o-l').textContent=v.l; $('mk-o-m').textContent=v.m;
+  $('mk-o-pe').textContent=v.pe; $('mk-o-pr').textContent=v.pr; $('mk-o-ph').textContent=v.ph;
+  ['pe','pr','ph'].forEach(function(k){$('mk-c-'+k).classList.toggle('off',!v.svc); MS[k].disabled=!v.svc;});
+  $('mk-mode-goods').classList.toggle('on',!v.svc); $('mk-mode-svc').classList.toggle('on',v.svc);
+  $('mk-radar').innerHTML=radarSVG(v);
+  var S=240;
+  $('mk-c-floor').style.left=clamp(v.vc/S*100,0,100)+'%';
+  $('mk-c-ceil').style.left=clamp(v.value/S*100,0,100)+'%';
+  $('mk-c-needle').style.left=clamp(v.p/S*100,0,100)+'%';
+  $('mk-mix-sub').innerHTML='Cost floor <b style="color:var(--danger)">'+inr(v.vc)+'</b> · Value ceiling <b style="color:var(--amberdeep)">'+inr(v.value)+'</b> · Fixed costs '+inr(v.fc);
+  $('mk-m-demand-val').textContent=v.demand.toLocaleString('en-IN')+' bottles';
+  $('mk-m-demand-bar').style.width=clamp(v.demand/4500*100,0,100)+'%';
+  var bad=v.profit<0;
+  $('mk-m-profit-val').textContent=(bad?'−':'+')+inr(Math.abs(v.profit));
+  var pb=$('mk-m-profit-bar'); pb.style.width=clamp(Math.abs(v.profit)/80000*100,2,100)+'%'; pb.classList.toggle('bad',bad);
+  var big=$('mk-mix-profit'); big.textContent=(bad?'−':'+')+inr(Math.abs(v.profit)); big.classList.toggle('bad',bad);
+  var vd=$('mk-mix-verdict'),msg,cls='';
+  if(v.p<=v.vc){msg='Below the cost floor — every bottle loses money. Raise the price or cut variable cost.';cls='bad';}
+  else if(v.p>v.value){msg='Above the value ceiling — tourists walk past. Raise perceived value (quality, promotion'+(v.svc?', service':'')+') or lower the price.';cls='warn';}
+  else if(v.profit<0&&(v.p-v.vc)<10&&v.demand>3000){msg='Penetration play: huge share, thin margin, a loss today — Jio\u2019s route needs deep pockets and falling costs.';cls='warn';}
+  else if(v.profit<0){msg='Loss-making mix. Fixed costs are eating you — push promotion, add outlets, or trim costs.';cls='bad';}
+  else if((v.p-v.vc)>60&&v.demand<1200){msg='Skimming the cream: few buyers, fat margin — works while the product feels unique.';cls='';}
+  else if(v.profit>=25000){msg='Sweet spot — close to Nisha\u2019s ₹100 plan: ~1,500 bottles and ~₹30,000 profit. Well mixed!';cls='';}
+  else{msg='Workable, but modest. Nudge promotion or outlets up, or ease the price toward the value ceiling\u2019s middle.';cls='warn';}
+  vd.textContent=msg; vd.className='mk-verdict '+cls;}
+Object.keys(MS).forEach(function(k){MS[k].addEventListener('input',renderMix)});
+$('mk-mode-goods').addEventListener('click',function(){mix.mode='goods';renderMix()});
+$('mk-mode-svc').addEventListener('click',function(){mix.mode='svc';renderMix()});
+function setMix(o){MS.q.value=o.q;MS.p.value=o.p;MS.l.value=o.l;MS.m.value=o.m;MS.pe.value=o.pe;MS.pr.value=o.pr;MS.ph.value=o.ph;mix.mode=o.mode;renderMix();}
+var PRESETS={nisha:{mode:'goods',q:5,p:100,l:4,m:3,pe:5,pr:5,ph:5},
+  jio:{mode:'svc',q:6,p:70,l:9,m:8,pe:7,pr:8,ph:6},
+  skim:{mode:'goods',q:9,p:150,l:2,m:2,pe:5,pr:5,ph:5}};
+W.querySelectorAll('[data-preset]').forEach(function(b){b.addEventListener('click',function(){setMix(PRESETS[b.getAttribute('data-preset')])})});
+$('mk-mix-reset').addEventListener('click',function(){setMix(PRESETS.nisha)});
+$('mk-mix-rand').addEventListener('click',function(){var r=function(a,b){return a+Math.floor(Math.random()*(b-a+1))};
+  setMix({mode:mix.mode,q:r(1,10),p:r(12,40)*5,l:r(1,10),m:r(0,10),pe:r(1,10),pr:r(1,10),ph:r(1,10)});});
+renderMix();
+
+/* ---------- LAB 05 journey ---------- */
+var JOUR=[
+ {t:'Need recognition',s:'The Sharma family stops at the bus stop — tired, hot, thirsty children.',b:'Feels a problem, triggered internally (thirst) or externally (a friend\u2019s new phone).',m:'Find what triggers the need; bring it to the buyer\u2019s attention.'},
+ {t:'Information search',s:'Mrs. Sharma asks Hari Chacha if the squash is safe and reads the Instagram page.',b:'Uses personal, commercial, public and experiential sources. Most trust: personal.',m:'Be visible where buyers search; give clear, truthful information.'},
+ {t:'Evaluation of alternatives',s:'She tastes a free sip and compares it with the cold drinks next door.',b:'Compares brands on the attributes she values; forms brand beliefs.',m:'Show strength on attributes that matter; offer demos and trials.'},
+ {t:'Purchase decision',s:'She buys three bottles as gifts. Others\u2019 attitudes or a stock-out could still change it.',b:'Chooses brand, dealer, timing, quantity and payment (cash, UPI, EMI).',m:'Make buying easy: availability, payment options, friendly service.'},
+ {t:'Post-purchase behaviour',s:'She sends a photo; a loose cap is replaced free; she tells her sister.',b:'Satisfaction = performance vs expectation. Doubt = cognitive dissonance (Festinger).',m:'Follow up, warranty, service, handle complaints — turn buyers into advocates.'}];
+var jI=0,jTimer=null,jNodes=$('mk-j-nodes');
+JOUR.forEach(function(_,i){var b=document.createElement('button');b.textContent=i+1;b.setAttribute('aria-label','Stage '+(i+1));
+  b.addEventListener('click',function(){stopPlay();jI=i;renderJ();});jNodes.appendChild(b);});
+function renderJ(){var j=JOUR[jI];
+  jNodes.querySelectorAll('button').forEach(function(b,i){b.classList.toggle('on',i===jI);b.classList.toggle('done',i<jI);});
+  $('mk-j-bar').style.width=(jI/4*100)+'%';
+  $('mk-j-card').innerHTML='<h4>Stage '+(jI+1)+' · '+j.t+'</h4><div class="mk-storybox"><b>Story:</b> '+j.s+'</div><div class="mk-kv"><b>Buyer</b><span>'+j.b+'</span><b>Marketer</b><span>'+j.m+'</span></div>';
+  $('mk-j-play').textContent=jTimer?'⏸ Stop':'▶ Play her day';}
+function stopPlay(){if(jTimer){clearInterval(jTimer);jTimer=null;}}
+$('mk-j-prev').addEventListener('click',function(){stopPlay();jI=(jI+4)%5;renderJ();});
+$('mk-j-next').addEventListener('click',function(){stopPlay();jI=(jI+1)%5;renderJ();});
+$('mk-j-play').addEventListener('click',function(){
+  if(jTimer){stopPlay();renderJ();return;}
+  jI=0;renderJ();
+  jTimer=setInterval(function(){if(jI>=4){stopPlay();renderJ();return;} jI++;renderJ();},2600);
+  renderJ();});
+renderJ();
+
+/* ---------- LAB 06 maslow ---------- */
+var MAS=[
+ {n:'Self-actualisation',c:'#c2264a',need:'Growth, using one\u2019s abilities fully.',eg:'Higher education, creative hobbies, personal-development courses.',link:'Nisha funds a village design workshop — the brand grows with her people.'},
+ {n:'Esteem',c:'#e85d8a',need:'Respect, status, recognition.',eg:'Branded clothes, jewellery, premium phones.',link:'The gift box makes the buyer look thoughtful back home.'},
+ {n:'Social / belonging',c:'#e8a020',need:'Love, friendship, acceptance.',eg:'Gifts, social media, family-oriented brands.',link:'Three bottles carried home as gifts — belonging in a bottle.'},
+ {n:'Safety',c:'#1f6fb2',need:'Security, health, stability.',eg:'Insurance, locks, helmets, savings schemes.',link:'"Is it safe?" — the hygiene note and FSSAI licence answer this need.'},
+ {n:'Physiological',c:'#2e7d43',need:'Food, water, shelter, clothing.',eg:'Food grains, packaged water, basic clothing.',link:'A cold, sweet drink at a hot bus stop. Start here.'}];
+var masI=4,masSvg=$('mk-mas');
+(function(){var s='',top=14,H=200,n=5;
+  for(var i=0;i<n;i++){var y0=top+H/n*i,y1=top+H/n*(i+1),w0=40+ (220/n)*i, w1=40+(220/n)*(i+1),cx=150;
+    s+='<path class="mk-layer" data-i="'+i+'" d="M'+(cx-w0/2)+' '+y0+' L'+(cx+w0/2)+' '+y0+' L'+(cx+w1/2)+' '+(y1-3)+' L'+(cx-w1/2)+' '+(y1-3)+' Z" fill="'+MAS[i].c+'"/>';
+    s+='<text x="'+cx+'" y="'+((y0+y1)/2+2)+'" text-anchor="middle" font-size="'+(i<2?9:10)+'" font-weight="700" fill="#fff" pointer-events="none">'+MAS[i].n+'</text>';}
+  masSvg.innerHTML=s;})();
+function renderMas(){masSvg.querySelectorAll('.mk-layer').forEach(function(p,i){p.classList.toggle('dim',i!==masI)});
+  var m=MAS[masI];
+  $('mk-mas-panel').innerHTML='<h4 style="color:'+m.c+'">'+m.n+'</h4><div class="mk-kv"><b>Need</b><span>'+m.need+'</span><b>Products</b><span>'+m.eg+'</span><b>Story link</b><span>'+m.link+'</span></div>';}
+masSvg.addEventListener('click',function(e){var p=e.target.closest('.mk-layer');if(!p)return;masI=+p.getAttribute('data-i');renderMas();});
+renderMas();
+
+/* ---------- LAB 07 flip cards ---------- */
+var FACT=[
+ {n:'Cultural',c:'linear-gradient(140deg,#0f5c63,#0b3d33)',s:'Widest influence',b:'<b>Culture</b> (festival gifting), <b>subculture</b> (Navratri vrat foods, Kumaoni tastes), <b>social class</b>. Deepest and broadest effect on buying.'},
+ {n:'Social',c:'linear-gradient(140deg,#1f6fb2,#154f86)',s:'Groups & family',b:'<b>Reference groups</b> — film stars = aspirational, the football captain = opinion leader. <b>Family</b>: initiator, influencer, decider, buyer, user. <b>Roles & status</b>.'},
+ {n:'Personal',c:'linear-gradient(140deg,#e8a020,#c07f10)',s:'Who the buyer is',b:'Age & life-cycle stage, occupation, economic situation, <b>lifestyle</b> (AIO), personality & self-concept. Toys → education loans → health insurance.'},
+ {n:'Psychological',c:'linear-gradient(140deg,#c2264a,#8e1330)',s:'Inside the mind',b:'<b>Motivation</b> (Maslow), <b>perception</b> (selective attention/distortion/retention), <b>learning</b> (drive–cue–response–reinforcement), <b>beliefs & attitudes</b> (herbal = safe).'}];
+var flipsBox=$('mk-flips');
+FACT.forEach(function(f){var d=document.createElement('div');d.className='mk-flip';d.setAttribute('role','button');d.setAttribute('tabindex','0');
+  d.innerHTML='<div class="in"><div class="f" style="background:'+f.c+'">'+f.n+'<small>'+f.s+' · tap to flip</small></div><div class="b mk-scroll">'+f.b+'</div></div>';
+  var tog=function(){d.classList.toggle('flip')};
+  d.addEventListener('click',tog);
+  d.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();tog();}});
+  flipsBox.appendChild(d);});
+
+/* ---------- LAB 08 STP ---------- */
+var SEGS=[
+ {k:'tour',n:'Tourists (gift buyers)',size:7,growth:8,fit:9,d:'Small bottles, gift packs, a name to remember.'},
+ {k:'stud',n:'College students',size:6,growth:5,fit:4,d:'Cheap, cold, quick. Low margins for a small kitchen.'},
+ {k:'city',n:'City gift-buying families',size:8,growth:9,fit:7,d:'Online gifting, hampers, delivery. Growing fast.'},
+ {k:'hotel',n:'Hotels & tour operators',size:5,growth:4,fit:3,d:'Bulk supply, steady but price-squeezed.'}];
+var sel={tour:true,city:true};
+var segBox=$('mk-segs');
+SEGS.forEach(function(s){var b=document.createElement('button');b.className='mk-seg';b.setAttribute('data-k',s.k);
+  b.innerHTML='<h4>'+s.n+'</h4><div class="bar">Size <i><b style="width:'+s.size*10+'%"></b></i></div><div class="bar">Growth <i><b style="width:'+s.growth*10+'%"></b></i></div><div class="bar">Fit <i><b style="width:'+s.fit*10+'%"></b></i></div><p class="mk-note" style="margin:6px 0 0">'+s.d+'</p>';
+  b.addEventListener('click',function(){sel[s.k]=!sel[s.k];renderSTP();});segBox.appendChild(b);});
+function renderSTP(){var keys=SEGS.filter(function(s){return sel[s.k]}).map(function(s){return s.k});
+  segBox.querySelectorAll('.mk-seg').forEach(function(b){b.classList.toggle('on',!!sel[b.getAttribute('data-k')])});
+  var v=$('mk-stp-strat'),h=$('mk-stp-hint'),n=keys.length,msg,cls='';
+  if(n===0){msg='No target chosen. A firm that aims at everyone pleases no one — pick at least one segment.';cls='bad';}
+  else if(n===1){msg='Concentrated (niche) marketing: one segment served deeply. Best for Nisha\u2019s limited money — but risky if that segment declines.';cls='';}
+  else if(n<4){msg='Differentiated marketing: a separate offer for each of '+n+' segments. Higher sales, higher costs — Titan\u2019s route (Tanishq, Fastrack, Sonata).';cls='';}
+  else{msg='All four segments = mass coverage. With a small kitchen and little money, Nisha would please no one. Undifferentiated suits salt and sugar, not squash.';cls='warn';}
+  v.textContent=msg; v.className='mk-verdict '+cls;
+  h.textContent='Evaluate on: size & growth · structural attractiveness (rivals, entry, substitutes) · company objectives & resources. Effective segments: M-A-S-D-A.';
+  W.querySelectorAll('#mk-stp-chips .mk-chip').forEach(function(c){c.classList.remove('on')});
+  var auto=n===1?'c':(n>1&&n<4)?'d':n===4?'u':'';
+  if(auto){var chip=W.querySelector('#mk-stp-chips [data-strat="'+auto+'"]');if(chip)chip.classList.add('on');}}
+var STRATS={u:{tour:true,stud:true,city:true,hotel:true},d:{tour:true,city:true},c:{tour:true},m:{city:true}};
+W.querySelectorAll('#mk-stp-chips .mk-chip').forEach(function(b){b.addEventListener('click',function(){
+  sel={};var s=STRATS[b.getAttribute('data-strat')];Object.keys(s).forEach(function(k){sel[k]=true});renderSTP();
+  W.querySelectorAll('#mk-stp-chips .mk-chip').forEach(function(c){c.classList.toggle('on',c===b)});
+  if(b.getAttribute('data-strat')==='m')$('mk-stp-hint').textContent='Micromarketing: tailor to one local area or individual — a tailor stitching to measure, or hampers personalised per family.';});});
+renderSTP();
+
+/* positioning builder */
+function renderPos(){var t=$('mk-pos-t').value,n=$('mk-pos-n').value,c=$('mk-pos-c').value,b=$('mk-pos-b').value;
+  $('mk-pos-out').innerHTML='“To <b>'+t+'</b> who <b>'+n+'</b>, <b>Pahadi Pitara</b> is a <b>'+c+'</b> that <b>'+b+'</b>.”';}
+['mk-pos-t','mk-pos-n','mk-pos-c','mk-pos-b'].forEach(function(id){$(id).addEventListener('change',renderPos)});
+renderPos();
+$('mk-pos-copy').addEventListener('click',function(){var txt=$('mk-pos-out').textContent;var btn=this;
+  function done(){btn.textContent='Copied ✓';setTimeout(function(){btn.textContent='Copy statement'},1500);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,done);}
+  else{var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(e){}document.body.removeChild(ta);done();}});
+
+/* ---------- LAB 09 perceptual map ---------- */
+var mapSvg=$('mk-map'),pp={x:120,y:70},drag=false;
+var COMP=[[262,52,'A','#0b3d33'],[100,60,'B','#2e7d43'],[82,168,'C','#1f6fb2'],[256,176,'D','#b3261e']];
+function mapBase(){var s='<rect x="24" y="16" width="276" height="192" rx="10" fill="#fffdf8" stroke="#e6ddcc"/>';
+  s+='<rect x="24" y="16" width="138" height="96" fill="rgba(46,125,67,.07)"/>';
+  s+='<line x1="162" y1="16" x2="162" y2="208" stroke="#e6ddcc" stroke-dasharray="4 4"/><line x1="24" y1="112" x2="300" y2="112" stroke="#e6ddcc" stroke-dasharray="4 4"/>';
+  s+='<text x="162" y="228" text-anchor="middle" font-size="10" font-weight="700" fill="#5b6b70">Price → low to high</text>';
+  s+='<text x="10" y="112" font-size="10" font-weight="700" fill="#5b6b70" transform="rotate(-90 10 112)" text-anchor="middle">Local feel / quality →</text>';
+  COMP.forEach(function(c){s+='<circle cx="'+c[0]+'" cy="'+c[1]+'" r="9" fill="'+c[3]+'" opacity=".85"/><text x="'+c[0]+'" y="'+(c[1]+3.5)+'" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">'+c[2]+'</text>';});
+  return s;}
+function renderMap(){var s=mapBase();
+  s+='<g class="mk-mapdot"><circle cx="'+pp.x+'" cy="'+pp.y+'" r="12" fill="#c2264a" stroke="#fff" stroke-width="3"/><circle cx="'+pp.x+'" cy="'+pp.y+'" r="19" fill="none" stroke="rgba(194,38,74,.4)" stroke-width="2"/><text x="'+pp.x+'" y="'+(pp.y-24)+'" text-anchor="middle" font-size="9" font-weight="800" fill="#c2264a">PAHADI PITARA</text></g>';
+  mapSvg.innerHTML=s;
+  var lowP=pp.x<162,hiF=pp.y<112,v=$('mk-map-verdict'),msg,cls='';
+  if(lowP&&hiF){msg='Value sweet spot: fair price, strong local feel — the empty space buyers value. This is Nisha\u2019s position in the book.';cls='';}
+  else if(!lowP&&hiF){msg='Premium lane: high price, high feel. Works only with a strong brand and quality proof (Brand A\u2019s territory).';cls='warn';}
+  else if(lowP&&!hiF){msg='Economy corner: cheap but forgettable. Thin margins and no reason to remember the name.';cls='warn';}
+  else{msg='Overpriced trap (Brand D): high price, weak feel — buyers walk away. Move left or raise the local feel.';cls='bad';}
+  v.textContent=msg;v.className='mk-verdict '+cls;}
+function mapPt(e){var r=mapSvg.getBoundingClientRect(),sc=320/r.width;
+  return {x:clamp((e.clientX-r.left)*sc,30,294),y:clamp((e.clientY-r.top)*sc,22,202)};}
+mapSvg.addEventListener('pointerdown',function(e){drag=true;mapSvg.setPointerCapture(e.pointerId);var p=mapPt(e);pp.x=p.x;pp.y=p.y;renderMap();e.preventDefault();});
+mapSvg.addEventListener('pointermove',function(e){if(!drag)return;var p=mapPt(e);pp.x=p.x;pp.y=p.y;renderMap();});
+mapSvg.addEventListener('pointerup',function(){drag=false});
+mapSvg.addEventListener('pointercancel',function(){drag=false});
+$('mk-map-reset').addEventListener('click',function(){pp={x:120,y:70};renderMap();});
+renderMap();
+
+/* ---------- LAB 10 onion ---------- */
+var ON=[
+ {n:'Augmented product',c:'#e8a020',d:'Extra services beyond the actual product.',e:'Gift box, free home delivery, WhatsApp helpline, free replacement for a loose cap. Competition is mostly here.'},
+ {n:'Actual product',c:'#e85d8a',d:'Features, quality, design, brand name and packaging.',e:'The 500 ml bottle, the recipe, the Pahadi Pitara name, the basket-and-flower mark, the label.'},
+ {n:'Core product',c:'#c2264a',d:'The basic benefit the buyer is really buying.',e:'Not a drink — a memory of the hills. For a phone: staying connected. For a hotel: rest and sleep.'}];
+var onI=2,onSvg=$('mk-onion');
+(function(){var s='',rs=[118,86,52];
+  for(var i=0;i<3;i++){s+='<circle class="mk-ring" data-i="'+i+'" cx="130" cy="130" r="'+rs[i]+'" fill="'+ON[i].c+'" opacity="'+(i===2?1:.9)+'" stroke="#fff" stroke-width="3"/>';}
+  s+='<text x="130" y="34" text-anchor="middle" font-size="10" font-weight="800" fill="#8a6410">AUGMENTED</text>';
+  s+='<text x="130" y="66" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">ACTUAL</text>';
+  s+='<text x="130" y="134" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">CORE</text>';
+  onSvg.innerHTML=s;})();
+function renderOn(){onSvg.querySelectorAll('.mk-ring').forEach(function(c,i){c.setAttribute('stroke',i===onI?'#1d2b30':'#fff');c.setAttribute('stroke-width',i===onI?4:3);});
+  var o=ON[onI];$('mk-on-panel').innerHTML='<h4 style="color:'+o.c+'">'+o.n+'</h4><p>'+o.d+'</p><div class="mk-storybox"><b>Pahadi Pitara:</b> '+o.e+'</div>';}
+onSvg.addEventListener('click',function(e){var c=e.target.closest('.mk-ring');if(!c)return;onI=+c.getAttribute('data-i');renderOn();});
+renderOn();
+
+/* ---------- LAB 11 dimensions ---------- */
+var dims={b:4,s:3,j:2,z:3,f:2},DLIM={b:[0,6],s:[0,6],j:[0,6],z:[1,4],f:[1,3]};
+function renderDims(){$('mk-d-b').textContent=dims.b;$('mk-d-s').textContent=dims.s;$('mk-d-j').textContent=dims.j;$('mk-d-z').textContent=dims.z;$('mk-d-f').textContent=dims.f;
+  $('mk-d-w').textContent=(dims.b>0)+(dims.s>0)+(dims.j>0);
+  $('mk-d-l').textContent=dims.b+dims.s+dims.j;
+  $('mk-d-d').textContent=dims.z*dims.f;}
+W.querySelectorAll('.mk-step [data-k]').forEach(function(b){b.addEventListener('click',function(){var k=b.getAttribute('data-k'),d=+b.getAttribute('data-d');
+  dims[k]=clamp(dims[k]+d,DLIM[k][0],DLIM[k][1]);renderDims();});});
+renderDims();
+
+/* ---------- LAB 12 PLC ---------- */
+var sm=function(a,b,t){t=clamp((t-a)/(b-a),0,1);return t*t*(3-2*t)};
+var plcSales=function(t){return 100/(1+Math.exp(-(t-28)/8))*(1-.6*sm(72,100,t))};
+var plcProfit=function(t){return 100/(1+Math.exp(-(t-34)/8))*(1-.75*sm(65,100,t))-22+6*sm(20,45,t)-10*sm(80,100,t)};
+var PLCST=[
+ {n:'Introduction',c:'#1f6fb2',s:'Low sales, negative profits, innovators only. Aim: awareness and trial. Basic product; skim or penetrate; selective outlets; heavy promotion with samples.'},
+ {n:'Growth',c:'#2e7d43',s:'Sales rise fast, rivals enter. Aim: market share. Improve quality, add features and outlets, keep or lower price, shift promotion to preference.'},
+ {n:'Maturity',c:'#e8a020',s:'Sales peak and flatten, price-cutting. Aim: profit while defending share. Modify the market (new users/uses), the product (flavour, pack), or the mix.'},
+ {n:'Decline',c:'#b3261e',s:'Sales and profits fall, laggards remain. Choose: maintain, harvest (cut costs, milk it), or drop the product.'}];
+var plcSvg=$('mk-plc-svg'),PL={l:46,r:14,t:16,b:30,w:640,h:260};
+var px=function(t){return PL.l+(PL.w-PL.l-PL.r)*t/100};
+var sy=function(v){return PL.t+(PL.h-PL.t-PL.b)*(1-v/110)};
+var py=function(v){return PL.t+(PL.h-PL.t-PL.b)*(1-(v+30)/140)};
+function plcPath(fn,map){var d='';for(var t=0;t<=100;t+=2){d+=(t===0?'M':'L')+px(t).toFixed(1)+' '+map(fn(t)).toFixed(1)+' ';}return d;}
+function renderPLC(){var t=+$('mk-plc-t').value,stage=t<25?0:t<50?1:t<75?2:3,st=PLCST[stage];
+  var s='<rect x="'+PL.l+'" y="'+PL.t+'" width="'+(PL.w-PL.l-PL.r)+'" height="'+(PL.h-PL.t-PL.b)+'" fill="#fffdf8" stroke="#e6ddcc" rx="8"/>';
+  var bandC=['rgba(31,111,178,.08)','rgba(46,125,67,.08)','rgba(232,160,32,.10)','rgba(179,38,30,.08)'];
+  for(var i=0;i<4;i++){s+='<rect x="'+px(i*25)+'" y="'+PL.t+'" width="'+(px(25)-px(0))+'" height="'+(PL.h-PL.t-PL.b)+'" fill="'+bandC[i]+'"'+(i===stage?' stroke="'+PLCST[i].c+'" stroke-width="2"':'')+'/>';
+    s+='<text x="'+px(i*25+12.5)+'" y="'+(PL.h-10)+'" text-anchor="middle" font-size="9" font-weight="700" fill="'+PLCST[i].c+'">'+PLCST[i].n+'</text>';}
+  s+='<line x1="'+PL.l+'" y1="'+py(0)+'" x2="'+(PL.w-PL.r)+'" y2="'+py(0)+'" stroke="#b3261e" stroke-dasharray="3 4" opacity=".5"/>';
+  s+='<text x="'+(PL.w-PL.r-4)+'" y="'+(py(0)-4)+'" text-anchor="end" font-size="8" fill="#b3261e">profit = 0</text>';
+  s+='<path d="'+plcPath(plcSales,sy)+'" fill="none" stroke="#0f5c63" stroke-width="3.5" stroke-linecap="round"/>';
+  s+='<path d="'+plcPath(plcProfit,py)+'" fill="none" stroke="#c2264a" stroke-width="3" stroke-dasharray="7 5" stroke-linecap="round"/>';
+  s+='<circle cx="'+px(t)+'" cy="'+sy(plcSales(t))+'" r="7" fill="#0f5c63" stroke="#fff" stroke-width="2.5"/>';
+  s+='<circle cx="'+px(t)+'" cy="'+py(plcProfit(t))+'" r="7" fill="#c2264a" stroke="#fff" stroke-width="2.5"/>';
+  s+='<line x1="'+px(t)+'" y1="'+PL.t+'" x2="'+px(t)+'" y2="'+(PL.h-PL.b)+'" stroke="#1d2b30" stroke-dasharray="2 4" opacity=".35"/>';
+  s+='<text x="'+(PL.l+8)+'" y="'+(PL.t+14)+'" font-size="10" font-weight="800" fill="#0f5c63">— Sales</text>';
+  s+='<text x="'+(PL.l+70)+'" y="'+(PL.t+14)+'" font-size="10" font-weight="800" fill="#c2264a">- - Profit</text>';
+  plcSvg.innerHTML=s;
+  $('mk-plc-stage').textContent=st.n;
+  $('mk-plc-sales-val').textContent=Math.round(plcSales(t)*30).toLocaleString('en-IN');
+  var pr=Math.round(plcProfit(t)*600);
+  var pv=$('mk-plc-profit-val');pv.textContent=(pr<0?'−':'')+inr(Math.abs(pr));pv.style.color=pr<0?'var(--danger)':'var(--leaf)';
+  $('mk-plc-strat').innerHTML='<h4 style="color:'+st.c+'">'+st.n+' strategy</h4><p>'+st.s+'</p>';
+  W.querySelectorAll('#mk-plc-chips .mk-chip').forEach(function(c,i){c.classList.toggle('on',i===stage)});
+  paintSlider($('mk-plc-t'));}
+$('mk-plc-t').addEventListener('input',renderPLC);
+W.querySelectorAll('#mk-plc-chips .mk-chip').forEach(function(c){c.addEventListener('click',function(){$('mk-plc-t').value=+c.getAttribute('data-stage')*25+12;renderPLC();});});
+renderPLC();
+
+/* ---------- LAB 13 break-even ---------- */
+var BE={fc:$('mk-b-fc'),vc:$('mk-b-vc'),p:$('mk-b-p'),vol:$('mk-b-vol'),tgt:30000};
+function renderBE(){var fc=+BE.fc.value,vc=+BE.vc.value,p=+BE.p.value,vol=+BE.vol.value;
+  ['fc','vc','p','vol'].forEach(function(k){paintSlider(BE[k])});
+  $('mk-o-fc').textContent=inr(fc);$('mk-o-vc').textContent=inr(vc);$('mk-o-bp').textContent=inr(p);$('mk-o-vol').textContent=vol.toLocaleString('en-IN');$('mk-o-tgt').textContent=inr(BE.tgt);
+  var c=p-vc,valid=c>0,bep=valid?fc/c:Infinity,tgt=valid?(fc+BE.tgt)/c:Infinity,profit=vol*c-fc;
+  $('mk-be-warn').classList.toggle('show',!valid);
+  $('mk-be-c').textContent=(c<0?'−':'')+inr(Math.abs(c));$('mk-be-c').style.color=valid?'var(--buransh)':'var(--danger)';
+  $('mk-be-bep').textContent=valid?Math.ceil(bep).toLocaleString('en-IN'):'—';
+  $('mk-be-tgt').textContent=valid?Math.ceil(tgt).toLocaleString('en-IN'):'—';
+  var bp=$('mk-be-profit');bp.textContent=(profit<0?'−':'+')+inr(Math.abs(profit));bp.classList.toggle('bad',profit<0);
+  var xmax=Math.min(6000,Math.max(3000,valid?Math.ceil(bep*1.35/500)*500:0,Math.ceil(vol*1.15/500)*500));
+  var ymax=Math.max(p*xmax,fc+vc*xmax)*1.06;
+  var L=58,R=14,T=16,B=34,Wd=640,H=320,iw=Wd-L-R,ih=H-T-B;
+  var X=function(u){return L+iw*u/xmax},Y=function(v){return T+ih*(1-v/ymax)};
+  var s='<rect x="'+L+'" y="'+T+'" width="'+iw+'" height="'+ih+'" fill="#fffdf8" stroke="#e6ddcc" rx="8"/>';
+  if(valid&&bep<xmax){
+    s+='<polygon points="'+X(bep)+','+Y(p*bep)+' '+X(xmax)+','+Y(p*xmax)+' '+X(xmax)+','+Y(fc+vc*xmax)+'" fill="rgba(46,125,67,.14)"/>';
+    s+='<polygon points="'+X(0)+','+Y(0)+' '+X(0)+','+Y(fc)+' '+X(bep)+','+Y(p*bep)+'" fill="rgba(179,38,30,.10)"/>';
+    s+='<text x="'+X(Math.min(xmax*.85,bep*1.2))+'" y="'+(Y(p*Math.min(xmax*.85,bep*1.2))-10)+'" font-size="10" font-weight="800" fill="#2e7d43">PROFIT ZONE</text>';
+    s+='<text x="'+X(bep*.35)+'" y="'+(Y(fc*.55))+'" font-size="10" font-weight="800" fill="#b3261e">LOSS ZONE</text>';}
+  for(var g=0;g<=4;g++){var gv=ymax*g/4;s+='<line x1="'+L+'" y1="'+Y(gv)+'" x2="'+(Wd-R)+'" y2="'+Y(gv)+'" stroke="#e6ddcc" stroke-dasharray="2 4"/><text x="'+(L-6)+'" y="'+(Y(gv)+3)+'" text-anchor="end" font-size="8" fill="#5b6b70">₹'+Math.round(gv/1000)+'k</text>';
+    var gu=xmax*g/4;s+='<text x="'+X(gu)+'" y="'+(H-12)+'" text-anchor="middle" font-size="8" fill="#5b6b70">'+Math.round(gu).toLocaleString('en-IN')+'</text>';}
+  s+='<line x1="'+L+'" y1="'+Y(fc)+'" x2="'+(Wd-R)+'" y2="'+Y(fc)+'" stroke="#8a6410" stroke-width="2" stroke-dasharray="6 4"/>';
+  s+='<text x="'+(Wd-R-4)+'" y="'+(Y(fc)-5)+'" text-anchor="end" font-size="9" font-weight="700" fill="#8a6410">Fixed '+inr(fc)+'</text>';
+  s+='<line x1="'+X(0)+'" y1="'+Y(fc)+'" x2="'+X(xmax)+'" y2="'+Y(fc+vc*xmax)+'" stroke="#b3261e" stroke-width="3" stroke-linecap="round"/>';
+  s+='<line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(xmax)+'" y2="'+Y(p*xmax)+'" stroke="#0f5c63" stroke-width="3" stroke-linecap="round"/>';
+  s+='<text x="'+(X(xmax)-4)+'" y="'+(Y(fc+vc*xmax)-6)+'" text-anchor="end" font-size="9" font-weight="800" fill="#b3261e">Total cost</text>';
+  s+='<text x="'+(X(xmax)-4)+'" y="'+(Y(p*xmax)+14)+'" text-anchor="end" font-size="9" font-weight="800" fill="#0f5c63">Revenue</text>';
+  if(valid&&bep<=xmax){s+='<line x1="'+X(bep)+'" y1="'+Y(p*bep)+'" x2="'+X(bep)+'" y2="'+Y(0)+'" stroke="#1d2b30" stroke-dasharray="3 4" opacity=".5"/>';
+    s+='<circle cx="'+X(bep)+'" cy="'+Y(p*bep)+'" r="8" fill="#e8a020" stroke="#fff" stroke-width="3"/>';
+    s+='<text x="'+X(bep)+'" y="'+(Y(0)+14)+'" text-anchor="middle" font-size="9" font-weight="800" fill="#8a6410">BEP '+Math.ceil(bep).toLocaleString('en-IN')+'</text>';}
+  if(vol<=xmax){s+='<line x1="'+X(vol)+'" y1="'+T+'" x2="'+X(vol)+'" y2="'+Y(0)+'" stroke="#c2264a" stroke-dasharray="2 3" opacity=".6"/>';
+    s+='<circle cx="'+X(vol)+'" cy="'+Y(p*vol)+'" r="5.5" fill="#c2264a" stroke="#fff" stroke-width="2"/>';
+    s+='<text x="'+X(vol)+'" y="'+(T+12)+'" text-anchor="middle" font-size="8" font-weight="800" fill="#c2264a">plan '+vol.toLocaleString('en-IN')+'</text>';}
+  $('mk-be-svg').innerHTML=s;}
+['fc','vc','p','vol'].forEach(function(k){BE[k].addEventListener('input',renderBE)});
+$('mk-b-tminus').addEventListener('click',function(){BE.tgt=clamp(BE.tgt-10000,0,100000);renderBE();});
+$('mk-b-tplus').addEventListener('click',function(){BE.tgt=clamp(BE.tgt+10000,0,100000);renderBE();});
+renderBE();
+
+/* ---------- LAB 14 skim/pen ---------- */
+var SP={
+ skim:{h:'Market-skimming — “skim the cream”',tag:'HIGH launch price',c:'var(--buransh)',rows:[['Aim','High profit per unit; recover costs quickly'],['Buyers','Quality-conscious, less price-sensitive'],['Volume','Low at launch'],['Competition','Attracts rivals (high profits)'],['Works when','Quality & image support the price; entry is hard'],['Example','New gadgets, luxury goods, Nisha\u2019s gift hamper']]},
+ pen:{h:'Market-penetration — “win the market”',tag:'LOW launch price',c:'var(--info)',rows:[['Aim','High volume and large market share'],['Buyers','Price-sensitive mass market'],['Volume','High at launch'],['Competition','Discourages rivals (thin profits)'],['Works when','Market is price-sensitive; costs fall with scale'],['Example','Reliance Jio (2016), new FMCG launch, Nisha\u2019s cookies']]}};
+function renderSP(mode){var d=SP[mode];
+  W.querySelectorAll('#mk-sp-btns .mk-chip').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-sp')===mode)});
+  var s='<h4 style="color:'+d.c+'">'+d.h+'</h4><span class="mk-uchip" style="background:'+d.c+'">'+d.tag+'</span><div class="mk-kv">';
+  d.rows.forEach(function(r){s+='<b>'+r[0]+'</b><span>'+r[1]+'</span>'});s+='</div>';
+  $('mk-sp-panel').innerHTML=s;}
+W.querySelectorAll('#mk-sp-btns .mk-chip').forEach(function(b){b.addEventListener('click',function(){renderSP(b.getAttribute('data-sp'))})});
+renderSP('skim');
+
+/* ---------- LAB 15 channels + push/pull ---------- */
+var CH=[
+ {nodes:['Producer','Consumer'],info:[['Control','Full'],['Reach','Narrow'],['Margin kept','100%'],['Example','Nisha\u2019s stall, a brand\u2019s own website (D2C)']]},
+ {nodes:['Producer','Retailer','Consumer'],info:[['Control','High'],['Reach','Medium'],['Margin kept','~75%'],['Example','Car dealerships; the tourist shop at the bus stop']]},
+ {nodes:['Producer','Wholesaler','Retailer','Consumer'],info:[['Control','Medium'],['Reach','Wide'],['Margin kept','~55%'],['Example','Soap and biscuits reaching kirana shops']]},
+ {nodes:['Producer','Agent','Wholesaler','Retailer','Consumer'],info:[['Control','Low'],['Reach','Widest'],['Margin kept','~40%'],['Example','FMCG into small towns via agents & super-stockists']]}];
+function renderCH(l){var d=CH[l];
+  W.querySelectorAll('#mk-ch-chips .mk-chip').forEach(function(b){b.classList.toggle('on',+b.getAttribute('data-l')===l)});
+  var f='';d.nodes.forEach(function(n,i){var cls=i===0?'':(i===d.nodes.length-1?'hot':'gold');
+    if(i>0)f+='<span class="mk-arrow"></span>';f+='<span class="mk-node '+cls+'">'+n+'</span>';});
+  $('mk-ch-flow').innerHTML=f;
+  var s='<div class="mk-kv">';d.info.forEach(function(r){s+='<b>'+r[0]+'</b><span>'+r[1]+'</span>'});s+='</div>';
+  $('mk-ch-info').innerHTML=s;}
+W.querySelectorAll('#mk-ch-chips .mk-chip').forEach(function(b){b.addEventListener('click',function(){renderCH(+b.getAttribute('data-l'))})});
+renderCH(1);
+function renderPP(mode){W.querySelectorAll('#mk-pp-btns .mk-chip').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-pp')===mode)});
+  if(mode==='push'){
+    $('mk-pp-flow').innerHTML='<span class="mk-node">Producer</span><span class="mk-arrow"></span><span class="mk-node gold">Dealer</span><span class="mk-arrow" style="opacity:.25;animation:none"></span><span class="mk-node hot" style="opacity:.55">Consumer</span>';
+    $('mk-pp-note').textContent='Push: promote to channel members — extra dealer margin, trade schemes, personal selling. Nisha gives shops a better margin.';
+  }else{
+    $('mk-pp-flow').innerHTML='<span class="mk-node" style="opacity:.55">Producer</span><span class="mk-arrow blue back"></span><span class="mk-node gold" style="opacity:.7">Dealer</span><span class="mk-arrow blue back"></span><span class="mk-node hot">Consumer asks</span>';
+    $('mk-pp-note').textContent='Pull: advertise to final consumers so they ask shops for the brand — Instagram makes tourists request Pahadi Pitara by name.';}}
+W.querySelectorAll('#mk-pp-btns .mk-chip').forEach(function(b){b.addEventListener('click',function(){renderPP(b.getAttribute('data-pp'))})});
+renderPP('push');
+
+/* ---------- QUIZ ARENA ---------- */
+var QUIZ=[
+ {u:1,q:'Marketing begins:',o:['After the sale','Before production and continues after the sale','Only in advertising','Only in the shop'],a:1,w:'It starts with studying customer needs and continues with after-sales service.'},
+ {u:1,q:'A want backed by the ability to pay is:',o:['Need','Utility','Demand','Satisfaction'],a:2,w:'Need → Want → Demand when buying power is added.'},
+ {u:1,q:'“Customers will not buy enough unless pushed” is the:',o:['Production concept','Selling concept','Product concept','Societal concept'],a:1,w:'Heavy selling and promotion — common for unsought goods like insurance.'},
+ {u:1,q:'Which philosophy balances profit, customer wants and society\u2019s well-being?',o:['Production','Product','Societal marketing','Selling'],a:2,w:'People, Planet, Profit. Example: ITC e-Choupal.'},
+ {u:1,q:'The 4Ps classification is credited to:',o:['Neil Borden','E. Jerome McCarthy','Booms & Bitner','Lauterborn'],a:1,w:'McCarthy (1960). Borden popularised the mix; Booms & Bitner added the 3 service Ps.'},
+ {u:1,q:'An empty hotel room tonight cannot be sold tomorrow. This shows:',o:['Intangibility','Inseparability','Perishability','Variability'],a:2,w:'Services cannot be stored; unused capacity is lost income.'},
+ {u:2,q:'The first stage of the buying decision process is:',o:['Need recognition','Information search','Purchase','Evaluation'],a:0,w:'Memory trick N-I-E-P-P.'},
+ {u:2,q:'Doubt after a costly purchase (“Did I choose right?”) is:',o:['Selective retention','Cognitive dissonance','Brand loyalty','Motivation'],a:1,w:'Festinger\u2019s term; reduce it with follow-up, warranty and service.'},
+ {u:2,q:'Culture, subculture and social class are:',o:['Personal factors','Cultural factors','Psychological factors','Social factors'],a:1,w:'They have the widest and deepest influence on buying.'},
+ {u:2,q:'In Maslow\u2019s hierarchy the highest need is:',o:['Esteem','Self-actualisation','Safety','Social'],a:1,w:'From bottom: physiological, safety, social, esteem, self-actualisation.'},
+ {u:2,q:'Which is NOT one of Kotler\u2019s four information sources?',o:['Personal','Public','Legal','Experiential'],a:2,w:'The four are personal, commercial, public, experiential.'},
+ {u:2,q:'A film star in an advertisement acts as a(n):',o:['Membership group','Primary group','Aspirational group','Secondary group'],a:2,w:'Buyers wish to be like them.'},
+ {u:3,q:'STP stands for:',o:['Selling, Testing, Pricing','Segmentation, Targeting, Positioning','Strategy, Target, Promotion','Segmentation, Testing, Promotion'],a:1,w:'Divide the market, choose the customers, place yourself in their minds.'},
+ {u:3,q:'Woollens in the hills, coolers in the plains is:',o:['Demographic','Psychographic','Behavioural','Geographic segmentation'],a:3,w:'Location and climate.'},
+ {u:3,q:'Lifestyle and personality are bases of:',o:['Geographic','Demographic','Psychographic','Behavioural segmentation'],a:2,w:'Same age and income can still mean different lifestyles.'},
+ {u:3,q:'Which is NOT a requirement of effective segmentation?',o:['Measurable','Accessible','Actionable','Inexpensive'],a:3,w:'The five are M-A-S-D-A: measurable, accessible, substantial, differentiable, actionable.'},
+ {u:3,q:'A coaching institute serving only one entrance exam follows:',o:['Concentrated marketing','Undifferentiated','Differentiated','Mass marketing'],a:0,w:'Niche focus suits limited resources; risk if the segment declines.'},
+ {u:3,q:'Positioning is the place a product occupies:',o:['On the shelf','In the buyer\u2019s mind vs competitors','In the warehouse','In the price list'],a:1,w:'Ries & Trout: what you do to the mind, not to the product.'},
+ {u:4,q:'The basic benefit the buyer is really buying is the:',o:['Augmented product','Core product','Actual product','Potential product'],a:1,w:'For a phone: staying connected.'},
+ {u:4,q:'Warranty and free installation belong to the:',o:['Core product','Actual product','Augmented product','Product line'],a:2,w:'Competition today is mostly at this level.'},
+ {u:4,q:'The number of product lines a company carries is its mix\u2019s:',o:['Length','Width','Depth','Consistency'],a:1,w:'W-L-D-C: width = lines, length = items, depth = versions.'},
+ {u:4,q:'A brand given legal protection by registration is a:',o:['Slogan','Trademark','Licence','Label'],a:1,w:'Trade Marks Act, 1999.'},
+ {u:4,q:'Low sales, negative profits, heavy promotion: which PLC stage?',o:['Growth','Introduction','Maturity','Decline'],a:1,w:'Aim: awareness and trial.'},
+ {u:4,q:'The cardboard box around a toothpaste tube is the:',o:['Primary package','Shipping package','Secondary package','Label'],a:2,w:'Primary = the tube itself; shipping = the bulk carton.'},
+ {u:5,q:'The only mix element that brings in revenue is:',o:['Product','Place','Price','Promotion'],a:2,w:'The other three involve costs.'},
+ {u:5,q:'The floor of the price is set by:',o:['Cost','Competitors\u2019 advertising','Perceived value','Taxes only'],a:0,w:'Perceived value is the ceiling.'},
+ {u:5,q:'Unit cost ₹80, mark-up 20% on sales. Price =',o:['₹96','₹100','₹104','₹90'],a:1,w:'80 ÷ (1 − 0.20) = 80 ÷ 0.80 = 100. Not 80 × 1.20!'},
+ {u:5,q:'Fixed ₹2,00,000, price ₹100, VC ₹60. Break-even =',o:['2,000 units','3,333 units','5,000 units','10,000 units'],a:2,w:'2,00,000 ÷ (100 − 60) = 5,000.'},
+ {u:5,q:'A channel with no intermediary is:',o:['One-level','Two-level','Three-level','Zero-level'],a:3,w:'Producer → Consumer directly.'},
+ {u:5,q:'A push strategy is aimed at:',o:['Final consumers','Competitors','Channel members','Government'],a:2,w:'Pull aims at consumers so they ask shops for the brand.'}];
+var QZ={filter:0,order:[],idx:0,score:0,streak:0,answered:false,wrong:[],done:false,best:0};
+try{QZ.best=+localStorage.getItem('mkMktBestV1')||0}catch(e){}
+function qzReset(order){QZ.order=order;QZ.idx=0;QZ.score=0;QZ.streak=0;QZ.answered=false;QZ.wrong=[];QZ.done=false;renderQuiz();}
+function qzBuild(){var o=[];QUIZ.forEach(function(q,i){if(!QZ.filter||q.u===QZ.filter)o.push(i)});return o;}
+function renderBest(){$('mk-qz-best').textContent=QZ.best?('Best '+QZ.best+'/'+QUIZ.length):'Best —';}
+function renderQuiz(){var box=$('mk-qz-box'),total=QZ.order.length;
+  $('mk-qz-score').textContent=QZ.score;$('mk-qz-streak').textContent=QZ.streak;renderBest();
+  $('mk-qz-count').textContent=QZ.done?'Finished':'Q '+(QZ.idx+1)+' / '+total;
+  $('mk-qz-bar').style.width=(QZ.done?100:QZ.idx/total*100)+'%';
+  if(QZ.done){var pct=QZ.score/total,grade=pct>=.9?'Outstanding — exam-ready!':pct>=.7?'Strong — revise the misses below.':pct>=.5?'Getting there — replay the weak unit.':'Rebuild the base — revisit the labs above.';
+    var circ=339.292,dash=(pct*circ).toFixed(1);
+    var s='<div class="mk-endwrap"><svg width="130" height="130" viewBox="0 0 130 130"><circle cx="65" cy="65" r="54" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="11"/><circle class="mk-ring" cx="65" cy="65" r="54" fill="none" stroke="url(#mkqg)" stroke-width="11" stroke-linecap="round" stroke-dasharray="'+dash+' '+circ+'"/><defs><linearGradient id="mkqg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8a020"/><stop offset="1" stop-color="#e85d8a"/></linearGradient></defs><text x="65" y="61" text-anchor="middle" font-size="24" font-weight="800" fill="#fff" font-family="Georgia">'+QZ.score+'/'+total+'</text><text x="65" y="80" text-anchor="middle" font-size="10" fill="#ffd98a">'+Math.round(pct*100)+'%</text></svg>';
+    s+='<div><h3 style="font-family:var(--disp);font-size:1.3rem">'+grade+'</h3><p style="color:#cfe6e0;font-size:.9rem">Best so far: '+QZ.best+'/'+QUIZ.length+'. Wrong answers: '+QZ.wrong.length+'.</p><div class="mk-navbtns"><button class="mk-btn hot" id="mk-qz-restart">Full restart</button>'+(QZ.wrong.length?'<button class="mk-btn cool" id="mk-qz-retry">Retry '+QZ.wrong.length+' wrong</button>':'')+'</div></div></div>';
+    if(QZ.wrong.length){s+='<ul class="mk-review mk-scroll">';QZ.wrong.forEach(function(i){var q=QUIZ[i];s+='<li><b>Unit '+q.u+' · </b>'+q.q+'<br>Your pick was wrong. <em>Correct: '+q.o[q.a]+'.</em> '+q.w+'</li>'});s+='</ul>';}
+    box.innerHTML=s;
+    $('mk-qz-restart').addEventListener('click',function(){qzReset(qzBuild())});
+    var rt=$('mk-qz-retry');if(rt)rt.addEventListener('click',function(){qzReset(QZ.wrong.slice())});
+    return;}
+  var qi=QZ.order[QZ.idx],q=QUIZ[qi];
+  var s='<div class="mk-qcard"><span class="mk-uchip" style="background:var(--petal)">UNIT '+q.u+'</span><div class="q" style="margin-top:8px">'+q.q+'</div><div class="mk-opts">';
+  q.o.forEach(function(o,i){s+='<button class="mk-opt" data-i="'+i+'"><span class="key">'+String.fromCharCode(65+i)+'</span><span>'+o+'</span></button>'});
+  s+='</div><div class="mk-why" id="mk-qz-why" style="display:none"></div><div class="mk-qfoot"><span class="mk-note" style="color:#9fc4bd">Keys 1–4 answer · Enter continues</span><button class="mk-btn hot" id="mk-qz-next" style="display:none">'+(QZ.idx+1===total?'See results →':'Next question →')+'</button></div></div>';
+  box.innerHTML=s;QZ.answered=false;
+  $('mk-qz-next').addEventListener('click',qzNext);}
+function qzAnswer(i){if(QZ.answered||QZ.done)return;QZ.answered=true;
+  var qi=QZ.order[QZ.idx],q=QUIZ[qi],opts=$('mk-qz-box').querySelectorAll('.mk-opt');
+  opts.forEach(function(b,j){b.disabled=true;if(j===q.a)b.classList.add('right');if(j===i&&i!==q.a)b.classList.add('wrong');});
+  var ok=i===q.a;
+  if(ok){QZ.score++;QZ.streak++;}else{QZ.streak=0;QZ.wrong.push(qi);}
+  $('mk-qz-score').textContent=QZ.score;$('mk-qz-streak').textContent=QZ.streak;
+  var why=$('mk-qz-why');why.style.display='block';
+  why.innerHTML=(ok?'<b style="color:#7ee2a0">Correct!</b> ':'<b style="color:#ff9d94">Not quite.</b> ')+q.w;
+  $('mk-qz-next').style.display='inline-flex';}
+function qzNext(){if(!QZ.answered)return;
+  if(QZ.idx+1>=QZ.order.length){QZ.done=true;
+    if(QZ.order.length===QUIZ.length&&QZ.score>QZ.best){QZ.best=QZ.score;try{localStorage.setItem('mkMktBestV1',String(QZ.best))}catch(e){}}
+    renderQuiz();return;}
+  QZ.idx++;renderQuiz();}
+$('mk-qz-box').addEventListener('click',function(e){var b=e.target.closest('.mk-opt');if(b)qzAnswer(+b.getAttribute('data-i'));});
+W.querySelectorAll('#mk-qz-chips .mk-chip').forEach(function(b){b.addEventListener('click',function(){
+  QZ.filter=+b.getAttribute('data-u');
+  W.querySelectorAll('#mk-qz-chips .mk-chip').forEach(function(c){c.classList.toggle('on',c===b)});
+  qzReset(qzBuild());});});
+document.addEventListener('keydown',function(e){
+  var tag=(e.target.tagName||'').toUpperCase();
+  if(tag==='INPUT'||tag==='SELECT'||tag==='TEXTAREA')return;
+  var qr=$('mk-quiz').getBoundingClientRect();
+  if(qr.bottom<0||qr.top>window.innerHeight)return;
+  if(!QZ.done&&!QZ.answered&&e.key>='1'&&e.key<='4'){qzAnswer(+e.key-1);}
+  else if(!QZ.done&&QZ.answered&&e.key==='Enter'&&tag!=='BUTTON'){qzNext();}});
+qzReset(qzBuild());
+
+})();
+</script>
