@@ -28,7 +28,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "docs")
 LEGACY = os.path.join(ROOT, "legacy")
 SITE = "https://wisrut.com"
-CONTACT = "amitjoshi.work@outlook.com"
+CONTACT = "wisdomroots@outlook.com"
 ADSENSE = "ca-pub-8690358052933130"
 POLICY_DATE = "24 November 2026"
 RAZORPAY_ID = "pl_T1cW8snj5ecBYS"
@@ -505,7 +505,7 @@ def build_notes(notes, tree, urls):
     else:
         body += "<p>No notes have been added yet.</p>"
     write("/notes/", shell("Find your notes %s Wisrut" % MIDDOT,
-                           "Pick your university, course and semester to find free college notes.",
+                           "Pick your university, course and semester to find free student notes.",
                            body, "/notes/", active="/notes/"))
 
 
@@ -516,7 +516,7 @@ def build_home(notes):
     body = "<h1>Free notes and current affairs for students</h1>"
     body += '<p class="lead">Notes that follow your syllabus, shared by teachers. Today%ss news in one place.</p>' % RSQUO
     body += '<div class="cards">'
-    body += '<a class="card" href="/notes/"><strong>College notes</strong><span>Find your syllabus</span></a>'
+    body += '<a class="card" href="/notes/"><strong>Student notes</strong><span>Find your syllabus</span></a>'
     body += '<a class="card" href="/current-affairs/"><strong>Current affairs</strong><span>Daily brief for exam preparation</span></a>'
     body += '<a class="card" href="/search/"><strong>Search</strong><span>Ask a question, get an AI answer</span></a>'
     body += "</div>"
