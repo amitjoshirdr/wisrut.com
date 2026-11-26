@@ -538,7 +538,7 @@ def build_notes(notes, tree, urls):
 # ---------------------------------------------------------------------------
 def build_home(notes):
     body = "<h1>Free notes and current affairs for students</h1>"
-    body += '<p class="lead">Notes that follow your syllabus, shared by teachers. Today%ss news in one place.</p>' % RSQUO
+    body += '<p class="lead">Teacher-written notes that follow your syllabus. Today%ss news in one place.</p>' % RSQUO
     body += '<div class="cards">'
     body += '<a class="card" href="/notes/"><strong>Student notes</strong><span>Find your syllabus</span></a>'
     body += '<a class="card" href="/current-affairs/"><strong>Current affairs</strong><span>Daily brief for exam preparation</span></a>'
@@ -554,7 +554,7 @@ def build_home(notes):
                      % (e(n["path"]), e(n["title"]), e(updated_label(n))))
         body += '<ul class="list">%s</ul>' % rows
     write("/", shell("Wisrut %s Free notes and current affairs for students" % MIDDOT,
-                     "Free notes and current affairs for college students in India.",
+                     "Free teacher-written notes that follow your syllabus, and daily current affairs, for college students in India.",
                      body, "/"))
 
 
