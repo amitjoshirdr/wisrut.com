@@ -29,6 +29,8 @@ OUT = os.path.join(ROOT, "docs")
 LEGACY = os.path.join(ROOT, "legacy")
 SITE = "https://wisrut.com"
 CONTACT = "wisdomroots@outlook.com"
+TEACHER = "Mr Amit Joshi"
+TEACHER_ROLE = "Assistant Professor"
 ADSENSE = "ca-pub-8690358052933130"
 POLICY_DATE = "24 November 2026"
 RAZORPAY_ID = "pl_T1cW8snj5ecBYS"
@@ -349,6 +351,25 @@ def drive_preview(link):
             'src="https://drive.google.com/file/d/%s/preview"></iframe>' % e(m.group(1)))
 
 
+def clean_body(raw, name):
+    """Return the HTML to show inside <div class="body">.
+
+    A plain fragment is used as it is. A complete HTML page is reduced to its
+    <body>: its own <style>, <script>, comments and first <h1> are dropped,
+    because the site page already supplies the header, stylesheet and title.
+    """
+    if not re.search(r"<(?:html|body)\b", raw, re.I):
+        return raw
+    m = re.search(r"<body[^>]*>(.*)</body>", raw, re.S | re.I)
+    body = m.group(1) if m else raw
+    body = re.sub(r"<!--.*?-->", "", body, flags=re.S)
+    body = re.sub(r"<(script|style)\b.*?</\1>", "", body, flags=re.S | re.I)
+    body = re.sub(r"<h1\b.*?</h1>\s*", "", body, count=1, flags=re.S | re.I)
+    print("NOTE: %s is a full HTML page; using only its body "
+          "(its own style, scripts, comments and first h1 are dropped)." % name)
+    return body.strip()
+
+
 def note_page(n, sem_path, subj_path, siblings, idx, urls):
     uni, course, sem, subj = n["university"], n["course"], n["semester"], n["subject"]
     parts = [crumbs([
@@ -357,7 +378,10 @@ def note_page(n, sem_path, subj_path, siblings, idx, urls):
     ])]
     parts.append("<h1>%s</h1>" % e(n["title"]))
 
-    meta = "By %s" % e(n.get("author") or "Wisrut")
+    author = n.get("author") or "Wisrut"
+    if author.strip().lower() in ("amit joshi", "mr amit joshi"):
+        author = "%s, %s" % (TEACHER, TEACHER_ROLE)
+    meta = "By %s" % e(author)
     if n.get("updated"):
         meta += " %s Updated %s" % (MIDDOT, e(n["updated"]))
     parts.append('<p class="meta">%s</p>' % meta)
@@ -376,8 +400,8 @@ def note_page(n, sem_path, subj_path, siblings, idx, urls):
     if n.get("body_file"):
         bpath = os.path.join(ROOT, "content", os.path.basename(n["body_file"]))
         if os.path.isfile(bpath):
-            with open(bpath, encoding="utf-8") as f:
-                parts.append('<div class="body">%s</div>' % f.read())
+            with open(bpath, encoding="utf-8-sig") as f:
+                parts.append('<div class="body">%s</div>' % clean_body(f.read(), n["body_file"]))
         else:
             print("WARNING: body_file %r for note %r was not found in content/"
                   % (n["body_file"], n["title"]))
@@ -520,6 +544,7 @@ def build_home(notes):
     body += '<a class="card" href="/current-affairs/"><strong>Current affairs</strong><span>Daily brief for exam preparation</span></a>'
     body += '<a class="card" href="/search/"><strong>Search</strong><span>Ask a question, get an AI answer</span></a>'
     body += "</div>"
+    body += '<p class="meta">Notes by %s, %s.</p>' % (e(TEACHER), e(TEACHER_ROLE.lower()))
     recent = sorted(notes, key=lambda n: n.get("updated", ""), reverse=True)[:6]
     if recent:
         body += "<h2>Recently updated notes</h2>"
@@ -535,7 +560,7 @@ def build_home(notes):
 
 def build_info():
     # About
-    inner = "<p>Wisrut is a free study site for college students in India. It is run by Amit Joshi.</p>"
+    inner = "<p>Wisrut is a free study site for college students in India. It is run by %s, %s, who writes the notes.</p>" % (e(TEACHER), e(TEACHER_ROLE.lower()))
     inner += "<h2>How the notes are made</h2><ul>"
     for line in (
         "Notes are written or chosen by teachers, in their own words.",
