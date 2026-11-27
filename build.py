@@ -377,16 +377,36 @@ _COPIED = set()
 def content_path(body_file):
     """Return (absolute path, folder inside content/) for a body_file value.
 
-    body_file may be a plain name (guide.html) or a path inside content/
-    (Marketing/Marketing.html). Anything that leaves content/ is refused.
+    body_file may be a plain name (guide.html), a name without .html, or a
+    path inside content/ (Marketing/Marketing.html). If the exact path is not
+    found, the build looks for one file with that name anywhere under content/
+    (capital letters ignored). Anything that leaves content/ is refused.
     """
     rel = body_file.strip().replace("\\", "/").lstrip("/")
     root = os.path.realpath(os.path.join(ROOT, "content"))
-    full = os.path.realpath(os.path.join(root, rel))
-    if full != root and not full.startswith(root + os.sep):
-        return None, ""
-    folder = os.path.dirname(rel)
-    return full, folder
+
+    def inside(p):
+        return p == root or p.startswith(root + os.sep)
+
+    candidates = [rel] if rel.lower().endswith((".html", ".htm")) else [rel + ".html", rel + ".htm", rel]
+    for c in candidates:
+        full = os.path.realpath(os.path.join(root, c))
+        if inside(full) and os.path.isfile(full):
+            return full, os.path.dirname(os.path.relpath(full, root).replace(os.sep, "/"))
+
+    wanted = [os.path.basename(c).lower() for c in candidates]
+    found = []
+    for dirpath, _dirs, files in os.walk(root):
+        for f in files:
+            if f.lower() in wanted:
+                found.append(os.path.join(dirpath, f))
+    if len(found) == 1:
+        relfound = os.path.relpath(found[0], root).replace(os.sep, "/")
+        print("NOTE: body_file %r was found as content/%s. Put that full path in notes.csv to be exact." % (body_file, relfound))
+        return os.path.realpath(found[0]), os.path.dirname(relfound)
+    if len(found) > 1:
+        print("WARNING: body_file %r matches more than one file in content/. Write the full path, for example Marketing/Marketing.html." % body_file)
+    return None, ""
 
 
 REL_REF = re.compile(r"""\b(src|href)\s*=\s*(["'])([^"']*)\2""", re.I)
@@ -730,6 +750,20 @@ def write_support_files(urls):
     write("/sitemap.xml", xml)
 
 
+_WARNINGS = []
+
+
+def _print_counting(*args, **kw):
+    text = " ".join(str(x) for x in args)
+    if text.startswith("WARNING"):
+        _WARNINGS.append(text)
+    _real_print(*args, **kw)
+
+
+_real_print = print
+print = _print_counting
+
+
 def main():
     shutil.rmtree(OUT, ignore_errors=True)
     os.makedirs(OUT)
@@ -754,6 +788,11 @@ def main():
     write_support_files(urls)
 
     print("Built %d notes and %d pages into docs." % (len(notes), PAGE_COUNT))
+    if _WARNINGS:
+        print("")
+        print("ATTENTION: %d warning(s). Something may be missing from the site:" % len(_WARNINGS))
+        for w in _WARNINGS:
+            print("  - " + w)
 
 
 if __name__ == "__main__":
