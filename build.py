@@ -408,10 +408,11 @@ def clean_body(raw, name):
     """Return the HTML to show inside <div class="body">.
 
     A plain fragment is used as it is. A complete HTML page is reduced to its
-    <body>. Its <script> blocks, comments and first <h1> are dropped, because
-    the site page already supplies the header and the title. Its own CSS is
-    kept, but limited to the note body (see scope_css), so diagrams and boxes
-    keep their colours without changing the rest of the site.
+    <body>. Nothing in the body is removed: its scripts, its elements and its
+    first <h1> stay (the <h1> becomes an <h2>, because the site page already has
+    one h1, the note title). Only HTML comments are dropped. Its own CSS is kept,
+    limited to the note body (see scope_css), so diagrams and boxes keep their
+    colours without changing the rest of the site.
     """
     if not re.search(r"<(?:html|body)\b", raw, re.I):
         return raw
@@ -419,13 +420,20 @@ def clean_body(raw, name):
     styles = re.findall(r"<style\b[^>]*>(.*?)</style>", raw, re.S | re.I)
     m = re.search(r"<body[^>]*>(.*)</body>", raw, re.S | re.I)
     body = m.group(1) if m else raw
-    body = re.sub(r"<(script|style)\b.*?</\1>", "", body, flags=re.S | re.I)
-    body = re.sub(r"<h1\b.*?</h1>\s*", "", body, count=1, flags=re.S | re.I)
+    body = re.sub(r"<style\b.*?</style>", "", body, flags=re.S | re.I)
+    body = re.sub(r"<h1\b([^>]*)>(.*?)</h1>", r'<h2 class="guide-title"\1>\2</h2>', body, count=1, flags=re.S | re.I)
+    for src in re.findall(r"<script\b[^>]*\bsrc\s*=\s*[\"']?(https?:[^\"' >]+)", body, re.I):
+        print("WARNING: %s loads a script from %s. The site rules ask for no external JavaScript." % (name, src))
+    mb = re.search(r"<body\b", raw, re.I)
+    if mb:
+        head_scripts = re.findall(r"<script\b.*?</script>", raw[:mb.start()], re.S | re.I)
+        if head_scripts:
+            body += "\n" + "\n".join(head_scripts)
     css = scope_css("\n".join(styles))
     if re.search(r"gradient|@keyframes", "\n".join(styles), re.I):
         print("WARNING: %s uses a gradient or animation in its CSS; the site rules ask for flat colours." % name)
     print("NOTE: %s is a full HTML page; using its body and its own CSS limited to the note "
-          "(scripts, comments and the first h1 are dropped)." % name)
+          "(its scripts stay; comments are dropped; the first h1 becomes an h2)." % name)
     if css:
         body = "<style>\n%s\n</style>\n%s" % (css, body)
     return body.strip()
