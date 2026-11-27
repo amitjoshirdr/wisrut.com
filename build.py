@@ -351,22 +351,83 @@ def drive_preview(link):
             'src="https://drive.google.com/file/d/%s/preview"></iframe>' % e(m.group(1)))
 
 
+def _split_blocks(css):
+    """Split CSS text into (prelude, block) pairs at the top level."""
+    out, i, n = [], 0, len(css)
+    while i < n:
+        k = css.find("{", i)
+        if k < 0:
+            break
+        depth, j = 1, k + 1
+        while j < n and depth:
+            depth += {"{": 1, "}": -1}.get(css[j], 0)
+            j += 1
+        out.append((css[i:k].strip(), css[k + 1:j - 1]))
+        i = j
+    return out
+
+
+def scope_css(css):
+    """Limit a page's own CSS to the note body, so it cannot restyle the site.
+
+    Rules for html, body and :root keep only custom properties (--name).
+    Dark-mode rules, animations, transitions, @import and @font-face are dropped,
+    because the site has one light theme and no web fonts.
+    """
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    css = re.sub(r"@(?:import|charset)[^;]*;", "", css)
+    out = []
+    for prelude, block in _split_blocks(css):
+        if prelude.startswith("@"):
+            if prelude.lower().startswith("@media") and "prefers-color-scheme" not in prelude \
+                    and "print" not in prelude.lower():
+                inner = scope_css(block)
+                if inner:
+                    out.append("%s{%s}" % (prelude, inner))
+            continue
+        decls = [d.strip() for d in block.split(";") if d.strip()]
+        decls = [d for d in decls if not re.match(r"(animation|transition)", d, re.I)]
+        sels = []
+        for sel in prelude.split(","):
+            sel = sel.strip()
+            if not sel or sel == "*":
+                continue
+            if re.fullmatch(r"(?:html|body|:root)", sel, re.I):
+                custom = [d for d in decls if d.startswith("--")]
+                if custom:
+                    out.append(".body{%s}" % ";".join(custom))
+                continue
+            sel = re.sub(r"^(?:html|body)\s+", "", sel, flags=re.I)
+            sels.append(".body " + sel)
+        if sels and decls:
+            out.append("%s{%s}" % (",".join(sels), ";".join(decls)))
+    return "\n".join(out)
+
+
 def clean_body(raw, name):
     """Return the HTML to show inside <div class="body">.
 
     A plain fragment is used as it is. A complete HTML page is reduced to its
-    <body>: its own <style>, <script>, comments and first <h1> are dropped,
-    because the site page already supplies the header, stylesheet and title.
+    <body>. Its <script> blocks, comments and first <h1> are dropped, because
+    the site page already supplies the header and the title. Its own CSS is
+    kept, but limited to the note body (see scope_css), so diagrams and boxes
+    keep their colours without changing the rest of the site.
     """
     if not re.search(r"<(?:html|body)\b", raw, re.I):
         return raw
+    raw = re.sub(r"<!--.*?-->", "", raw, flags=re.S)
+    styles = re.findall(r"<style\b[^>]*>(.*?)</style>", raw, re.S | re.I)
     m = re.search(r"<body[^>]*>(.*)</body>", raw, re.S | re.I)
     body = m.group(1) if m else raw
-    body = re.sub(r"<!--.*?-->", "", body, flags=re.S)
     body = re.sub(r"<(script|style)\b.*?</\1>", "", body, flags=re.S | re.I)
     body = re.sub(r"<h1\b.*?</h1>\s*", "", body, count=1, flags=re.S | re.I)
-    print("NOTE: %s is a full HTML page; using only its body "
-          "(its own style, scripts, comments and first h1 are dropped)." % name)
+    css = scope_css("\n".join(styles))
+    if re.search(r"gradient|@keyframes", "\n".join(styles), re.I):
+        print("WARNING: %s uses a gradient or animation in its CSS; the site rules ask for flat colours." % name)
+    print("NOTE: %s is a full HTML page; using its body and its own CSS limited to the note "
+          "(scripts, comments and the first h1 are dropped)." % name)
+    if css:
+        body = "<style>\n%s\n</style>\n%s" % (css, body)
     return body.strip()
 
 
