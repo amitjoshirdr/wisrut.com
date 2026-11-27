@@ -370,6 +370,65 @@ def clean_body(raw, name):
     return body.strip()
 
 
+BIG_FILE_BYTES = 400 * 1024
+_COPIED = set()
+
+
+def content_path(body_file):
+    """Return (absolute path, folder inside content/) for a body_file value.
+
+    body_file may be a plain name (guide.html) or a path inside content/
+    (Marketing/Marketing.html). Anything that leaves content/ is refused.
+    """
+    rel = body_file.strip().replace("\\", "/").lstrip("/")
+    root = os.path.realpath(os.path.join(ROOT, "content"))
+    full = os.path.realpath(os.path.join(root, rel))
+    if full != root and not full.startswith(root + os.sep):
+        return None, ""
+    folder = os.path.dirname(rel)
+    return full, folder
+
+
+REL_REF = re.compile(r"""\b(src|href)\s*=\s*(["'])([^"']*)\2""", re.I)
+SKIP_REF = ("/", "#", "http://", "https://", "mailto:", "tel:", "data:", "javascript:")
+
+
+def publish_assets(body, folder, note_title):
+    """Copy files that a body refers to by a relative path (images and so on)
+    to docs/files/<folder>/ and point the references there.
+
+    A reference such as src="fig1.png" or src="images/fig1.png" is looked up
+    next to the body file, inside content/. Missing files print a warning.
+    """
+    root = os.path.realpath(os.path.join(ROOT, "content"))
+    base = os.path.realpath(os.path.join(root, folder))
+
+    def fix(m):
+        attr, quote, val = m.group(1), m.group(2), m.group(3).strip()
+        if not val or val.lower().startswith(SKIP_REF):
+            return m.group(0)
+        name = re.split(r"[?#]", val)[0].replace("\\", "/")
+        src = os.path.realpath(os.path.join(base, name))
+        inside = src.startswith(root + os.sep)
+        is_page = name.lower().endswith((".html", ".htm"))
+        if not inside or not os.path.isfile(src) or is_page:
+            if attr.lower() == "src":
+                print("WARNING: %r refers to %r, which was not found next to its body file." % (note_title, val))
+            return m.group(0)
+        rel = os.path.relpath(src, root).replace(os.sep, "/")
+        dest = os.path.join(OUT, "files", *rel.split("/"))
+        if dest not in _COPIED:
+            os.makedirs(os.path.dirname(dest), exist_ok=True)
+            shutil.copyfile(src, dest)
+            _COPIED.add(dest)
+            if os.path.getsize(src) > BIG_FILE_BYTES:
+                print("WARNING: %s is %d KB. Large images are slow on mobile data; try under 400 KB."
+                      % (rel, os.path.getsize(src) // 1024))
+        return "%s=%s/files/%s%s" % (attr, quote, rel, quote)
+
+    return REL_REF.sub(fix, body)
+
+
 def note_page(n, sem_path, subj_path, siblings, idx, urls):
     uni, course, sem, subj = n["university"], n["course"], n["semester"], n["subject"]
     parts = [crumbs([
@@ -398,10 +457,12 @@ def note_page(n, sem_path, subj_path, siblings, idx, urls):
                      % RSQUO)
 
     if n.get("body_file"):
-        bpath = os.path.join(ROOT, "content", os.path.basename(n["body_file"]))
-        if os.path.isfile(bpath):
+        bpath, folder = content_path(n["body_file"])
+        if bpath and os.path.isfile(bpath):
             with open(bpath, encoding="utf-8-sig") as f:
-                parts.append('<div class="body">%s</div>' % clean_body(f.read(), n["body_file"]))
+                body_html = clean_body(f.read(), n["body_file"])
+            body_html = publish_assets(body_html, folder, n["title"])
+            parts.append('<div class="body">%s</div>' % body_html)
         else:
             print("WARNING: body_file %r for note %r was not found in content/"
                   % (n["body_file"], n["title"]))
