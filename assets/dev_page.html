@@ -1,0 +1,63 @@
+<article class="doc dev">
+<h1>Developers</h1>
+<noscript><p class="dev-bad">This page needs JavaScript.</p></noscript>
+
+<div id="dev-app" hidden>
+<p class="lead">Private tools for the site owner.</p>
+<p id="dev-msg" class="meta" role="status"></p>
+
+<div class="dev-tabs" role="group" aria-label="Tool">
+<button type="button" class="btn" id="dev-tab-note" aria-pressed="true">Draft a note</button>
+<button type="button" class="btn" id="dev-tab-search" aria-pressed="false">Free search</button>
+<button type="button" class="btn" id="dev-tab-free" aria-pressed="false">Build anything</button>
+</div>
+
+<section id="dev-panel-note">
+<h2>Draft a note</h2>
+<p class="meta">Makes a study guide as one HTML file. Paste the syllabus: the guide follows only that. Check every fact before you publish.</p>
+<div class="pick"><label for="n-univ">University</label><input id="n-univ" type="text" value="Kumaon University">
+<label for="n-course">Course</label><input id="n-course" type="text" value="B.Com (H)">
+<label for="n-sem">Semester</label><input id="n-sem" type="text" value="Semester 1">
+<label for="n-subject">Subject</label><input id="n-subject" type="text">
+<label for="n-unit">Unit or topic</label><input id="n-unit" type="text">
+<label for="n-lang">Language</label>
+<select id="n-lang"><option>Simple English</option><option>Simple English with Hindi key terms in brackets</option></select>
+<label for="n-pattern">Exam pattern</label><input id="n-pattern" type="text" value="2, 5 and 10 marks">
+<label for="n-syllabus">Syllabus text (required)</label><textarea id="n-syllabus" rows="6"></textarea>
+<label for="n-pyq">Previous-year questions (optional)</label><textarea id="n-pyq" rows="4"></textarea>
+<label for="n-resources">Books or other material (optional)</label><textarea id="n-resources" rows="3"></textarea>
+<label for="n-extra">Anything else (optional)</label><textarea id="n-extra" rows="2"></textarea>
+<button type="button" class="btn dev-run" id="dev-run-note">Draft the note</button></div>
+</section>
+
+<section id="dev-panel-search" hidden>
+<h2>Free search</h2>
+<p class="meta">Searches the web and writes an answer from the results, with sources.</p>
+<div class="pick"><label for="s-query">Your question</label><textarea id="s-query" rows="3"></textarea>
+<button type="button" class="btn dev-run" id="dev-run-search">Search</button></div>
+</section>
+
+<section id="dev-panel-free" hidden>
+<h2>Build anything</h2>
+<p class="meta">Describe a web page, code, a handout or any text. Say what you want in plain words.</p>
+<div class="pick"><label for="f-kind">What to make</label>
+<select id="f-kind"><option>A complete HTML page</option><option>Code</option><option>Plain text</option></select>
+<label for="f-request">Your request</label><textarea id="f-request" rows="6"></textarea>
+<button type="button" class="btn dev-run" id="dev-run-free">Make it</button></div>
+</section>
+
+<section id="dev-out" hidden>
+<h2>Result</h2>
+<p id="dev-status" class="meta"></p>
+<div id="dev-sources"></div>
+<textarea id="dev-text" rows="14" readonly aria-label="Result text"></textarea>
+<div class="dev-actions">
+<button type="button" class="btn" id="dev-copy">Copy</button>
+<button type="button" class="btn" id="dev-download">Download</button>
+<button type="button" class="btn" id="dev-preview-btn">Preview</button>
+<button type="button" class="btn" id="dev-print">Print or save as PDF</button>
+</div>
+<iframe id="dev-preview" class="preview" sandbox="allow-scripts allow-modals" title="Preview" hidden></iframe>
+</section>
+</div>
+</article>

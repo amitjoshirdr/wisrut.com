@@ -16,16 +16,12 @@
 <nav><a href="/notes/">Notes</a><a href="/current-affairs/">Current affairs</a><a href="/search/">Search</a><a href="/support/">Support</a></nav>
 </header>
 <main>
-
 <article class="doc dev">
 <h1>Developers</h1>
-<p class="lead">Private tools for the site owner. They need the developer password.</p>
+<noscript><p class="dev-bad">This page needs JavaScript.</p></noscript>
 
-<div class="pick">
-<label for="dev-password">Developer password</label>
-<input id="dev-password" type="password" autocomplete="current-password">
-<label class="dev-check"><input id="dev-keep" type="checkbox" checked> Remember it until I close this tab</label>
-</div>
+<div id="dev-app" hidden>
+<p class="lead">Private tools for the site owner.</p>
 <p id="dev-msg" class="meta" role="status"></p>
 
 <div class="dev-tabs" role="group" aria-label="Tool">
@@ -81,31 +77,55 @@
 </div>
 <iframe id="dev-preview" class="preview" sandbox="allow-scripts allow-modals" title="Preview" hidden></iframe>
 </section>
+</div>
 </article>
-<script>
+<script src="/dev-gate.js"></script><script>/* Developers page script. The Worker address is filled in by build.py. */
 (function () {
-  var API = "https://margo-api.amitjoshirdr.workers.dev/api/dev";
-  var KEY = "wisrutdevpassword";
-  var tool = "note";
+  var PW = "";
   var lastText = "";
+  var gate = window.wisrutGate;
   var $ = function (id) { return document.getElementById(id); };
 
-  function store(v) { try { if (v === null) sessionStorage.removeItem(KEY); else sessionStorage.setItem(KEY, v); } catch (e) {} }
-  function load() { try { return sessionStorage.getItem(KEY) || ""; } catch (e) { return ""; } }
+  function post(path, obj, timeoutMs) {
+    var ctl = (typeof AbortController !== "undefined") ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, timeoutMs || 30000);
+    return fetch("https://margo-api.amitjoshirdr.workers.dev/api/" + path, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(obj), signal: ctl ? ctl.signal : undefined
+    }).then(function (res) {
+      clearTimeout(timer);
+      return res.json().catch(function () { return {}; }).then(function (data) { return { status: res.status, ok: res.ok, data: data }; });
+    }, function (err) { clearTimeout(timer); throw err; });
+  }
+
+  /* ---------- the password dialog ---------- */
+  function home() { window.location.href = "/"; }
+  function showApp(password) { PW = password; $("dev-app").hidden = false; }
+  function ask(message) {
+    PW = ""; $("dev-app").hidden = true;
+    gate.open({ onSuccess: showApp, onCancel: home, message: message });
+  }
+
+  if (!gate) {
+    $("dev-msg").textContent = "The password dialog did not load. Reload the page.";
+  } else if (gate.saved()) {
+    gate.verify(gate.saved()).then(function (x) {
+      if (x.ok) showApp(gate.saved()); else { gate.store(null); ask(""); }
+    }).catch(function () { ask("Could not reach the server. Enter the password to try again."); });
+  } else {
+    ask("");
+  }
+
+  /* ---------- the tools ---------- */
   function say(t, bad) { var m = $("dev-msg"); m.textContent = t; m.className = bad ? "dev-bad" : "meta"; }
 
-  var pw = $("dev-password");
-  pw.value = load();
-
+  var names = ["note", "search", "free"];
   function showTool(name) {
-    tool = name;
-    var names = ["note", "search", "free"];
     for (var i = 0; i < names.length; i++) {
       $("dev-panel-" + names[i]).hidden = names[i] !== name;
       $("dev-tab-" + names[i]).setAttribute("aria-pressed", names[i] === name ? "true" : "false");
     }
   }
-  var names = ["note", "search", "free"];
   names.forEach(function (n) { $("dev-tab-" + n).addEventListener("click", function () { showTool(n); }); });
   showTool("note");
 
@@ -158,27 +178,17 @@
   }
 
   function run(mode, prompt, maxTokens) {
-    if (!pw.value) { say("Enter the developer password first.", true); pw.focus(); return; }
     if (!prompt) { say(mode === "note" ? "Paste the syllabus text first. The guide must follow your syllabus." : "Write your request first.", true); return; }
-    store($("dev-keep").checked ? pw.value : null);
     say("Working. A long guide can take a minute or two.", false);
     setBusy(true);
-    var ctl = (typeof AbortController !== "undefined") ? new AbortController() : null;
-    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 170000);
-    fetch(API, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password: pw.value, mode: mode, prompt: prompt, max_tokens: maxTokens }),
-      signal: ctl ? ctl.signal : undefined
-    }).then(function (res) {
-      return res.json().catch(function () { return {}; }).then(function (data) { return { res: res, data: data }; });
-    }).then(function (x) {
-      clearTimeout(timer); setBusy(false);
-      if (x.res.status === 401) { store(null); say("Wrong password.", true); return; }
-      if (!x.res.ok) { say((x.data && x.data.error) ? x.data.error + (x.data.details ? " (" + String(x.data.details).slice(0, 160) + ")" : "") : "Something went wrong (" + x.res.status + ").", true); return; }
+    post("dev", { password: PW, mode: mode, prompt: prompt, max_tokens: maxTokens }, 170000).then(function (x) {
+      setBusy(false);
+      if (x.status === 401) { say("", false); gate.store(null); ask("The password was not accepted. Enter it again."); return; }
+      if (!x.ok) { say((x.data && x.data.error) ? x.data.error + (x.data.details ? " (" + String(x.data.details).slice(0, 160) + ")" : "") : "Something went wrong (" + x.status + ").", true); return; }
       say("Done.", false);
       showResult(String(x.data.response || ""), x.data.sources || [], !!x.data.grounded);
     }).catch(function () {
-      clearTimeout(timer); setBusy(false);
+      setBusy(false);
       say("Could not reach the server, or it took too long. Try again, or ask for a smaller piece (one unit at a time).", true);
     });
   }
@@ -223,5 +233,6 @@
 </script>
 </main>
 <footer class="site"><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/for-business/">For businesses</a><a href="/developers/">Developers</a></footer>
+<script>(function(){var a=document.querySelector('footer.site a[href="/developers/"]');if(!a||location.pathname==="/developers/")return;a.addEventListener("click",function(e){e.preventDefault();if(window.wisrutGate){window.wisrutGate.open();return}var s=document.createElement("script");s.src="/dev-gate.js";s.onload=function(){window.wisrutGate.open()};s.onerror=function(){location.href="/developers/"};document.head.appendChild(s)})})();</script>
 </body>
 </html>

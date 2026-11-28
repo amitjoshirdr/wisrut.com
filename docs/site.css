@@ -245,3 +245,25 @@ input:focus-visible, textarea:focus-visible {
 .dev-tabs .btn[aria-pressed="true"] { color: #ffffff; background: var(--accent); }
 .dev .btn:disabled { opacity: 0.5; cursor: default; }
 .dev-bad { color: #9b1c1c; font-size: 0.85rem; }
+
+/* Password popup on the Developers page */
+.dev-gate {
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem; background: rgba(27, 36, 48, 0.55);
+}
+.dev-gate[hidden] { display: none; }
+.dev-open header.top, .dev-open main, .dev-open footer.site { filter: blur(5px); }
+.dev-open { overflow: hidden; }
+.dev-gate-card {
+  width: 100%; max-width: 22rem; padding: 1.25rem;
+  background: #ffffff; border: 1px solid var(--line); border-radius: 8px;
+}
+.dev-gate-card h2 { margin-top: 0; }
+.dev-gate-card label { display: block; font-weight: 600; margin: 0.75rem 0 0.25rem; }
+.dev-gate-card .btn { margin-top: 0.5rem; }
+.dev-cancel { margin-left: 1rem; }
+.dev-gate-card input {
+  display: block; width: 100%; padding: 0.6rem; font: inherit; color: var(--ink);
+  background: #ffffff; border: 1px solid var(--line); border-radius: 6px;
+}
