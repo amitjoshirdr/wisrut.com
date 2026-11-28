@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Developers · Wisrut</title>
+<meta name="description" content="Private tools for the site owner.">
+<meta name="robots" content="noindex">
+<meta name="google-adsense-account" content="ca-pub-8690358052933130">
+<link rel="canonical" href="https://wisrut.com/developers/">
+<link rel="stylesheet" href="/site.css">
+</head>
+<body>
+<header class="top">
+<a class="brand" href="/">Wisrut</a>
+<nav><a href="/notes/">Notes</a><a href="/current-affairs/">Current affairs</a><a href="/search/">Search</a><a href="/support/">Support</a></nav>
+</header>
+<main>
+
+<article class="doc dev">
+<h1>Developers</h1>
+<p class="lead">Private tools for the site owner. They need the developer password.</p>
+
+<div class="pick">
+<label for="dev-password">Developer password</label>
+<input id="dev-password" type="password" autocomplete="current-password">
+<label class="dev-check"><input id="dev-keep" type="checkbox" checked> Remember it until I close this tab</label>
+</div>
+<p id="dev-msg" class="meta" role="status"></p>
+
+<div class="dev-tabs" role="group" aria-label="Tool">
+<button type="button" class="btn" id="dev-tab-note" aria-pressed="true">Draft a note</button>
+<button type="button" class="btn" id="dev-tab-search" aria-pressed="false">Free search</button>
+<button type="button" class="btn" id="dev-tab-free" aria-pressed="false">Build anything</button>
+</div>
+
+<section id="dev-panel-note">
+<h2>Draft a note</h2>
+<p class="meta">Makes a study guide as one HTML file. Paste the syllabus: the guide follows only that. Check every fact before you publish.</p>
+<div class="pick"><label for="n-univ">University</label><input id="n-univ" type="text" value="Kumaon University">
+<label for="n-course">Course</label><input id="n-course" type="text" value="B.Com (H)">
+<label for="n-sem">Semester</label><input id="n-sem" type="text" value="Semester 1">
+<label for="n-subject">Subject</label><input id="n-subject" type="text">
+<label for="n-unit">Unit or topic</label><input id="n-unit" type="text">
+<label for="n-lang">Language</label>
+<select id="n-lang"><option>Simple English</option><option>Simple English with Hindi key terms in brackets</option></select>
+<label for="n-pattern">Exam pattern</label><input id="n-pattern" type="text" value="2, 5 and 10 marks">
+<label for="n-syllabus">Syllabus text (required)</label><textarea id="n-syllabus" rows="6"></textarea>
+<label for="n-pyq">Previous-year questions (optional)</label><textarea id="n-pyq" rows="4"></textarea>
+<label for="n-resources">Books or other material (optional)</label><textarea id="n-resources" rows="3"></textarea>
+<label for="n-extra">Anything else (optional)</label><textarea id="n-extra" rows="2"></textarea>
+<button type="button" class="btn dev-run" id="dev-run-note">Draft the note</button></div>
+</section>
+
+<section id="dev-panel-search" hidden>
+<h2>Free search</h2>
+<p class="meta">Searches the web and writes an answer from the results, with sources.</p>
+<div class="pick"><label for="s-query">Your question</label><textarea id="s-query" rows="3"></textarea>
+<button type="button" class="btn dev-run" id="dev-run-search">Search</button></div>
+</section>
+
+<section id="dev-panel-free" hidden>
+<h2>Build anything</h2>
+<p class="meta">Describe a web page, code, a handout or any text. Say what you want in plain words.</p>
+<div class="pick"><label for="f-kind">What to make</label>
+<select id="f-kind"><option>A complete HTML page</option><option>Code</option><option>Plain text</option></select>
+<label for="f-request">Your request</label><textarea id="f-request" rows="6"></textarea>
+<button type="button" class="btn dev-run" id="dev-run-free">Make it</button></div>
+</section>
+
+<section id="dev-out" hidden>
+<h2>Result</h2>
+<p id="dev-status" class="meta"></p>
+<div id="dev-sources"></div>
+<textarea id="dev-text" rows="14" readonly aria-label="Result text"></textarea>
+<div class="dev-actions">
+<button type="button" class="btn" id="dev-copy">Copy</button>
+<button type="button" class="btn" id="dev-download">Download</button>
+<button type="button" class="btn" id="dev-preview-btn">Preview</button>
+<button type="button" class="btn" id="dev-print">Print or save as PDF</button>
+</div>
+<iframe id="dev-preview" class="preview" sandbox="allow-scripts allow-modals" title="Preview" hidden></iframe>
+</section>
+</article>
+<script>
+(function () {
+  var API = "https://margo-api.amitjoshirdr.workers.dev/api/dev";
+  var KEY = "wisrutdevpassword";
+  var tool = "note";
+  var lastText = "";
+  var $ = function (id) { return document.getElementById(id); };
+
+  function store(v) { try { if (v === null) sessionStorage.removeItem(KEY); else sessionStorage.setItem(KEY, v); } catch (e) {} }
+  function load() { try { return sessionStorage.getItem(KEY) || ""; } catch (e) { return ""; } }
+  function say(t, bad) { var m = $("dev-msg"); m.textContent = t; m.className = bad ? "dev-bad" : "meta"; }
+
+  var pw = $("dev-password");
+  pw.value = load();
+
+  function showTool(name) {
+    tool = name;
+    var names = ["note", "search", "free"];
+    for (var i = 0; i < names.length; i++) {
+      $("dev-panel-" + names[i]).hidden = names[i] !== name;
+      $("dev-tab-" + names[i]).setAttribute("aria-pressed", names[i] === name ? "true" : "false");
+    }
+  }
+  var names = ["note", "search", "free"];
+  names.forEach(function (n) { $("dev-tab-" + n).addEventListener("click", function () { showTool(n); }); });
+  showTool("note");
+
+  function val(id) { return ($(id).value || "").trim(); }
+
+  function buildNotePrompt() {
+    var parts = [];
+    function add(label, id) { var v = val(id); if (v) parts.push(label + ": " + v); }
+    add("University", "n-univ"); add("Course", "n-course"); add("Semester", "n-sem");
+    add("Subject", "n-subject"); add("Unit or topic", "n-unit"); add("Language", "n-lang");
+    add("Exam pattern", "n-pattern");
+    var syl = val("n-syllabus");
+    if (!syl) return "";
+    parts.push("SYLLABUS TEXT:\n" + syl);
+    var pyq = val("n-pyq"); if (pyq) parts.push("PREVIOUS-YEAR QUESTIONS:\n" + pyq);
+    var res = val("n-resources"); if (res) parts.push("BOOKS AND OTHER MATERIAL:\n" + res);
+    var extra = val("n-extra"); if (extra) parts.push("EXTRA INSTRUCTIONS:\n" + extra);
+    return parts.join("\n");
+  }
+
+  function looksLikeHtml(t) { return /^\s*(<!doctype|<html|<body|<div|<section|<article|<h1)/i.test(t); }
+
+  function setBusy(b) {
+    var btns = document.querySelectorAll(".dev-run");
+    for (var i = 0; i < btns.length; i++) btns[i].disabled = b;
+  }
+
+  function showResult(text, sources, grounded) {
+    lastText = text;
+    $("dev-out").hidden = false;
+    $("dev-text").value = text;
+    $("dev-preview").hidden = true;
+    var box = $("dev-sources");
+    while (box.firstChild) box.removeChild(box.firstChild);
+    if (sources && sources.length) {
+      var h = document.createElement("p"); h.className = "meta";
+      h.textContent = grounded ? "Sources used:" : "Sources:";
+      box.appendChild(h);
+      var ul = document.createElement("ul");
+      sources.forEach(function (s) {
+        if (!s || !/^https?:/i.test(s.uri || "")) return;
+        var li = document.createElement("li"), a = document.createElement("a");
+        a.href = s.uri; a.rel = "noopener noreferrer"; a.target = "_blank";
+        a.textContent = s.title || s.uri; li.appendChild(a); ul.appendChild(li);
+      });
+      box.appendChild(ul);
+    }
+    $("dev-status").textContent = text.length + " characters." + (looksLikeHtml(text) ? " This looks like a web page: use Preview to see it." : "");
+    $("dev-out").scrollIntoView();
+  }
+
+  function run(mode, prompt, maxTokens) {
+    if (!pw.value) { say("Enter the developer password first.", true); pw.focus(); return; }
+    if (!prompt) { say(mode === "note" ? "Paste the syllabus text first. The guide must follow your syllabus." : "Write your request first.", true); return; }
+    store($("dev-keep").checked ? pw.value : null);
+    say("Working. A long guide can take a minute or two.", false);
+    setBusy(true);
+    var ctl = (typeof AbortController !== "undefined") ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 170000);
+    fetch(API, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: pw.value, mode: mode, prompt: prompt, max_tokens: maxTokens }),
+      signal: ctl ? ctl.signal : undefined
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) { return { res: res, data: data }; });
+    }).then(function (x) {
+      clearTimeout(timer); setBusy(false);
+      if (x.res.status === 401) { store(null); say("Wrong password.", true); return; }
+      if (!x.res.ok) { say((x.data && x.data.error) ? x.data.error + (x.data.details ? " (" + String(x.data.details).slice(0, 160) + ")" : "") : "Something went wrong (" + x.res.status + ").", true); return; }
+      say("Done.", false);
+      showResult(String(x.data.response || ""), x.data.sources || [], !!x.data.grounded);
+    }).catch(function () {
+      clearTimeout(timer); setBusy(false);
+      say("Could not reach the server, or it took too long. Try again, or ask for a smaller piece (one unit at a time).", true);
+    });
+  }
+
+  $("dev-run-note").addEventListener("click", function () { run("note", buildNotePrompt(), 8000); });
+  $("dev-run-search").addEventListener("click", function () { run("search", val("s-query"), 3000); });
+  $("dev-run-free").addEventListener("click", function () {
+    var kind = $("f-kind").value, req = val("f-request");
+    run("free", req ? "Output type: " + kind + "\n" + req : "", 8000);
+  });
+
+  $("dev-copy").addEventListener("click", function () {
+    var t = $("dev-text"); t.focus(); t.select();
+    var done = false;
+    try { done = document.execCommand("copy"); } catch (e) {}
+    if (navigator.clipboard && !done) { navigator.clipboard.writeText(lastText).then(function () { say("Copied.", false); }); return; }
+    say(done ? "Copied." : "Select the text and copy it by hand.", !done);
+  });
+
+  $("dev-download").addEventListener("click", function () {
+    var isHtml = looksLikeHtml(lastText);
+    var blob = new Blob([lastText], { type: isHtml ? "text/html;charset=utf-8" : "text/plain;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = isHtml ? "wisrut-note.html" : "wisrut-result.txt";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+  });
+
+  function docFor(text) {
+    if (looksLikeHtml(text)) return text;
+    var d = document.createElement("div"); d.textContent = text;
+    return '<!doctype html><meta charset="utf-8"><body style="font:15px system-ui,sans-serif;white-space:pre-wrap;padding:12px">' + d.innerHTML + "</body>";
+  }
+  function preview() { var f = $("dev-preview"); f.hidden = false; f.srcdoc = docFor(lastText); return f; }
+  $("dev-preview-btn").addEventListener("click", function () { preview().scrollIntoView(); });
+  $("dev-print").addEventListener("click", function () {
+    var f = preview();
+    f.onload = function () { try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) { say("Use Preview, then your browser's print option.", true); } };
+  });
+})();
+</script>
+</main>
+<footer class="site"><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/for-business/">For businesses</a><a href="/developers/">Developers</a></footer>
+</body>
+</html>
