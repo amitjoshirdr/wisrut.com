@@ -303,3 +303,16 @@ input:focus-visible, textarea:focus-visible {
   #dev-app.has-result #dev-text { height: 62vh; }
   .dev-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* Build in parts: idea on one side, code on the other */
+.dev-two { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+.dev-box h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
+.dev-box textarea { min-height: 14rem; }
+#p-code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.85rem; background: #f7f9fa; }
+#dev-app.parts-mode .dev-layout { display: block; }
+#dev-app.parts-mode #dev-out { display: none; }
+#dev-app.parts-mode .dev-forms { max-width: none; }
+@media (min-width: 1000px) {
+  .dev-two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .dev-box textarea { min-height: 28rem; }
+}

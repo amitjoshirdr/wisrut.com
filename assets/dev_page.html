@@ -10,6 +10,7 @@
 <button type="button" class="btn" id="dev-tab-note" aria-pressed="true">Draft a note</button>
 <button type="button" class="btn" id="dev-tab-search" aria-pressed="false">Free search</button>
 <button type="button" class="btn" id="dev-tab-free" aria-pressed="false">Build anything</button>
+<button type="button" class="btn" id="dev-tab-parts" aria-pressed="false">Build in parts</button>
 </div>
 
 <div class="dev-layout">
@@ -48,6 +49,37 @@
 <select id="f-kind"><option>A complete HTML page</option><option>Code</option><option>Plain text</option></select></div>
 <div class="dev-field"><label for="f-request">Your request</label><textarea id="f-request" rows="8"></textarea></div>
 <button type="button" class="btn dev-run" id="dev-run-free">Make it</button>
+</section>
+
+<section id="dev-panel-parts" class="dev-panel" hidden>
+<h2>Build in parts</h2>
+<p class="meta">For a big page. Write the idea, make a plan, then build one part at a time. Your work is saved in this browser.</p>
+<div class="dev-two">
+<div class="dev-box">
+<h3>1. Idea and context</h3>
+<p class="meta">Say what to build, for whom, the content to cover, and any style notes. Paste the syllabus or facts here. Every part follows this text, so you can change it at any time.</p>
+<textarea id="p-idea" rows="14" aria-label="Idea and context"></textarea>
+<div class="dev-actions">
+<button type="button" class="btn dev-run" id="p-plan">Make a plan</button>
+</div>
+<p id="p-progress" class="meta"></p>
+</div>
+<div class="dev-box">
+<h3>2. Code</h3>
+<p class="meta">The file so far. Each new part is added at the end. You can edit it by hand.</p>
+<textarea id="p-code" rows="14" aria-label="Code so far" spellcheck="false"></textarea>
+<div class="dev-actions">
+<button type="button" class="btn dev-run" id="p-next">Build next part</button>
+<button type="button" class="btn dev-run" id="p-redo">Redo last part</button>
+<button type="button" class="btn" id="p-preview">Preview</button>
+<button type="button" class="btn" id="p-copy">Copy</button>
+<button type="button" class="btn" id="p-download">Download</button>
+<button type="button" class="btn" id="p-clear">Start over</button>
+</div>
+<p id="p-status" class="meta" role="status"></p>
+</div>
+</div>
+<iframe id="p-frame" class="preview" sandbox="allow-scripts allow-modals" title="Preview of the file so far" hidden></iframe>
 </section>
 
 </div>
