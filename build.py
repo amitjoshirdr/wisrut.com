@@ -742,7 +742,7 @@ def build_developers():
     body = read("dev_page.html") + '<script src="/dev-gate.js"></script><script>' + read("dev.js") + "</script>"
     write("/developers/", shell("Developers %s Wisrut" % MIDDOT,
                                 "Private tools for the site owner.", body, "/developers/",
-                                index=False))
+                                index=False, wide=True))
 
 
 def build_info():

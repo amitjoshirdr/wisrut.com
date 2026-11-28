@@ -93,7 +93,8 @@
       box.appendChild(ul);
     }
     $("dev-status").textContent = text.length + " characters." + (looksLikeHtml(text) ? " This looks like a web page: use Preview to see it." : "");
-    $("dev-out").scrollIntoView();
+    $("dev-app").className = "has-result";
+    if (window.innerWidth < 1000) $("dev-out").scrollIntoView();
   }
 
   function run(mode, prompt, maxTokens) {
@@ -143,7 +144,7 @@
     return '<!doctype html><meta charset="utf-8"><body style="font:15px system-ui,sans-serif;white-space:pre-wrap;padding:12px">' + d.innerHTML + "</body>";
   }
   function preview() { var f = $("dev-preview"); f.hidden = false; f.srcdoc = docFor(lastText); return f; }
-  $("dev-preview-btn").addEventListener("click", function () { preview().scrollIntoView(); });
+  $("dev-preview-btn").addEventListener("click", function () { preview().scrollIntoView({ block: "nearest" }); });
   $("dev-print").addEventListener("click", function () {
     var f = preview();
     f.onload = function () { try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) { say("Use Preview, then your browser's print option.", true); } };

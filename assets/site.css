@@ -267,3 +267,39 @@ input:focus-visible, textarea:focus-visible {
   display: block; width: 100%; padding: 0.6rem; font: inherit; color: var(--ink);
   background: #ffffff; border: 1px solid var(--line); border-radius: 6px;
 }
+
+/* Developers page layout (own stacked layout; not the Notes selector form) */
+.dev-panel { margin: 0 0 1.5rem; padding: 1rem; border: 1px solid var(--line); border-radius: 8px; background: #ffffff; }
+.dev-panel h2 { margin-top: 0; }
+.dev-field { margin: 0 0 1rem; }
+.dev-field label { display: block; font-weight: 600; margin: 0 0 0.3rem; }
+.dev select { width: 100%; }
+.dev-grid { display: grid; grid-template-columns: 1fr; gap: 0 1rem; }
+@media (min-width: 700px) { .dev-grid { grid-template-columns: 1fr 1fr; } }
+.dev #dev-out { margin-top: 1.5rem; }
+.dev #dev-text { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.85rem; background: #f7f9fa; }
+
+/* Developers page: one column on phones, tools left and result right on laptops */
+.dev-layout { display: block; }
+.dev-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+.dev-tabs .btn { padding: 0.7rem 0.4rem; font-size: 0.95rem; text-align: center; min-height: 44px; }
+.dev .btn { min-height: 44px; }
+.dev .dev-run { width: 100%; }
+.dev-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.dev-actions .btn { text-align: center; padding: 0.6rem 0.4rem; }
+.dev #dev-text { min-height: 16rem; }
+.dev .preview { height: 60vh; }
+@media (min-width: 700px) {
+  .dev .dev-run { width: auto; }
+  .dev-actions { display: flex; flex-wrap: wrap; }
+  .dev-tabs { display: flex; flex-wrap: wrap; }
+  .dev-tabs .btn { padding: 0.65rem 1rem; }
+}
+@media (min-width: 1000px) {
+  #dev-app.has-result .dev-layout {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem; align-items: start;
+  }
+  #dev-app.has-result #dev-out { position: sticky; top: 1rem; margin-top: 0; }
+  #dev-app.has-result #dev-text { height: 62vh; }
+  .dev-grid { grid-template-columns: 1fr 1fr; }
+}
