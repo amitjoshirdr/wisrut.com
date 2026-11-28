@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Information Systems for Managers: quick notes, MBA Semester 1, UTU</title>
+<style>
+:root{--ink:#1d2433;--muted:#4b566b;--paper:#fffdf7;--rule:#d6d0bd;--accent:#1f5f4a;--soft:#e7f0eb;--tipbg:#fff2d9;--tip:#a35f00;--exbg:#edf2fb;--ex:#34569e;--card:#fff;--c1:#1f5f4a;--c2:#34569e;--c3:#a35f00;--c4:#8a3b5c;color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--ink:#e8ebf2;--muted:#aab3c5;--paper:#141a17;--rule:#3a4640;--accent:#6fc9a6;--soft:#1e2a25;--tipbg:#33291a;--tip:#f0b45a;--exbg:#1c2536;--ex:#8fb0ee;--card:#1a211e;--c1:#2e8a6c;--c2:#4c72c4;--c3:#b87414;--c4:#a8527a;color-scheme:dark}}
+:root[data-theme=dark]{--ink:#e8ebf2;--muted:#aab3c5;--paper:#141a17;--rule:#3a4640;--accent:#6fc9a6;--soft:#1e2a25;--tipbg:#33291a;--tip:#f0b45a;--exbg:#1c2536;--ex:#8fb0ee;--card:#1a211e;--c1:#2e8a6c;--c2:#4c72c4;--c3:#b87414;--c4:#a8527a;color-scheme:dark}
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;padding:12px 14px 48px;font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--paper)}
+main{max-width:760px;margin:0 auto}
+h1{font-size:1.65rem;line-height:1.2;margin:.5em 0 .3em}
+h2{font-size:1.3rem;margin:1.3em 0 .5em;padding-bottom:4px;border-bottom:3px solid var(--accent)}
+h3{font-size:1.05rem;margin:1.2em 0 .3em;color:var(--accent)}
+p{margin:.5em 0}ul,ol{margin:.4em 0;padding-left:1.3rem}li{margin:.2em 0}
+table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;font-size:.88rem;margin:.6em 0}
+th,td{border:1px solid var(--rule);padding:6px 8px;text-align:left;vertical-align:top}th{background:var(--soft)}
+.toc{background:var(--soft);border:1px solid var(--rule);border-radius:8px;padding:8px 12px;margin:.8em 0}
+.toc a{display:block;padding:7px 0;color:var(--accent);text-decoration:none;font-weight:600;border-bottom:1px solid var(--rule)}
+.toc a:last-child{border:0}
+.box,.story{border-left:5px solid var(--tip);background:var(--tipbg);padding:8px 12px;margin:.9em 0;border-radius:0 8px 8px 0;font-size:.95rem}
+.story{border-color:var(--ex);background:var(--exbg)}
+details{border:1px solid var(--rule);border-radius:8px;margin:.5em 0;background:var(--card)}
+summary{cursor:pointer;padding:10px 12px;font-weight:600}
+details>:not(summary){margin-left:12px;margin-right:12px}details>:last-child{margin-bottom:12px}
+.vis{background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:10px;margin:.8em 0;font-size:.85rem}
+.vis>b:first-child{display:block;margin-bottom:6px;color:var(--accent)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch}
+.flow>span{flex:1 1 90px;background:var(--c1);color:#fff;border-radius:8px;padding:6px 8px;text-align:center}
+.flow>span:nth-of-type(2n){background:var(--c2)}.flow>span:nth-of-type(3n){background:var(--c3)}.flow>span:nth-of-type(4n){background:var(--c4)}
+.flow>i{align-self:center;font-style:normal;color:var(--muted)}
+.flow small{display:block;opacity:.9;font-size:.78rem}
+.py div{margin:3px auto;padding:6px 8px;color:#fff;text-align:center;border-radius:6px}
+.fb{margin-top:6px;border:2px dashed var(--rule);border-radius:8px;padding:4px;text-align:center;color:var(--muted)}
+.ff{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:6px;text-align:center}
+.ff div{border-radius:8px;padding:8px 4px;background:var(--soft);border:1px solid var(--rule)}
+.ff .m{grid-column:2;grid-row:2;background:var(--c1);color:#fff}
+.layer{margin:0 auto 4px;border-radius:8px;padding:6px;text-align:center;color:#fff}
+hr{border:0;border-top:2px dashed var(--rule);margin:2em 0}
+</style>
+</head>
+<body>
+<main>
+<h1>Information Systems for Managers: quick notes</h1>
+<p><b>MBA Semester 1, Uttarakhand Technical University. Five units, with diagrams and exam tips.</b></p>
+<p>Built from the unit notes of Mr. Amit Joshi. Marks tagged <b>PYQ</b> are topics asked in 2022–23 to 2025–26 papers.</p>
+<div class="box"><b>Revise in 30 minutes.</b> Read every diagram (10 min), every yellow box (5 min), the comparison tables (10 min), then try the quiz (5 min).</div>
+<div class="toc">
+<a href="#u1">Unit 1. Introduction to MIS</a><a href="#u2">Unit 2. Information systems in the enterprise</a><a href="#u3">Unit 3. Office tools for business</a><a href="#u4">Unit 4. IS in global business today</a><a href="#u5">Unit 5. Business applications and expert systems</a><a href="#qa">Likely questions and answers</a><a href="#quiz">Quiz</a>
+</div>
+
+<h2 id="u1">Unit 1. Introduction to MIS</h2>
+<div class="box"><b>High yield.</b> Unit 1 was Q1 in every paper: a definition, data vs information, and the role of IT.</div>
+<h3>1.1 MIS in one line</h3>
+<p><b>MIS</b> (Davis and Olson) is an <b>integrated user–machine system</b> that provides information to support <b>operations, management and decision-making</b>, using hardware, software, manual procedures, models and a <b>database</b>. Keep the bold words; each one earns marks.</p>
+<p><b>Why it matters:</b> facts instead of intuition, better coordination across levels, faster decisions, and data turned into a competitive resource.</p>
+<div class="vis"><b>Five functions of MIS</b><div class="flow"><span>Capture<small>raw data</small></span><i>→</i><span>Process<small>classify, calculate</small></span><i>→</i><span>Store<small>database</small></span><i>→</i><span>Retrieve<small>on demand</small></span><i>→</i><span>Disseminate<small>reports</small></span></div></div>
+<h3>1.2 Data vs information</h3>
+<table><tr><th>Basis</th><th>Data</th><th>Information</th></tr>
+<tr><td>Nature</td><td>Raw, unorganised facts</td><td>Processed, meaningful</td></tr>
+<tr><td>Use</td><td>Not directly useful</td><td>Basis of decisions</td></tr>
+<tr><td>Example</td><td>Invoice lines, attendance punches</td><td>Monthly regional sales report, average attendance %</td></tr></table>
+<div class="vis"><b>DIKW ladder: each step adds meaning</b><div class="py">
+<div style="width:46%;background:var(--c4)">Wisdom: why, and what next</div><div style="width:64%;background:var(--c3)">Knowledge: how (information + experience)</div><div style="width:82%;background:var(--c2)">Information: what, who, when, where</div><div style="width:100%;background:var(--c1)">Data: raw facts with no context</div></div></div>
+<p>Information supports decisions in four steps: <b>identify problems, evaluate alternatives, decide, monitor and control</b>. Close an answer with: &ldquo;without this, decisions fall back on intuition.&rdquo;</p>
+<h3>1.3 System and information system</h3>
+<div class="vis"><b>A system: input, process, output, feedback</b><div class="flow"><span>Input</span><i>→</i><span>Process</span><i>→</i><span>Output</span></div><div class="fb">↺ Feedback and control sends results back to adjust the input</div></div>
+<ul><li><b>Elements:</b> components, interrelationship, boundary, environment, input, process, output, feedback.</li>
+<li><b>Types:</b> open/closed, deterministic/probabilistic, physical/abstract, adaptive/non-adaptive.</li>
+<li><b>Information system</b> (Laudon): components that collect, process, store and distribute information. It is <b>socio-technical</b>: technology plus people plus organisation.</li></ul>
+<table><tr><th>Six components</th><th>Role</th></tr><tr><td>People</td><td>End users and IS specialists</td></tr><tr><td>Hardware</td><td>Computers, storage, devices</td></tr><tr><td>Software</td><td>System and application programs</td></tr><tr><td>Data</td><td>Facts held in databases</td></tr><tr><td>Network</td><td>Links hardware, shares resources</td></tr><tr><td>Procedures</td><td>Rules for running the system</td></tr></table>
+<h3>1.4 Business process design</h3>
+<p>A <b>business process</b> is a set of related tasks that produces a business outcome (order fulfilment, loan approval). <b>Process design</b> redesigns it, usually with IT, to cut cost and time and raise quality.</p>
+<div class="vis"><b>Hospital registration: as-is to to-be</b><div class="flow"><span>As-is<small>paper form, queue at each counter, re-entry of data</small></span><i>→</i><span>Redesign<small>map, find waste, automate</small></span><i>→</i><span>To-be<small>data entered once, digital token, billing linked</small></span></div></div>
+<h3>1.5 Role of IT, retail, and adoption factors</h3>
+<ul><li><b>Role of IT:</b> automation, communication, better decisions, customer service (CRM), innovation.</li>
+<li><b>Retail:</b> POS, inventory systems, loyalty/CRM, e-commerce, supply chain visibility. End with: efficiency plus differentiation.</li></ul>
+<table><tr><th>Adoption factors (TOE)</th><th>Examples</th></tr><tr><td>Technological</td><td>Infrastructure, compatibility, security, cost</td></tr><tr><td>Organisational</td><td>Size, top-management support, skills, culture</td></tr><tr><td>Environmental</td><td>Competition, customers, regulation</td></tr><tr><td>Economic</td><td>ROI, access to finance</td></tr></table>
+<div class="box"><b>Remember:</b> IT = the technology. IS = IT + people + data + procedures, built to meet goals. <b>Common mistake:</b> calling MIS only a computer system.</div>
+
+<h2 id="u2">Unit 2. Information systems in the enterprise</h2>
+<h3>2.1 The systems pyramid</h3>
+<div class="vis"><b>Who uses which system</b><div class="py">
+<div style="width:40%;background:var(--c4)">ESS: top managers</div><div style="width:60%;background:var(--c3)">MIS and DSS: middle managers</div><div style="width:80%;background:var(--c2)">KWS and OAS: knowledge workers</div><div style="width:100%;background:var(--c1)">TPS: operational staff</div></div><p style="margin:6px 0 0;color:var(--muted)">TPS data feeds every system above it.</p></div>
+<table><tr><th>Feature</th><th>TPS</th><th>MIS</th><th>DSS</th><th>ESS</th></tr>
+<tr><td>Level</td><td>Operational</td><td>Middle</td><td>Middle/senior</td><td>Top</td></tr>
+<tr><td>Purpose</td><td>Record routine transactions</td><td>Summary reports for control</td><td>Analyse semi-structured problems</td><td>Support strategic decisions</td></tr>
+<tr><td>Decisions</td><td>None</td><td>Structured</td><td>Semi/unstructured</td><td>Unstructured</td></tr>
+<tr><td>Data</td><td>Direct capture</td><td>Internal (TPS)</td><td>Internal + external</td><td>Internal + external, summarised</td></tr>
+<tr><td>Output</td><td>Records, receipts</td><td>Scheduled, exception reports</td><td>What-if, simulation</td><td>Dashboards, KPIs</td></tr>
+<tr><td>Example</td><td>POS billing</td><td>Monthly sales report</td><td>Pricing scenario tool</td><td>CEO dashboard</td></tr></table>
+<div class="box"><b>PYQ:</b> the TPS, MIS, DSS, ESS table was asked in 2024–25 and 2025–26. Always say that TPS is the base data source.</div>
+<h3>2.2 Functional systems</h3>
+<table><tr><th>Function</th><th>Aim</th><th>Key activities</th></tr>
+<tr><td>Sales and marketing</td><td>Revenue and market share</td><td>Order tracking, market research, pricing, promotion (4 Ps)</td></tr>
+<tr><td>Manufacturing</td><td>Output, quality, resource use</td><td>Production planning, MRP, shop-floor control, CAD/CAM, quality control</td></tr>
+<tr><td>Finance and accounting</td><td>Manage assets, report accurately</td><td>Ledgers, budgets and variance, cash flow, NPV/IRR appraisal</td></tr>
+<tr><td>HR</td><td>Manage the workforce</td><td>Recruitment, payroll, attendance, training, appraisal</td></tr></table>
+<div class="vis"><b>HR information flow (PYQ 2025–26)</b><div class="flow"><span>Input<small>hiring, joining data</small></span><i>→</i><span>Update<small>attendance, leave, training</small></span><i>→</i><span>Output<small>payslips, HR reports</small></span><i>→</i><span>Feedback<small>change policy</small></span></div></div>
+<h3>2.3 Enterprise systems</h3>
+<p>Separate functional “silos” have duplicate, inconsistent data. An <b>enterprise system</b> joins them with <b>one shared database</b>. A sales order updates inventory and finance at once.</p>
+<div class="vis"><b>Silos to one platform</b><div class="flow"><span>Sales</span><span>Production</span><span>Finance</span><span>HR</span></div><div class="fb">↕ one shared database and one set of business rules</div></div>
+<table><tr><th>Benefits</th><th>Challenges (PYQ)</th></tr><tr><td>One structure and set of rules; real-time firm-wide reports; single platform</td><td>High cost, complexity and time, process reengineering, data migration, misfit with unique processes, user resistance</td></tr></table>
+<h3>2.4 Strategic use of IS (PYQ 2024–25)</h3>
+<table><tr><th>Strategy</th><th>IS mechanism</th><th>Example</th></tr><tr><td>Low-cost leadership</td><td>Supply-chain and inventory systems</td><td>Retail chain logistics</td></tr><tr><td>Differentiation</td><td>CRM, analytics, personalisation</td><td>Recommendation engines</td></tr><tr><td>Focus (niche)</td><td>Detailed segment data</td><td>Niche marketing analytics</td></tr><tr><td>Customer/supplier intimacy</td><td>Extranets, EDI</td><td>Just-in-time supplier links</td></tr></table>
+<p><b>Answer pattern:</b> name the strategy, the IS mechanism, then an example. Also mention <b>network effects</b>, <b>airline yield management</b> and <b>strategic alignment</b> (IS enables strategy, and ERP can also constrain it).</p>
+
+<h2 id="u3">Unit 3. Office tools for business</h2>
+<div class="box">This unit is examined by <b>step-by-step procedures</b>. Write the menu path exactly: tab, then button.</div>
+<h3>3.1 Windows</h3>
+<p>A <b>GUI-based operating system</b>. Features: GUI, multitasking, file management, plug and play, networking, multi-user accounts, utilities, security, taskbar and Start menu.</p>
+<h3>3.2 MS Word</h3>
+<table><tr><th>Task (PYQ 2024–25)</th><th>Steps</th></tr><tr><td>Margins</td><td>Layout tab → Margins → preset or Custom Margins</td></tr><tr><td>Orientation</td><td>Layout → Orientation → Portrait or Landscape</td></tr><tr><td>Page numbers</td><td>Insert → Page Number → position → style (Format Page Numbers to change start)</td></tr></table>
+<div class="vis"><b>Mail merge (PYQ 2024–25, 2025–26)</b><div class="flow"><span>Main letter</span><i>+</i><span>Data source<small>Excel list</small></span><i>→</i><span>Mailings → Start Mail Merge</span><i>→</i><span>Select Recipients</span><i>→</i><span>Insert Merge Field</span><i>→</i><span>Preview Results</span><i>→</i><span>Finish and Merge</span></div></div>
+<p>Purpose: personalised documents in bulk, with time saved and consistency kept. Finish by <b>Print Documents</b> or <b>Edit Individual Documents</b>.</p>
+<h3>3.3 MS Excel</h3>
+<table><tr><th>Function</th><th>Syntax</th><th>Use</th></tr><tr><td>SUM</td><td>=SUM(A1:A10)</td><td>Adds a range</td></tr><tr><td>AVERAGE</td><td>=AVERAGE(B1:B10)</td><td>Mean of a range</td></tr><tr><td>VLOOKUP</td><td>=VLOOKUP(A2,D2:F10,3,FALSE)</td><td>Finds A2 in the <b>first column</b> of D2:F10 and returns the 3rd column</td></tr><tr><td>IF</td><td>=IF(test,yes,no)</td><td>Conditional result</td></tr></table>
+<p>VLOOKUP parts: <b>lookup_value</b>, <b>table_array</b>, <b>col_index_num</b>, <b>range_lookup</b> (FALSE = exact, TRUE = approximate). Other features: charts, conditional formatting, sort and filter, PivotTables.</p>
+<h3>3.4 PowerPoint, Access, Outlook</h3>
+<ul><li><b>PowerPoint chart (PYQ):</b> select slide → Insert → Chart → choose type → OK → enter data in the linked Excel sheet → close it → format with Design and Format tabs.</li>
+<li><b>Access</b> is a desktop RDBMS. Objects: <b>Tables</b> (store), <b>Queries</b> (retrieve), <b>Forms</b> (enter), <b>Reports</b> (print summaries). Suits small databases with few users; Oracle and SQL Server are server-based, for many users, and need a DBA.</li>
+<li><b>Outlook:</b> email, calendar, contacts, tasks.</li></ul>
+<div class="vis"><b>Internet, WWW and browser: three layers</b><div class="layer" style="background:var(--c4)">Browser: client software that displays pages (Chrome, Edge)</div><div class="layer" style="background:var(--c3)">WWW: linked web pages, over HTTP/HTTPS</div><div class="layer" style="background:var(--c1)">Internet: global network of networks, over TCP/IP</div></div>
+<table><tr><th>Tool</th><th>Executive benefit</th></tr><tr><td>Word</td><td>Professional documents</td></tr><tr><td>Excel</td><td>Fast analysis, budgets, charts</td></tr><tr><td>PowerPoint</td><td>Persuasive presentations</td></tr><tr><td>Access</td><td>Light database, no DBA</td></tr><tr><td>Outlook</td><td>Mail and scheduling</td></tr></table>
+<p>Together they form an integrated suite; an Excel chart can be embedded in Word or PowerPoint.</p>
+
+<h2 id="u4">Unit 4. Information systems in global business today</h2>
+<h3>4.1 Why firms invest in IS</h3>
+<table><tr><th>Six business objectives</th><th>Example</th></tr><tr><td>Operational excellence</td><td>Walmart’s inventory system</td></tr><tr><td>New products and business models</td><td>Apple’s App Store</td></tr><tr><td>Customer and supplier intimacy</td><td>CRM, extranets</td></tr><tr><td>Improved decision making</td><td>Real-time forecasting</td></tr><tr><td>Competitive advantage</td><td>Better price and response</td></tr><tr><td>Survival</td><td>Regulatory reporting</td></tr></table>
+<h3>4.2 Managers and trends</h3>
+<table><tr><th>Mintzberg role</th><th>Roles</th><th>IS support</th></tr><tr><td>Interpersonal</td><td>Figurehead, leader, liaison</td><td>Email, video calls</td></tr><tr><td>Informational</td><td>Monitor, disseminator, spokesperson</td><td>MIS reports, dashboards</td></tr><tr><td>Decisional</td><td>Entrepreneur, disturbance handler, resource allocator, negotiator</td><td>DSS, what-if models</td></tr></table>
+<p>Cover both sides: managers are <b>users</b> of MIS and <b>drivers</b> of IS strategy and change. <b>Technology trends:</b> mobile, cloud (SaaS, PaaS, IaaS), big data and analytics, AI/ML, IoT. <b>Business trends:</b> globalisation, flatter organisations, work separate from location, empowered customers.</p>
+<h3>4.3 Decision levels</h3>
+<p>Use the pyramid in Unit 2: strategic (ESS), management (MIS, DSS), knowledge (KWS, OAS), operational (TPS).</p>
+<table><tr><th>Decision</th><th>Nature</th><th>Example</th><th>System</th></tr><tr><td>Structured</td><td>Routine, clear rule</td><td>Reorder at reorder point</td><td>TPS</td></tr><tr><td>Semi-structured</td><td>Part rule, part judgment</td><td>Marketing budget</td><td>DSS</td></tr><tr><td>Unstructured</td><td>Novel, no procedure</td><td>Enter a new country?</td><td>ESS</td></tr></table>
+<h3>4.4 Competitive advantage</h3>
+<div class="vis"><b>Porter’s five forces: where IS can help</b><div class="ff"><div>New entrants</div><div>Substitutes</div><div>&nbsp;</div><div>Suppliers</div><div class="m">Rivals in the industry</div><div>Customers</div></div></div>
+<div class="vis"><b>Value chain: IS improves fit between activities</b><div class="flow"><span>Inbound logistics</span><i>→</i><span>Operations</span><i>→</i><span>Outbound logistics</span><i>→</i><span>Sales and marketing</span><i>→</i><span>Service</span></div><div class="fb">Support: firm infrastructure, HR, technology development, procurement</div></div>
+<table><tr><th>Basis</th><th>Five forces</th><th>Value chain</th></tr><tr><td>Focus</td><td>External industry</td><td>Internal activities</td></tr><tr><td>Use</td><td>Pick overall strategy</td><td>Pick where to invest in IS</td></tr></table>
+<p>Generic strategies are the same four as in Unit 2.4 (cost, differentiation, focus, intimacy).</p>
+<h3>4.5 IT foundation and managerial challenges</h3>
+<ul><li><b>IT foundation:</b> hardware, operating systems, enterprise software, data management, networks, internet platforms, consulting and integration. It must keep being upgraded.</li>
+<li><b>Challenges:</b> strategic (cost, uncertain ROI, resistance, process redesign); implementation (legacy integration, scaling, vendor dependence); governance (security, privacy, ethics, job loss); human (skill gaps, change management).</li></ul>
+<h3>4.6 DBMS</h3>
+<p>Old file systems caused <b>redundancy, inconsistency, program–data dependence</b> and weak sharing. A <b>DBMS</b> sits between programs and data files and centralises data. Features: data definition, data dictionary, DML (SQL), integrity, concurrent access, backup, security.</p>
+<table><tr><th>Basis</th><th>RDBMS</th><th>NoSQL (PYQ)</th></tr><tr><td>Structure</td><td>Tables, rows, columns</td><td>Documents, key-value, graph</td></tr><tr><td>Schema</td><td>Fixed</td><td>Flexible</td></tr><tr><td>Query</td><td>SQL</td><td>Varies</td></tr><tr><td>Best for</td><td>Structured, transactional data (banking, ERP)</td><td>Big, fast, unstructured data (social, IoT)</td></tr><tr><td>Scaling</td><td>Vertical</td><td>Horizontal</td></tr><tr><td>Examples</td><td>Oracle, MySQL, SQL Server</td><td>MongoDB, Cassandra</td></tr></table>
+
+<h2 id="u5">Unit 5. Business applications and expert systems</h2>
+<h3>5.1 E-commerce and payments</h3>
+<p>E-commerce is buying and selling via computer networks. <b>Unique features:</b> ubiquity, global reach, universal standards, richness, interactivity, information density, personalisation, social technology.</p>
+<table><tr><th>Type</th><th>Meaning</th><th>Example</th></tr><tr><td>B2C</td><td>Business to consumer</td><td>Amazon, Flipkart</td></tr><tr><td>B2B</td><td>Business to business</td><td>IndiaMART</td></tr><tr><td>C2C</td><td>Consumer to consumer</td><td>OLX, eBay</td></tr><tr><td>C2B</td><td>Consumer to business</td><td>Freelancing sites</td></tr><tr><td>M-commerce</td><td>Via mobile devices</td><td>App shopping, UPI apps</td></tr></table>
+<p><b>Business models:</b> portal, e-tailer, content provider, market creator, service provider, community provider. <b>E-payments:</b> cards, e-wallets, net banking/EFT (NEFT, RTGS), mobile/UPI, cryptocurrency, EDI. A sound system is secure, reliable, scalable and interoperable.</p>
+<h3>5.2 ERP, CRM, SCM</h3>
+<table><tr><th>Basis</th><th>ERP</th><th>CRM</th><th>SCM</th></tr><tr><td>Focus</td><td>Internal process integration</td><td>Customers</td><td>Suppliers and logistics</td></tr><tr><td>Goal</td><td>Efficiency, standard processes</td><td>Retention, satisfaction, revenue</td><td>Right product, place, time, at least cost</td></tr><tr><td>Modules</td><td>Finance, HR, production, materials</td><td>Sales, marketing, service</td><td>Procurement, logistics, planning</td></tr><tr><td>Example</td><td>SAP</td><td>Salesforce</td><td>Oracle SCM Cloud</td></tr></table>
+<ul><li><b>ERP advantages:</b> integration, real-time data, efficiency, better decisions, standardisation, compliance. <b>Challenges:</b> cost, complexity, reengineering, resistance, data migration, misfit, vendor dependency.</li>
+<li>If ERP goals do not match strategy (PYQ 2023–24): disrupted processes, loss of distinctive capability, poor acceptance, project failure.</li>
+<li><b>CRM:</b> sales-force automation, service, marketing automation, analytical CRM. Result: retention, cross-selling and up-selling, lower acquisition cost.</li></ul>
+<h3>5.3 Data warehouse, data mining, BI</h3>
+<p>A <b>data warehouse</b> is <b>subject-oriented, integrated, time-variant and non-volatile</b> (Inmon). A <b>data mart</b> is a departmental subset.</p>
+<div class="vis"><b>Exam flow to remember</b><div class="flow"><span>TPS<small>capture data</small></span><i>→</i><span>Data warehouse<small>ETL: integrate, store</small></span><i>→</i><span>Data mining<small>find patterns</small></span><i>→</i><span>BI<small>dashboards, OLAP</small></span></div></div>
+<table><tr><th>Basis</th><th>Operational DB (OLTP)</th><th>Data warehouse (OLAP)</th></tr><tr><td>Purpose</td><td>Daily transactions</td><td>Analysis, decisions</td></tr><tr><td>Data</td><td>Current, detailed</td><td>Historical, summarised</td></tr><tr><td>Updates</td><td>Constant</td><td>Periodic loads</td></tr><tr><td>Users</td><td>Clerks</td><td>Managers, analysts</td></tr></table>
+<p><b>Data mining patterns:</b> associations (buy X, also buy Y), sequences, classification, clustering, forecasting. Uses: segmentation, fraud detection, credit scoring, churn prediction, market-basket analysis.</p>
+<h3>5.4 Expert systems</h3>
+<p>An <b>expert system</b> captures expertise in a narrow domain and imitates a human expert’s reasoning.</p>
+<div class="vis"><b>How an expert system works</b><div class="flow"><span>User<small>enters facts</small></span><i>→</i><span>Inference engine<small>matches facts to rules</small></span><i>↔</i><span>Knowledge base<small>IF-THEN rules</small></span><i>→</i><span>Advice<small>with explanation</small></span></div><div class="fb">Knowledge acquisition subsystem: experts feed rules into the knowledge base</div></div>
+<table><tr><th>Basis</th><th>Expert system</th><th>DSS</th></tr><tr><td>Basis</td><td>Expert rules</td><td>Data and models</td></tr><tr><td>Role</td><td>Replicates expert, gives recommendation</td><td>Supports the manager, who decides</td></tr><tr><td>Domain</td><td>Narrow</td><td>Broad</td></tr><tr><td>Example</td><td>Medical diagnosis</td><td>Sales forecast tool</td></tr></table>
+<p><b>Challenges:</b> knowledge acquisition bottleneck (tacit knowledge), representation, maintenance, brittleness, validation, high cost. <b>Good knowledge base:</b> complete, consistent, validated, updatable, suitably represented.</p>
+
+<h2 id="qa">Likely questions and answers</h2>
+<p>Tap a question to open the answer.</p>
+<details><summary>Define MIS and state two objectives. (Unit 1)</summary><p>MIS is an integrated user–machine system that supplies information for operations, management and decisions, using hardware, software, procedures, models and a database. Objectives: support timely, accurate decisions; improve efficiency and coordination across departments.</p></details>
+<details><summary>Differentiate data and information. (Unit 1)</summary><p>Data are raw facts; information is data processed into a meaningful form. Data alone cannot guide a decision; information can. Example: daily invoice lines are data, a monthly regional sales report is information. Close with: without this step, decisions rest on intuition.</p></details>
+<details><summary>How do TPS, MIS, DSS and ESS differ? (Unit 2)</summary><p>Use the comparison table: TPS records routine transactions at the operational level; MIS summarises them for middle managers; DSS gives what-if analysis for semi-structured decisions; ESS gives dashboards to top managers for unstructured strategic decisions.</p></details>
+<details><summary>Challenges of enterprise systems / ERP? (Units 2, 5)</summary><p>High cost, long and complex implementation, process reengineering, data migration, risk of misfit with unique processes, user resistance, vendor dependency. Add the strategic-alignment point.</p></details>
+<details><summary>Steps of mail merge. (Unit 3)</summary><p>Prepare the main document and data source; Mailings → Start Mail Merge → Letters; Select Recipients → Use an Existing List; Insert Merge Fields; Preview Results; Finish and Merge → Print or Edit Individual Documents.</p></details>
+<details><summary>Explain VLOOKUP. (Unit 3)</summary><p>=VLOOKUP(lookup_value, table_array, col_index_num, [range_lookup]) searches the first column of the table and returns a value from the stated column in the same row. FALSE gives an exact match.</p></details>
+<details><summary>Compare the five forces and value chain models. (Unit 4)</summary><p>Five forces looks outward at the industry and shows threats; the value chain looks inward at activities and shows where IS adds value. Name the five forces and the primary and support activities.</p></details>
+<details><summary>RDBMS vs NoSQL. (Unit 4)</summary><p>RDBMS: fixed tables, SQL, strong relationships, vertical scaling, suited to transactions. NoSQL: flexible schema, varied queries, horizontal scaling, suited to big and unstructured data.</p></details>
+<details><summary>Expert system vs DSS. (Units 2, 5)</summary><p>An expert system uses an expert’s rules and an inference engine in a narrow domain and gives a recommendation; a DSS uses data and models, and the manager decides.</p></details>
+
+<h2 id="quiz">Quiz</h2>
+<details><summary>Q1. Which system is the main source of data for MIS, DSS and ESS?<br>(a) ESS (b) TPS (c) KWS (d) Expert system</summary><p>Answer: (b) TPS.</p></details>
+<details><summary>Q2. “Non-volatile” in a data warehouse means:<br>(a) Data is loaded periodically and then read-only (b) Data changes in real time (c) Data is deleted daily (d) Only current data</summary><p>Answer: (a).</p></details>
+<details><summary>Q3. In VLOOKUP, FALSE as the last argument gives:<br>(a) Approximate match (b) Exact match (c) Error always (d) Sorted output</summary><p>Answer: (b) Exact match.</p></details>
+<details><summary>Q4. Unstructured decisions are mainly supported by:<br>(a) TPS (b) MIS (c) ESS (d) OAS</summary><p>Answer: (c) ESS.</p></details>
+<details><summary>Q5. Which is NOT one of the six components of an information system?<br>(a) People (b) Procedures (c) Network (d) Competitors</summary><p>Answer: (d) Competitors.</p></details>
+<details><summary>Q6. OLX is an example of:<br>(a) B2C (b) B2B (c) C2C (d) C2B</summary><p>Answer: (c) C2C.</p></details>
+<details><summary>Q7. The flow “TPS → warehouse → mining → ___” ends with:<br>(a) ERP (b) BI (c) SCM (d) DBMS</summary><p>Answer: (b) Business intelligence.</p></details>
+
+<hr>
+<h2>Last-day checklist</h2>
+<ul><li>Davis and Olson MIS definition; data vs information; DIKW.</li><li>The TPS, MIS, DSS, ESS table and the pyramid.</li><li>Enterprise/ERP benefits and challenges.</li><li>Mail merge, margins, page numbers, VLOOKUP, PowerPoint chart steps.</li><li>Five forces, value chain, generic strategies, RDBMS vs NoSQL.</li><li>Warehouse characteristics, the TPS-to-BI flow, expert system parts, ES vs DSS.</li></ul>
+<div class="box"><b>Check this against your syllabus and your teacher’s notes.</b> These notes condense the five unit files; use the originals for fuller detail.</div>
+</main>
+</body>
+</html>
